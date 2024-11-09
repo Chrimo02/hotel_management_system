@@ -1,11 +1,13 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.domain.model;
 
+import java.util.List;
+
 public class Hotel {
 
-    long id;
-    String name;
-    String description;
-    HotelLocation location;
-    HotelRating rating; // -> in welcher Datenstruktur wollen wir Ratings darstellen?
-    Room room;
+    private long id;
+    private String name;
+    private String description;
+    private HotelLocation location;
+    List<HotelRating> rating; // -> in welcher Datenstruktur wollen wir Ratings darstellen?
+    List<Room> room;
 }

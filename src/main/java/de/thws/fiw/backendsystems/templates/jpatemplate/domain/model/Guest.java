@@ -5,5 +5,4 @@ public class Guest extends Person {
     String eMail;
     String phoneNumber;
 
-
 }
