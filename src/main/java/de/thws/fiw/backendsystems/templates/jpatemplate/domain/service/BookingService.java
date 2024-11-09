@@ -6,7 +6,7 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.domain.model.HotelRating
 public class BookingService {
 
 
-    private void cancelBooking(Booking b){
+    public void cancelBooking(Booking b){
         //TODO: Genauere Bedingungen für Stornierung noch implementieren
          b.setStatus(false);
     }
