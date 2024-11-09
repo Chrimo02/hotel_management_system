@@ -18,10 +18,6 @@ public class Guest extends Person {
     public List<Booking> getBookingsHistory(){
         return this.bookingsHistory;
     }
-    public void updateContactData(String newMail, String newPhone){
-        this.eMail = newMail;
-        this.phoneNumber = newPhone;
-    }
 
     public long getId() {
         return id;

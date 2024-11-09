@@ -30,6 +30,18 @@ public class Booking {
         this.status = b;
     }
 
+    public boolean getStatus(){
+        return this.status;
+    }
+
+    public HotelRating getRating() {
+        return rating;
+    }
+
+    public void setRating(HotelRating rating) {
+        this.rating = rating;
+    }
+
     public static long calculateNights(LocalDate checkInDate, LocalDate checkOutDate) {
         return ChronoUnit.DAYS.between(checkInDate, checkOutDate);
     }

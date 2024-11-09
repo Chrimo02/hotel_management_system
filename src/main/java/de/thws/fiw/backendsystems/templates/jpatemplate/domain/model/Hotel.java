@@ -10,15 +10,15 @@ public class Hotel {
     private HotelLocation location;
     private double averageRating;     //Todo: Im Hotel-service noch Methode die alle bookings durchläuft und dann eine Durchschnittsbewertung speichert implementieren
 
-    private List<Room> room;
+    private List<Room> rooms;
     private List<Booking> bookings;
 
-    public Hotel(long id, String name, String description, HotelLocation location, List<Room> room, List<Booking> bookings) {
+    public Hotel(long id, String name, String description, HotelLocation location, List<Room> rooms, List<Booking> bookings) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.location = location;
-        this.room = room;
+        this.rooms = rooms;
         this.bookings = bookings;
     }
 
