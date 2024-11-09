@@ -1,4 +1,7 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.domain.model;
+import java.awt.print.Book;
+import java.time.LocalDate;
+import java.util.List;
 
 public class Guest extends Person {
     private final long id;

@@ -58,12 +58,12 @@ public class Hotel {
         return this.averageRating;
     }
 
-    public List<Room> getRoom() {
-        return room;
+    public List<Room> getRooms() {
+        return rooms;
     }
 
-    public void setRoom(List<Room> room) {
-        this.room = room;
+    public void setRoom(List<Room> rooms) {
+        this.rooms = rooms;
     }
 
     public List<Booking> getBookings() {
@@ -72,5 +72,8 @@ public class Hotel {
 
     public void setBookings(List<Booking> bookings) {
         this.bookings = bookings;
+    }
+    public void addRoom(Room room){
+        rooms.add(room);
     }
 }
