@@ -75,45 +75,4 @@ public class Booking {
         return guests;
     }
 
-    // Static inner Builder class
-    public static class Builder {
-        private long id;
-        private LocalDate checkInDate;
-        private LocalDate checkOutDate;
-        private Room room;
-        private List<Guest> guests = new ArrayList<>();
-
-        public Builder(long id) {
-            this.id = id;
-        }
-
-        public Builder checkInDate(LocalDate checkInDate) {
-            this.checkInDate = checkInDate;
-            return this;
-        }
-
-        public Builder checkOutDate(LocalDate checkOutDate) {
-            this.checkOutDate = checkOutDate;
-            return this;
-        }
-
-        public Builder room(Room room) {
-            this.room = room;
-            return this;
-        }
-
-        public Builder addGuest(Guest guest) {
-            this.guests.add(guest);
-            return this;
-        }
-
-        public Builder addGuests(List<Guest> guests) {
-            this.guests.addAll(guests);
-            return this;
-        }
-
-        public Booking build() {
-            return new Booking(this);
-        }
-    }
 }

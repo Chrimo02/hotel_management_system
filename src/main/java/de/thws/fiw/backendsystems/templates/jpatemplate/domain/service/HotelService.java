@@ -77,8 +77,8 @@ public class HotelService {
      * Filters hotel ratings based on the specified star rating and comment presence.
      *
      * @param hotel the hotel whose bookings are being filtered
-     * @param minStarRating the minimum star rating to filter by
-     * @param withComment if true, only include ratings with comments; if false, only include ratings without comments;
+     * @param starRating the minimum star rating to filter by
+     * @param onlyWithComment if true, only include ratings with comments; if false, only include ratings without comments;
      *                    if null, include all ratings that meet the star rating requirement regardless of comments
      * @return a list of HotelRating objects that match the filtering criteria
      */

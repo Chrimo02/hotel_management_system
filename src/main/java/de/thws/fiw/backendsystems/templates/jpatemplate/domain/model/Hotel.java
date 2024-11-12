@@ -13,7 +13,7 @@ public class Hotel {
     private List<Room> rooms;
     private List<Booking> bookings;
 
-    public Hotel(long id, String name, String description, HotelLocation location, List<Room> rooms, List<Booking> bookings) {
+    public Hotel(long id, String name, String description, HotelLocation location) {
         this.id = id;
         this.name = name;
         this.description = description;

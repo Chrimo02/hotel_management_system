@@ -9,7 +9,7 @@ public class Guest extends Person {
     private String phoneNumber;
     private List<Booking> bookingsHistory;  // --> aufpassen, dass beim Erstellen jeder Buchung auch die Buchung zur History hinzugefügt wird
 
-    public Guest(String firstName, String lastName, String title, LocalDate birthday, long id, String eMail, String phoneNumber) {
+    public Guest(long id, String firstName, String lastName, String title, LocalDate birthday, String eMail, String phoneNumber) {
         super(firstName, lastName, title, birthday);  // Passing parameters to the Person constructor
 
         // Initialize fields for the Guest class

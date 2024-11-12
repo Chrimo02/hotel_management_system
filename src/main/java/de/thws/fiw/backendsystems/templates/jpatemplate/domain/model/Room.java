@@ -1,4 +1,9 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.domain.model;
+import java.util.HashMap;
+import java.util.Map;
+import jakarta.persistence.criteria.Predicate;
+
+import java.time.LocalDate;
 
 public abstract class Room {
 
@@ -8,6 +13,10 @@ public abstract class Room {
     private boolean available;
     private RoomIdentifier roomIdentifier;
     private Hotel hotel;
+    private Booking currentBooking;
+
+    // Availability map for specific dates
+    private Map<LocalDate, Boolean> availabilityMap = new HashMap<>();
 
     public Room(long id, double pricePerNight, boolean available, RoomIdentifier roomIdentifier, Hotel hotel) {
         this.id = id;
@@ -17,6 +26,12 @@ public abstract class Room {
         this.hotel = hotel;
     }
 
+    public Booking getCurrentBooking() {
+        return currentBooking;
+    }
+    public Map<LocalDate, Boolean> getAvailabilityMap() {
+        return availabilityMap;
+    }
     public long getId() {
         return id;
     }

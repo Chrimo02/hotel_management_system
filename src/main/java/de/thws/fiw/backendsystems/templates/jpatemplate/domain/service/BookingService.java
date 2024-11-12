@@ -1,18 +1,38 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.domain.service;
 
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.model.Booking;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.model.HotelRating;
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.model.*;
+
+import java.awt.print.Book;
+import java.time.LocalDate;
+import java.util.List;
 
 public class BookingService {
 
 
     public void cancelBooking(Booking b){
         //TODO: Genauere Bedingungen für Stornierung noch implementieren
-         b.setStatus(false);
+        roomService.cancelRoom(b.getRoom(), b.getCheckInDate(), b.getCheckOutDate());
+        b.setStatus(false);
     }
     public boolean isActive(Booking b){
         return b.getStatus();
     }
+
+
+    public Room findAvailableRoom(Hotel hotel, Class<? extends Room> roomType, LocalDate checkInToCheck, LocalDate checkOutToCheck) {
+        for (Room room : hotel.getRooms()) {
+            // Check if the room is an instance of the specified roomType (SingleRoom or DoubleRoom)
+            if (roomType.isInstance(room)) {
+                // Check if the room is available for the specified dates
+                if (roomService.isAvailable(room, checkInToCheck, checkOutToCheck)) {
+                    return room; // Return the first available room of the specified type
+                }
+            }
+        }
+        return null; // No available room of the specified type found
+    }
+
+
 
     public void rateBooking(Booking booking, String comment, int starRating) throws RuntimeException{
         if (starRating < 1 || starRating > 5) throw new IllegalArgumentException("Invalid rating");
