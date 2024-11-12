@@ -21,14 +21,14 @@ public enum HotelRating {
         return starRating;
     }
 
+    //Getter for the comment
+    public String getGuestComment() {
+        return commentRating;
+    }
 
     public boolean setCommentRating(String commentRating){
             this.commentRating = commentRating;
             return true;
-    }
-
-    public String getGuestComment() {
-        return commentRating;
     }
 
     // Methode zur Ausgabe der Sternebewertung
