@@ -4,6 +4,7 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.domain.model.*;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HotelService {
 
@@ -71,5 +72,34 @@ public class HotelService {
     }
 
     //TODO: HotelRatings-Filter Methode nach Sternen und nach Comment (true / false)
+
+    /**
+     * Filters hotel ratings based on the specified star rating and comment presence.
+     *
+     * @param hotel the hotel whose bookings are being filtered
+     * @param minStarRating the minimum star rating to filter by
+     * @param withComment if true, only include ratings with comments; if false, only include ratings without comments;
+     *                    if null, include all ratings that meet the star rating requirement regardless of comments
+     * @return a list of HotelRating objects that match the filtering criteria
+     */
+    public List<HotelRating> filterHotelRatings(Hotel hotel, int starRating, boolean onlyWithComment) {
+        List<Booking> bookings = hotel.getBookings();
+        if (bookings.isEmpty()) {
+            throw new RuntimeException("No Ratings so far");
+        }
+
+        return bookings.stream()
+                .map(Booking::getRating)
+                .filter(rating -> rating.getStarRating() == starRating)
+                .filter(rating -> {
+                    // Apply comment filter based on the value of withComment
+                    if (onlyWithComment) {
+                        return rating.getGuestComment() != null && !rating.getGuestComment().isEmpty();
+                    } else {
+                        return true;
+                    }
+                })
+                .collect(Collectors.toList());
+    }
 }
 
