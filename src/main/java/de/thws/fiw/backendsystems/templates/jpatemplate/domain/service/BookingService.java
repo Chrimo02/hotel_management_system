@@ -43,10 +43,30 @@ public class BookingService {
 
 
 
-    public void rateBooking(Booking booking, String comment, int starRating) throws RuntimeException{
-        if (starRating < 1 || starRating > 5) throw new IllegalArgumentException("Invalid rating");
-        HotelRating rating = HotelRating.values()[starRating - 1];
-        if(comment != null) rating.setCommentRating(comment);
-        booking.setRating(rating);
-    }
+    //    public boolean isOverlapping(Booking booking, LocalDate otherCheckInDate, LocalDate otherCheckOutDate) {
+//        // Two date ranges overlap if one starts before the other ends and vice versa
+//        return (booking.getCheckInDate().isBefore(otherCheckOutDate) && otherCheckInDate.isBefore(booking.getCheckOutDate()));
+//    }
+//
+//    public Room returnFreeRoom(Hotel hotel, Class<? extends Room> kindOfRoom, LocalDate otherCheckInDate, LocalDate otherCheckOutDate){
+//        for (Room room : hotel.getRooms()){
+//
+//        }
+//    }
+//
+//    /**
+//     * Überprüft, ob das Zimmer für die angegebenen Daten verfügbar ist.
+//     */
+//    public boolean isAvailableForDates(Hotel hotel, long roomID, LocalDate checkInDate, LocalDate checkOutDate) {
+//        for (Booking booking : hotel.getBookings()) {
+//            if (BookingService.isOverlapping(checkInDate, checkOutDate)) {
+//                return false;  // Wenn es eine Überlappung gibt, ist das Zimmer nicht verfügbar
+//            }
+//        }
+//        return true;
+//    }
+//
+
+
+
 }
