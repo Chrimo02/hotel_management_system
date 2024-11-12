@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Booking {
-    private final long id;
+    private final long id; //final
     private LocalDate checkInDate;
     private LocalDate checkOutDate; //final oder nicht? Verlängerung?
     private double totalPrice;
@@ -16,12 +16,12 @@ public class Booking {
     private boolean status; // shows true if the booking is confirmed and active or false if the booking was canceled --> true after initializing
 
     // Private constructor for the builder pattern
-    private Booking(Builder builder) {
-        this.id = builder.id;
-        this.checkInDate = builder.checkInDate;
-        this.checkOutDate = builder.checkOutDate;
-        this.room = builder.room;
-        this.guests = builder.guests;
+    public Booking(long id, LocalDate checkInDate,LocalDate checkOutDate, Room room, Guest ... guests) {
+        this.id = id;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.room = room;
+        for (Guest g : guests) this.guests.add(g);
         this.totalPrice = calculateTotalPrice();
         this.status = true;
     }

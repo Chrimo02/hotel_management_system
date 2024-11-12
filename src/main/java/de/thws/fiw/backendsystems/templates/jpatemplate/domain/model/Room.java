@@ -8,9 +8,8 @@ import java.time.LocalDate;
 public abstract class Room {
 
     //einzelne Room-types mit Vererbung implementieren
-    private long id;
+    private final long id;
     private double pricePerNight;
-    private boolean available;
     private RoomIdentifier roomIdentifier;
     private Hotel hotel;
     private Booking currentBooking;
@@ -21,10 +20,42 @@ public abstract class Room {
     public Room(long id, double pricePerNight, boolean available, RoomIdentifier roomIdentifier, Hotel hotel) {
         this.id = id;
         this.pricePerNight = pricePerNight;
-        this.available = available;
         this.roomIdentifier = roomIdentifier;
         this.hotel = hotel;
+
+        // Initialize the availability for two years from today
+        initializeAvailability();
     }
+
+    private void initializeAvailability() {
+        LocalDate today = LocalDate.now();
+        for (int i = 0; i < 730; i++) {
+            availabilityMap.put(today.plusDays(i), true); // Initially, all days are available
+        }
+    }
+
+    //TODO: cleanupolddates in roomservice/hotelservice und scheduler? wöchentlich/monatlich aufruf von allen räumen
+   /* ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+scheduler.scheduleAtFixedRate(() -> {
+        for (Room room : hotel.getRooms()) {
+            room.cleanupOldDates();
+        }
+    }, 0, 1, TimeUnit.DAYS); // Führt das tägliche Update durch*/
+
+
+    public void cleanupOldDates() {
+        LocalDate today = LocalDate.now();
+
+        // Entfernt alle vergangenen Daten
+        availabilityMap.keySet().removeIf(date -> date.isBefore(today));
+
+        // Fügt neue Daten für zwei Jahre im Voraus hinzu
+        for (int i = 0; i < 730; i++) {
+            LocalDate futureDate = today.plusDays(i);
+            availabilityMap.putIfAbsent(futureDate, true); // Nur hinzufügen, falls das Datum noch nicht vorhanden ist
+        }
+    }
+
 
     public Booking getCurrentBooking() {
         return currentBooking;
@@ -36,24 +67,12 @@ public abstract class Room {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public double getPricePerNight() {
         return pricePerNight;
     }
 
     public void setPricePerNight(double pricePerNight) {
         this.pricePerNight = pricePerNight;
-    }
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
     }
 
     public RoomIdentifier getRoomIdentifier() {

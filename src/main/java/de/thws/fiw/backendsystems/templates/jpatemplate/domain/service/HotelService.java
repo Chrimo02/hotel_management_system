@@ -2,6 +2,7 @@ package de.thws.fiw.backendsystems.templates.jpatemplate.domain.service;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.model.*;
 
 import java.lang.reflect.Constructor;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,10 +12,11 @@ public class HotelService {
     //Alle verfügbare Zimmer: List<Room> availableRooms = hotelService.findAvailableRooms(hotel, Room.class);
     //Aufruf: List<Room> availableSingleRooms = hotelService.findAvailableRooms(hotel, SingleRoom.class);
     public List<Room> findAvailableRooms(Hotel hotel, Class<? extends Room> roomType) {
+        RoomService roomService = new RoomService();
         List<Room> availableRooms = new ArrayList<>();
         for (Room room : hotel.getRooms()) {
             // Überprüfen, ob das Zimmer verfügbar ist und ob der Raumtyp übereinstimmt (falls ein Typ angegeben wurde)
-            if (room.isAvailable() && (roomType == null || roomType.isInstance(room))) {
+            if (roomService.isAvailable(room, LocalDate.now(), LocalDate.now().plusDays(1)) && (roomType == null || roomType.isInstance(room))) {
                 availableRooms.add(room);
             }
         }

@@ -1,11 +1,13 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.domain.model;
 
 public class HotelLocation {
+    private final long id;
     private String address;
     private String city;
     private String country;
 
-    public HotelLocation(String address, String city, String country) {
+    public HotelLocation(long id, String address, String city, String country) {
+        this.id = id;
         this.address = address;
         this.city = city;
         this.country = country;

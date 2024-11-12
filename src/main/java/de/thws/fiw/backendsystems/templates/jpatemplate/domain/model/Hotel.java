@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Hotel {
 
-    private long id;
+    private final long id;
     private String name;
     private String description;
     private HotelLocation location;
@@ -18,16 +18,10 @@ public class Hotel {
         this.name = name;
         this.description = description;
         this.location = location;
-        this.rooms = rooms;
-        this.bookings = bookings;
     }
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getName() {

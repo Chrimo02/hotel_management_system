@@ -8,6 +8,15 @@ import java.util.List;
 
 public class BookingService {
 
+    RoomService roomService = new RoomService();
+    public void makeBooking(Hotel hotel, LocalDate desiredCheckIn,LocalDate desiredCheckout, Guest ... guests){
+        Room chosenRoom;
+        if (guests.length == 1) chosenRoom = findAvailableRoom(hotel,SingleRoom.class,desiredCheckIn,desiredCheckout);
+        else chosenRoom = findAvailableRoom(hotel,DoubleRoom.class,desiredCheckIn,desiredCheckout);
+        //BookingEntity newBooking = new BookingEntity(desiredCheckIn,desiredCheckout, chosenRoom, guests);
+
+
+    }
 
     public void cancelBooking(Booking b){
         //TODO: Genauere Bedingungen für Stornierung noch implementieren
