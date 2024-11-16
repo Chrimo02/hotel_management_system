@@ -1,8 +1,6 @@
-package de.thws.fiw.backendsystems.templates.jpatemplate.domain.service;
+package de.thws.fiw.backendsystems.templates.jpatemplate.domain.services;
 
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.model.Booking;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.model.Hotel;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.model.Room;
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Room;
 
 import java.time.LocalDate;
 

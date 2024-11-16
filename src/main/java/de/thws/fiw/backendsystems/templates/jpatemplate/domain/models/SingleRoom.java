@@ -1,4 +1,4 @@
-package de.thws.fiw.backendsystems.templates.jpatemplate.domain.model;
+package de.thws.fiw.backendsystems.templates.jpatemplate.domain.models;
 
 public class SingleRoom extends Room{
 

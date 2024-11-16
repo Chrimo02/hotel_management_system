@@ -1,10 +1,9 @@
-package de.thws.fiw.backendsystems.templates.jpatemplate.domain.service;
+package de.thws.fiw.backendsystems.templates.jpatemplate.domain.services;
 
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.model.Booking;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.model.Guest;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.model.HotelRating;
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Booking;
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Guest;
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.HotelRating;
 
-import java.awt.print.Book;
 import java.util.List;
 
 public class GuestService {

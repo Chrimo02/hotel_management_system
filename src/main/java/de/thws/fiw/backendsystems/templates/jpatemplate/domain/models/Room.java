@@ -1,7 +1,6 @@
-package de.thws.fiw.backendsystems.templates.jpatemplate.domain.model;
+package de.thws.fiw.backendsystems.templates.jpatemplate.domain.models;
 import java.util.HashMap;
 import java.util.Map;
-import jakarta.persistence.criteria.Predicate;
 
 import java.time.LocalDate;
 

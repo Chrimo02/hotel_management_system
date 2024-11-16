@@ -1,10 +1,8 @@
-package de.thws.fiw.backendsystems.templates.jpatemplate.domain.service;
+package de.thws.fiw.backendsystems.templates.jpatemplate.domain.services;
 
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.model.*;
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.*;
 
-import java.awt.print.Book;
 import java.time.LocalDate;
-import java.util.List;
 
 public class BookingService {
 

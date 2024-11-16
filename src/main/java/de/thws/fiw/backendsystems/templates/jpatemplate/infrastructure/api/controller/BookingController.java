@@ -1,6 +1,6 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.api.controller;
 
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.service.BookingService;
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.services.BookingService;
 
 import java.util.Scanner;
 

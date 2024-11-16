@@ -1,5 +1,5 @@
-package de.thws.fiw.backendsystems.templates.jpatemplate.domain.service;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.model.*;
+package de.thws.fiw.backendsystems.templates.jpatemplate.domain.services;
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.*;
 
 import java.lang.reflect.Constructor;
 import java.time.LocalDate;

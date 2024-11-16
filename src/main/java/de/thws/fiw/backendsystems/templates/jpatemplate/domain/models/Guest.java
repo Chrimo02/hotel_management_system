@@ -1,5 +1,4 @@
-package de.thws.fiw.backendsystems.templates.jpatemplate.domain.model;
-import java.awt.print.Book;
+package de.thws.fiw.backendsystems.templates.jpatemplate.domain.models;
 import java.time.LocalDate;
 import java.util.List;
 

@@ -1,8 +1,7 @@
-package de.thws.fiw.backendsystems.templates.jpatemplate.domain.model;
+package de.thws.fiw.backendsystems.templates.jpatemplate.domain.models;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Booking {
