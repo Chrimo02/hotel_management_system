@@ -1,4 +1,4 @@
-package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.api;
+package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.api.controller;
 
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.service.BookingService;
 

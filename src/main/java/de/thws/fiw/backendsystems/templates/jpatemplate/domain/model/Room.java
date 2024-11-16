@@ -12,12 +12,12 @@ public abstract class Room {
     private double pricePerNight;
     private RoomIdentifier roomIdentifier;
     private Hotel hotel;
-    private Booking currentBooking;
+    private Booking currentBooking; //benötigt?
 
     // Availability map for specific dates
     private Map<LocalDate, Boolean> availabilityMap = new HashMap<>();
 
-    public Room(long id, double pricePerNight, boolean available, RoomIdentifier roomIdentifier, Hotel hotel) {
+    public Room(long id, double pricePerNight, RoomIdentifier roomIdentifier, Hotel hotel) {
         this.id = id;
         this.pricePerNight = pricePerNight;
         this.roomIdentifier = roomIdentifier;

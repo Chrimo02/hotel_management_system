@@ -1,8 +1,6 @@
-package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entity;
+package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities;
 
 import jakarta.persistence.*;
-
-import java.util.List;
 
 @Entity
 public class HotelEntity {
