@@ -1,6 +1,7 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.domain.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
