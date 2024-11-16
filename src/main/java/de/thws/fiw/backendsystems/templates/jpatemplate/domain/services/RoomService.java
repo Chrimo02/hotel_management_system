@@ -13,13 +13,8 @@ public class RoomService {
         }
         return true;
     }
-    public void bookRoom(Room room, LocalDate checkIn, LocalDate checkOut) {
-        for (LocalDate date = checkIn; date.isBefore(checkOut); date = date.plusDays(1)) {
-            room.getAvailabilityMap().put(date, false); // Mark dates as booked
-        }
-    }
 
-    public void cancelRoom(Room room, LocalDate checkIn, LocalDate checkOut) {
+    public void updateAvailabilityMap(Room room, LocalDate checkIn, LocalDate checkOut, boolean) {
         for (LocalDate date = checkIn; date.isBefore(checkOut); date = date.plusDays(1)) {
             room.getAvailabilityMap().put(date, true); // Mark dates as available again
         }

@@ -53,6 +53,7 @@ public class HotelService {
     }
 
     public double calculateHotelRating(List<Booking> bookings) {
+
         if (bookings == null || bookings.isEmpty()) {
             return 0.0; // Wenn keine Buchungen vorliegen, keine Bewertung
         }

@@ -13,6 +13,10 @@ public class Booking {
     private List<Guest> guests;
     private HotelRating rating; //wird in der Booking-Klasse nicht weiter benutzt, lediglich von der zugehörigen Methode im BookingService in der jeweiligen Buchung gespeichert
     private boolean status; // shows true if the booking is confirmed and active or false if the booking was canceled --> true after initializing
+    private LocalDateTime checkInTime;
+    private LocalDateTime checkOutTime;
+    private boolean checkedIn;
+    private boolean checkedOut;
 
     // Private constructor for the builder pattern
     public Booking(long id, LocalDate checkInDate,LocalDate checkOutDate, Room room, Guest ... guests) {
