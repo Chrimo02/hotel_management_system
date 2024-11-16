@@ -18,7 +18,7 @@ public class BookingService {
 
     public void cancelBooking(Booking b){
         //TODO: Genauere Bedingungen für Stornierung noch implementieren
-        roomService.updateAvailabilityMap(b.getRoom(), b.getCheckInDate(), b.getCheckOutDate());
+        roomService.updateAvailabilityMap(b.getRoom(), b.getCheckInDate(), b.getCheckOutDate(), false);
         b.setStatus(false);
     }
     public boolean isActive(Booking b){

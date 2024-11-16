@@ -14,7 +14,7 @@ public class RoomService {
         return true;
     }
 
-    public void updateAvailabilityMap(Room room, LocalDate checkIn, LocalDate checkOut, boolean) {
+    public void updateAvailabilityMap(Room room, LocalDate checkIn, LocalDate checkOut, boolean falseMeansBookTrueMeansCancel) {
         for (LocalDate date = checkIn; date.isBefore(checkOut); date = date.plusDays(1)) {
             room.getAvailabilityMap().put(date, true); // Mark dates as available again
         }
