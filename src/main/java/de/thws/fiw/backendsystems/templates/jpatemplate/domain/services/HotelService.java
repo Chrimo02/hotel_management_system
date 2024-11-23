@@ -62,6 +62,8 @@ public class HotelService {
         return hotel;
     }
 
+    public List<Hotel> getHotels(){ return new ArrayList<>(hotelMap.values());}
+
     public Hotel getHotelById(long hotelId) {
         return hotelMap.get(hotelId);
     }
