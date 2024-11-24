@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class GuestService {
-    //TODO:
+    //TODO: Code repetition vermeiden, einheitliche Methode für check ob guest null
     private final GuestRepository guestRepository;
     public GuestService(GuestRepository guestRepository){
         this.guestRepository = guestRepository;
