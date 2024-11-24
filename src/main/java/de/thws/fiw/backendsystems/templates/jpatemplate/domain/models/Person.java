@@ -8,11 +8,11 @@ public abstract class Person {
     private String title;
     private LocalDate birthday;
 
-    public Person(String firstName, String lastName, String title, LocalDate birthday) {
+    public Person(String firstName, String lastName, String title, int yearBirthday,int monthBirtday, int dayBirthday) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.title = title;
-        this.birthday = birthday;
+        this.birthday = LocalDate.of(yearBirthday,monthBirtday,dayBirthday);
     }
 
     public String getFirstName() {

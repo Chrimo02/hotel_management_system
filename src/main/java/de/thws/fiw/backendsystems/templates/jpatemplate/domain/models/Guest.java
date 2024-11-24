@@ -2,16 +2,21 @@ package de.thws.fiw.backendsystems.templates.jpatemplate.domain.models;
 import java.time.LocalDate;
 import java.util.List;
 
-public class Guest extends Person {
+public class Guest {
     private final long id;
+    private String firstName;
+    private String lastName;
+    private String title;
+    private LocalDate birthday;
     private String eMail;
     private String phoneNumber;
     private List<Booking> bookingsHistory;  // --> aufpassen, dass beim Erstellen jeder Buchung auch die Buchung zur History hinzugefügt wird
 
-    public Guest(long id, String firstName, String lastName, String title, LocalDate birthday, String eMail, String phoneNumber) {
-        super(firstName, lastName, title, birthday);  // Passing parameters to the Person constructor
-
-        // Initialize fields for the Guest class
+    public Guest(long id, String firstName, String lastName, String title, int yearBirthday,int monthBirtday, int dayBirthday, String eMail, String phoneNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.title = title;
+        this.birthday = LocalDate.of(yearBirthday,monthBirtday,dayBirthday);
         this.id = id;
         this.eMail = eMail;
         this.phoneNumber = phoneNumber;
@@ -39,5 +44,13 @@ public class Guest extends Person {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
