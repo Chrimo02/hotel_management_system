@@ -24,15 +24,15 @@ public class BookingService {
     public void cancelBooking(long bookingID){
         Booking booking = getBookingById(bookingID);
         for(Room room : booking.getRooms()){
-            cancelRoom(room, booking);
+            roomService.cancelRoom(room, booking);
         }
         booking.setStatus(false);
         //update booking repo
     }
 
-    public Room findAvailableRoom(long hotelID, Class<? extends Room> roomType, LocalDate checkInToCheck, LocalDate checkOutToCheck) {
+    private Room findAvailableRoom(long hotelID, Class<? extends Room> roomType, LocalDate checkInToCheck, LocalDate checkOutToCheck) {
         HotelService hotelService = new HotelService();
-        Hotel hotel = hotelService.findHotelById(hotelID);
+        Hotel hotel = hotelService.getHotelById(hotelID);
         for (Room room : hotel.getRooms()) {
             if (roomType.isInstance(room)) {
                 if (roomService.isAvailable(room, checkInToCheck, checkOutToCheck)) {
