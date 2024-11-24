@@ -10,6 +10,4 @@ public class GuestNotFoundException extends Exception{
         super(message);
     }
 
-    //TODO: Je nachdem wie wir die Methoden später benutzen,
-    //      könnten wir überlegen custom-Exceptions für unsere domain-Klassen anzulegen
 }
