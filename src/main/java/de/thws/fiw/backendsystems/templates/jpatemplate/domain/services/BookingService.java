@@ -2,69 +2,67 @@ package de.thws.fiw.backendsystems.templates.jpatemplate.domain.services;
 
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.time.LocalDate;
 
 public class BookingService {
 
     RoomService roomService = new RoomService();
-    public void makeBooking(Hotel hotel, LocalDate desiredCheckIn,LocalDate desiredCheckout, Guest ... guests){
-        Room chosenRoom;
-        if (guests.length == 1) chosenRoom = findAvailableRoom(hotel,SingleRoom.class,desiredCheckIn,desiredCheckout);
-        else chosenRoom = findAvailableRoom(hotel,DoubleRoom.class,desiredCheckIn,desiredCheckout);
-        //BookingEntity newBooking = new BookingEntity(desiredCheckIn,desiredCheckout, chosenRoom, guests);
-
-
+    public void makeBooking(long hotelId, LocalDate checkInDate, LocalDate checkOutDate, List<Class<? extends Room>> roomTypes, long ... guests){
+        List<Room> rooms = new ArrayList<>();
+        Room foundRoom;
+        for(Class<? extends Room> roomType : roomTypes){
+            foundRoom = findAvailableRoom(hotelId, roomType, checkInDate, checkOutDate);
+            if(foundRoom == null) throw new RuntimeException("Available Room not found");
+            rooms.add(foundRoom);
+        }
+        //Access Repo
     }
 
-    public void cancelBooking(Booking b){
-        //TODO: Genauere Bedingungen für Stornierung noch implementieren
-        roomService.updateAvailabilityMap(b.getRoom(), b.getCheckInDate(), b.getCheckOutDate(), false);
-        b.setStatus(false);
-    }
-    public boolean isActive(Booking b){
-        return b.getStatus();
+    public void cancelBooking(long bookingID){
+        Booking booking = getBookingById(bookingID);
+        for(Room room : booking.getRooms()){
+            cancelRoom(room, booking);
+        }
+        booking.setStatus(false);
+        //update booking repo
     }
 
-
-    public Room findAvailableRoom(Hotel hotel, Class<? extends Room> roomType, LocalDate checkInToCheck, LocalDate checkOutToCheck) {
+    public Room findAvailableRoom(long hotelID, Class<? extends Room> roomType, LocalDate checkInToCheck, LocalDate checkOutToCheck) {
+        HotelService hotelService = new HotelService();
+        Hotel hotel = hotelService.findHotelById(hotelID);
         for (Room room : hotel.getRooms()) {
-            // Check if the room is an instance of the specified roomType (SingleRoom or DoubleRoom)
             if (roomType.isInstance(room)) {
-                // Check if the room is available for the specified dates
                 if (roomService.isAvailable(room, checkInToCheck, checkOutToCheck)) {
-                    return room; // Return the first available room of the specified type
+                    return room;
                 }
             }
         }
-        return null; // No available room of the specified type found
+        return null;
     }
 
+    void guestCheckIn(long bookingID){
+        Booking booking = getBookingById(bookingID);
+        if (booking != null) {
+            booking.setCheckedIn(true);
+            booking.setCheckInTime(LocalDateTime.now());
+            //update booking repo
+        }
+    }
 
+    void guestCheckOut(long bookingID){
+        Booking booking = getBookingById(bookingID);
+        if (booking != null) {
+            booking.setCheckedOut(true);
+            booking.setCheckOutTime(LocalDateTime.now());
+            //update booking repo
+        }
+    }
 
-    //    public boolean isOverlapping(Booking booking, LocalDate otherCheckInDate, LocalDate otherCheckOutDate) {
-//        // Two date ranges overlap if one starts before the other ends and vice versa
-//        return (booking.getCheckInDate().isBefore(otherCheckOutDate) && otherCheckInDate.isBefore(booking.getCheckOutDate()));
-//    }
-//
-//    public Room returnFreeRoom(Hotel hotel, Class<? extends Room> kindOfRoom, LocalDate otherCheckInDate, LocalDate otherCheckOutDate){
-//        for (Room room : hotel.getRooms()){
-//
-//        }
-//    }
-//
-//    /**
-//     * Überprüft, ob das Zimmer für die angegebenen Daten verfügbar ist.
-//     */
-//    public boolean isAvailableForDates(Hotel hotel, long roomID, LocalDate checkInDate, LocalDate checkOutDate) {
-//        for (Booking booking : hotel.getBookings()) {
-//            if (BookingService.isOverlapping(checkInDate, checkOutDate)) {
-//                return false;  // Wenn es eine Überlappung gibt, ist das Zimmer nicht verfügbar
-//            }
-//        }
-//        return true;
-//    }
-//
-
-
-
+    private Booking getBookingById(long bookingID){
+        //access repo
+        return null;
+    }
 }
