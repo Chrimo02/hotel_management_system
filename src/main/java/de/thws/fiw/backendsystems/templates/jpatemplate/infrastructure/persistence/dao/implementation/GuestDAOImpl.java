@@ -32,7 +32,7 @@ public class GuestDAOImpl implements GuestDAO {
         try (EntityManager em = entityManager()) {
             return em.find(GuestEntity.class, id);
         } catch (Exception e) {
-            throw new DataAccessException("Error while reading guest entity, rolled back", e);
+            throw new DataAccessException("Error while reading guest entity!", e);
         }
     }
     @Override
