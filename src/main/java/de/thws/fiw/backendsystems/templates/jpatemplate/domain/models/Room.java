@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public abstract class Room {
 
     //einzelne Room-types mit Vererbung implementieren
-    private final long id;
+    private long id;
     private double pricePerNight;
     private RoomIdentifier roomIdentifier;
     private Hotel hotel;
@@ -18,6 +18,14 @@ public abstract class Room {
 
     public Room(long id, double pricePerNight, RoomIdentifier roomIdentifier, Hotel hotel) {
         this.id = id;
+        this.pricePerNight = pricePerNight;
+        this.roomIdentifier = roomIdentifier;
+        this.hotel = hotel;
+
+        // Initialize the availability for two years from today
+        initializeAvailability();
+    }
+    public Room(double pricePerNight, RoomIdentifier roomIdentifier, Hotel hotel) {
         this.pricePerNight = pricePerNight;
         this.roomIdentifier = roomIdentifier;
         this.hotel = hotel;
