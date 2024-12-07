@@ -7,4 +7,5 @@ public class SingleRoom extends Room{
     public SingleRoom(double pricePerNight, RoomIdentifier roomIdentifier, Hotel hotel) {
         super(pricePerNight, roomIdentifier, hotel);
     }
+    //vllt nur eine Klasse Room machen, statt double- und single- room?
 }

@@ -17,6 +17,7 @@ public class RoomService {
     private Room getRoomById(long roomId) {
         Room room = roomRepository.findRoomById(roomId);
         if (room == null) throw new IllegalArgumentException("There is no room with id: " + roomId);
+        //Optional verwenden?
         return room;
     }
     public void bookRoom(long roomId, LocalDate checkIn, LocalDate checkOut) {
@@ -57,7 +58,8 @@ public class RoomService {
             availabilityMap.put(i, status);
         }
     }
-    public boolean removeRoom(long roomId) { //boolean?
+    public boolean removeRoom(long roomId) {
         roomRepository.removeRoom(roomId);
+        return (getRoomById(roomId) == null);
     }
 }
