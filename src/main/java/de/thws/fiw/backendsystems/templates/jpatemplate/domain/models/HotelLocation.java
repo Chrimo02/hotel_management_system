@@ -9,7 +9,6 @@ public class HotelLocation {
     private String country;
 
     private HotelLocation(HotelLocationBuilder hotelLocationBuilder) {
-        this.id = hotelLocationBuilder.id;
         this.address = hotelLocationBuilder.address;
         this.city = hotelLocationBuilder.city;
         this.country = hotelLocationBuilder.country;
@@ -36,13 +35,11 @@ public class HotelLocation {
     }
 
     public static class HotelLocationBuilder {
-        private final long id;
         private String address;
         private String city;
         private String country;
 
-        public HotelLocationBuilder(long id){
-            this.id = id;
+        public HotelLocationBuilder(){
         }
 
         public HotelLocationBuilder withAddress(String address){

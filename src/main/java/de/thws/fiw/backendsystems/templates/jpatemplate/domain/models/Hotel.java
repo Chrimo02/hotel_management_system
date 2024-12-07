@@ -17,7 +17,6 @@ public class Hotel {
     private final Map<Long, HotelRating> ratings;
 
     private Hotel(HotelBuilder hotelBuilder) {
-        this.id = hotelBuilder.id;
         this.name = hotelBuilder.name;
         this.description = hotelBuilder.description;
         this.location = hotelBuilder.location;
@@ -46,6 +45,7 @@ public class Hotel {
     public List<Booking> getBookings() {return bookings;}
     public Map<Long, HotelRating> getRatings() {return ratings;}
 
+
     public void setName(String name) {
         this.name = name;
     }
@@ -70,14 +70,12 @@ public class Hotel {
 
 
     public static class HotelBuilder {
-        private final long id;
         private String name;
         private String description;
         private HotelLocation location;
         private List<Room> rooms;
 
-        public HotelBuilder(long id) {
-            this.id = id;
+        public HotelBuilder() {
         }
 
         public HotelBuilder withName(String name) {

@@ -1,75 +1,101 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.domain.services;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.*;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.shared.IdGenerator;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelLocationRepository;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelRepository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class HotelService {
-    private final IdGenerator hotelIdGenerator;
-    private final IdGenerator locationIdGenerator;
-    private final Map<Long, Hotel> hotelMap = new HashMap<>();
 
-    public HotelService(IdGenerator hotelIdGenerator, IdGenerator locationIdGenerator) {
-        this.hotelIdGenerator = hotelIdGenerator;
-        this.locationIdGenerator = locationIdGenerator;
+    private final HotelRepository hotelRepository;
+    private final HotelLocationRepository hotelLocationRepository;
+
+    public HotelService(HotelRepository hotelRepository, HotelLocationRepository hotelLocationRepository) {
+        this.hotelRepository = hotelRepository;
+        this.hotelLocationRepository = hotelLocationRepository;
     }
 
-    public Hotel createHotel(String name, String description, String address, String city, String county){
-        validateInputs(name, description, address, city, county);
-        HotelLocation hotelLocation = new HotelLocation.HotelLocationBuilder(Long.parseLong(locationIdGenerator.generateId()))
-                .withAddress(address)
-                .withCity(city)
-                .withCountry(county)
-                .build();
-
-        Hotel hotel = new Hotel.HotelBuilder(Long.parseLong(hotelIdGenerator.generateId()))
+    public Hotel createHotel(String name, String description, HotelLocation hotelLocation) throws Exception {
+        validateInputs(name, description, hotelLocation);
+        Hotel hotel = new Hotel.HotelBuilder()
                 .withName(name)
                 .withDescription(description)
                 .withLocation(hotelLocation)
                 .build();
+        if(hotelRepository.createHotel(hotel)) return hotel;
+        else throw new Exception();
+    }
 
-        hotelMap.put(hotel.getId(), hotel);
+    public void deleteHotel(long hotelId) {
+        validateHotelId(hotelId);
+        hotelRepository.deleteById(hotelId);
+    }
+
+    public Hotel updateHotel(long hotelId, Map<String, String> updates) {
+        Hotel hotel = validateHotelIdAndReturnObject(hotelId);
+        boolean isUpdated = false;
+        for (Map.Entry<String, String> entry : updates.entrySet()) {
+            String field = entry.getKey().toLowerCase();
+            String value = entry.getValue();
+            if (value == null || value.isBlank()) continue;
+            switch (field) {
+                case "name":
+                    if (!value.equals(hotel.getName())) {
+                        hotel.setName(value);
+                        isUpdated = true;
+                    }
+                    break;
+                case "description":
+                    if (!value.equals(hotel.getDescription())) {
+                        hotel.setDescription(value);
+                        isUpdated = true;
+                    }
+                    break;
+                case "address":
+                    if (!value.equals(hotel.getLocation().getAddress())) {
+                        hotel.getLocation().setAddress(value);
+                        isUpdated = true;
+                    }
+                    break;
+                case "city":
+                    if (!value.equals(hotel.getLocation().getCity())) {
+                        hotel.getLocation().setCity(value);
+                        isUpdated = true;
+                    }
+                    break;
+                case "country":
+                    if (!value.equals(hotel.getLocation().getCountry())) {
+                        hotel.getLocation().setCountry(value);
+                        isUpdated = true;
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid field: " + field);
+            }
+        }
+
+        if (isUpdated) {
+            hotelRepository.update(hotel);
+            System.out.println("Hotel with ID " + hotelId + " has been successfully updated.");
+        } else {
+            System.out.println("No changes were made to the hotel with ID " + hotelId + ".");
+        }
+
         return hotel;
     }
 
-    public void deleteHotel(Long hotelId) {
-        hotelMap.remove(validateHotelId(hotelId).getId());
-    }
 
-    public Hotel updateHotel(long hotelId, String name, String description, String address, String city, String country) {
-        Hotel hotel = validateHotelId(hotelId);
-        if (name != null && !name.isBlank()) {
-            hotel.setName(name);
-        }
-        if (description != null && !description.isBlank()) {
-            hotel.setDescription(description);
-        }
-        if (address != null && !address.isBlank()) {
-            hotel.getLocation().setAddress(address);
-        }
-        if (city != null && !city.isBlank()) {
-            hotel.getLocation().setCity(city);
-        }
-        if (country != null && !country.isBlank()) {
-            hotel.getLocation().setCountry(country);
-        }
-        System.out.println("Hotel with ID " + hotelId + " has been successfully updated.");
-        return hotel;
-    }
-
-    public List<Hotel> getHotels(){ return new ArrayList<>(hotelMap.values());}
+    public List<Hotel> getHotels(){ return hotelRepository.findAll();}
 
     public Hotel getHotelById(long hotelId) {
-        return hotelMap.get(hotelId);
+        return validateHotelIdAndReturnObject(hotelId);
     }
 
-    public HotelLocation getHotelLocation(long id) {
-        return hotelMap.get(id).getLocation();
+    public HotelLocation getHotelLocation(long hotelId) {
+        validateHotelId(hotelId);
+        return hotelLocationRepository.getLocationByHotelId(hotelId, );
     }
 
     public List<HotelRating> getHotelRatings(long hotelID, int starRating, boolean onlyWithComment) {
@@ -93,7 +119,7 @@ public class HotelService {
     }
 
     public List<Room> findAvailableRooms(long hotelID, Class<? extends Room> roomType) {
-        Hotel hotel = validateHotelId(hotelID);
+        Hotel hotel = validateHotelIdAndReturnObject(hotelID);
         RoomService roomService = new RoomService();
         List<Room> availableRooms = new ArrayList<>();
         for (Room room : hotel.getRooms()) {
@@ -117,7 +143,7 @@ public class HotelService {
                 .collect(Collectors.toList());
     }
 
-    private void validateInputs(String name, String description, String address, String city, String country) {
+    private void validateInputs(String name, String description, HotelLocation hotelLocation) throws Exception {
 
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Hotel name must not be empty");
@@ -125,38 +151,28 @@ public class HotelService {
         if (description == null || description.isBlank()) {
             throw new IllegalArgumentException("Hotel description must not be empty");
         }
-        if (address == null || address.isBlank()) {
-            throw new IllegalArgumentException("Hotel address must not be empty");
-        }
-        if (city == null || city.isBlank()) {
-            throw new IllegalArgumentException("Hotel city must not be empty");
-        }
-        if (country == null || country.isBlank()) {
-            throw new IllegalArgumentException("Hotel country must not be empty");
-        }
+        //HotelLocation validieren
     }
-
     private Hotel validateInputs(long guestId, long hotelID, int starRating) {
         Hotel hotel = validateHotelId(hotelID);
         validateGuestId(hotel, guestId);
         validateStarRating(starRating);
         return hotel;
     }
-
     private Hotel validateInputs(long guestId, long hotelID, int starRating, String comment) {
-        Hotel hotel = validateHotelId(hotelID);
+        Hotel hotel = validateHotelIdAndReturnObject(hotelID);
         validateGuestId(hotel, guestId);
         validateStarRating(starRating);
         validateComment(comment);
         return hotel;
     }
-
-    private Hotel validateHotelId(long hotelID){
-        Hotel hotel = hotelMap.get(hotelID);
-        if (hotel == null) {
-            throw new IllegalArgumentException("Hotel with ID " + hotelID + " not found!");
-        }
-        return hotel;
+    private Hotel validateHotelIdAndReturnObject(long hotelID) {
+        return hotelRepository.findById(hotelID)
+                .orElseThrow(() -> new IllegalArgumentException("Hotel with ID " + hotelID + " not found!"));
+    }
+    private boolean validateHotelId(long hotelID) {
+        return hotelRepository.findById(hotelID)
+                .orElseThrow(() -> new IllegalArgumentException("Hotel with ID " + hotelID + " not found!"));
     }
     private void validateGuestId(Hotel hotel, long guestID){
         if (!(hotel.getBookings().stream()
