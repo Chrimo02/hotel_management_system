@@ -31,7 +31,7 @@
 
     <persistence-unit name="my-persistence-unit">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>de.thws.fiw.backendsystems.templates.jpatemplate.models.Person</class>
+        <class>de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.GuestEntity</class> <!-- noch die anderen Entities hinzufügen-->
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>
