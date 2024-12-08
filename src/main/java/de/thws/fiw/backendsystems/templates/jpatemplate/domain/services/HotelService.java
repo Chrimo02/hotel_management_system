@@ -1,6 +1,7 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.domain.services;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.*;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelLocationRepository;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelRatingRepository;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelRepository;
 
 import java.time.LocalDate;
@@ -11,10 +12,12 @@ public class HotelService {
 
     private final HotelRepository hotelRepository;
     private final HotelLocationRepository hotelLocationRepository;
+    private final HotelRatingRepository hotelRatingRepository;
 
-    public HotelService(HotelRepository hotelRepository, HotelLocationRepository hotelLocationRepository) {
+    public HotelService(HotelRepository hotelRepository, HotelLocationRepository hotelLocationRepository, HotelRatingRepository hotelRatingRepository) {
         this.hotelRepository = hotelRepository;
         this.hotelLocationRepository = hotelLocationRepository;
+        this.hotelRatingRepository = hotelRatingRepository;
     }
 
     public Hotel createHotel(String name, String description, HotelLocation hotelLocation) throws Exception {
@@ -24,13 +27,13 @@ public class HotelService {
                 .withDescription(description)
                 .withLocation(hotelLocation)
                 .build();
-        if(hotelRepository.createHotel(hotel)) return hotel;
-        else throw new Exception();
+        return hotelRepository.createHotel(hotel);
     }
 
-    public void deleteHotel(long hotelId) {
+    public boolean deleteHotel(long hotelId) {
         validateHotelId(hotelId);
         hotelRepository.deleteById(hotelId);
+        return true;
     }
 
     public Hotel updateHotel(long hotelId, Map<String, String> updates) {
@@ -89,35 +92,25 @@ public class HotelService {
 
     public List<Hotel> getHotels(){ return hotelRepository.findAll();}
 
-    public Hotel getHotelById(long hotelId) {
+    public Hotel getHotelByHotelId(long hotelId) {
         return validateHotelIdAndReturnObject(hotelId);
     }
 
-    public HotelLocation getHotelLocation(long hotelId) {
+    public HotelLocation getHotelLocationByHotelId(long hotelId) {
         validateHotelId(hotelId);
-        return hotelLocationRepository.getLocationByHotelId(hotelId, );
+        return hotelLocationRepository.getHotelLocationByHotelId(hotelId, HotelLocation.class);
     }
 
-    public List<HotelRating> getHotelRatings(long hotelID, int starRating, boolean onlyWithComment) {
+    public List<HotelRating> getHotelRatingsByHotelId(long hotelID, int starRating, boolean onlyWithComment) {
         Map<Long, HotelRating> hotelRatingMap = validateHotelRatings(hotelID);
         return hotelRatingMap.values().stream().toList();
     }
-
-    public void rateHotel(long guestID, long hotelID, int starRating) {
-        Hotel hotel = validateInputs(hotelID,guestID, starRating);
-        HotelRating rating = createHotelRating(starRating); // Map starRating to enum
+    public void rateHotel(long guestID, long hotelID, HotelRating rating) {
+        Hotel hotel = validateInputs(hotelID,guestID);
         hotel.addRating(guestID, rating);
         hotel.setAverageRating(calculateHotelRating(hotel.getBookings()));
+        hotelRepository.update(hotel);
     }
-
-    public void rateHotel(long guestID, long hotelID, int starRating, String comment) {
-        Hotel hotel = validateInputs(hotelID,guestID, starRating, comment);
-        HotelRating rating = createHotelRating(starRating); // Map starRating to enum
-        rating.setCommentRating(comment);
-        hotel.addRating(guestID, rating);
-        hotel.setAverageRating(calculateHotelRating(hotel.getBookings()));
-    }
-
     public List<Room> findAvailableRooms(long hotelID, Class<? extends Room> roomType) {
         Hotel hotel = validateHotelIdAndReturnObject(hotelID);
         RoomService roomService = new RoomService();
@@ -129,7 +122,6 @@ public class HotelService {
         }
         return availableRooms;
     }
-
     public List<HotelRating> filterHotelRatings(long hotelID, int starRating, boolean onlyWithComment) {
         Map<Long, HotelRating> hotelRatingMap = validateHotelRatings(hotelID);
         return hotelRatingMap.values().stream()
@@ -153,17 +145,9 @@ public class HotelService {
         }
         //HotelLocation validieren
     }
-    private Hotel validateInputs(long guestId, long hotelID, int starRating) {
-        Hotel hotel = validateHotelId(hotelID);
-        validateGuestId(hotel, guestId);
-        validateStarRating(starRating);
-        return hotel;
-    }
-    private Hotel validateInputs(long guestId, long hotelID, int starRating, String comment) {
+    private Hotel validateInputs(long guestId, long hotelID) {
         Hotel hotel = validateHotelIdAndReturnObject(hotelID);
         validateGuestId(hotel, guestId);
-        validateStarRating(starRating);
-        validateComment(comment);
         return hotel;
     }
     private Hotel validateHotelIdAndReturnObject(long hotelID) {
@@ -172,6 +156,7 @@ public class HotelService {
     }
     private boolean validateHotelId(long hotelID) {
         return hotelRepository.findById(hotelID)
+                .map(hotel -> true)
                 .orElseThrow(() -> new IllegalArgumentException("Hotel with ID " + hotelID + " not found!"));
     }
     private void validateGuestId(Hotel hotel, long guestID){
@@ -180,19 +165,6 @@ public class HotelService {
                 .anyMatch(guest -> guest.getId() == guestID))) {
             throw new IllegalArgumentException("Guest with ID " + guestID + " has no booking in this hotel!");
         }
-    }
-    private void validateStarRating(int starRating) {
-        if (starRating < 1 || starRating > 5) {
-            throw new IllegalArgumentException("Star rating must be between 1 and 5.");
-        }
-    }
-    private void validateComment(String comment) {
-        if (comment == null || comment.isBlank()) {
-            throw new IllegalArgumentException("Hotel comment must not be empty");
-        }
-    }
-    private HotelRating createHotelRating(int starRating){
-        return HotelRating.values()[starRating - 1];
     }
     private double calculateHotelRating(List<Booking> bookings) {
         double totalRating = 0;
@@ -207,7 +179,7 @@ public class HotelService {
         return count > 0 ? totalRating / count : 0.0;
     }
     private  Map<Long, HotelRating> validateHotelRatings(long hotelID) {
-        Map<Long, HotelRating> ratings = validateHotelId(hotelID).getRatings();
+        Map<Long, HotelRating> ratings = validateHotelIdAndReturnObject(hotelID).getRatings();
         if (ratings.isEmpty()) {
             throw new IllegalArgumentException("No Ratings so far");
         }
@@ -220,33 +192,3 @@ public class HotelService {
 
 
 
-
-
-
-//    public void addRoom(Class<? extends Room> roomClass, long id, double pricePerNight, boolean available, Hotel hotel, String building, int floor, String roomNumber) {
-//        RoomIdentifier roomIdentifier = new RoomIdentifier(building, floor, roomNumber);
-//
-//        try {
-//            // Holt den passenden Konstruktor der Unterklasse
-//            Constructor<? extends Room> constructor = roomClass.getConstructor(long.class, double.class, boolean.class, RoomIdentifier.class, Hotel.class);
-//            // Erstellt eine Instanz der Unterklasse mit den angegebenen Parametern
-//            Room newRoom = constructor.newInstance(id, pricePerNight, available, roomIdentifier, hotel);
-//            // Fügt den Raum der Zimmerliste des Hotels hinzu
-//            hotel.addRoom(newRoom);
-//
-//            //Beispiel Repository speicherung: roomRepository.save(newRoom);
-//
-//        } catch (Exception e) {
-//            throw new RuntimeException("Fehler beim Erstellen des Zimmers", e);
-//        }
-//    }
-
-//    public boolean removeRoom(Hotel hotel, long id){
-//        //TODO:An DatabaseAdapter (HotelRepository) weiterleiten, der mit der read Methode den Room findet und löschen kann
-//        try{
-//
-//            return true;
-//        }catch(Exception e){
-//            throw new RuntimeException("RaumID nicht vorhanden");
-//        }
-//    }

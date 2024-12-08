@@ -9,17 +9,12 @@ import java.util.Optional;
 public interface HotelLocationRepository {
 
     void createHotelLocation(HotelLocation hotelLocation);
-
-    // Optional<HotelLocation> findById(Long id);
-
     List<HotelLocation> findAll();
-
     void updateAddress(long hotelId, String newAddress);
     void updateCountry(long hotelId, String newCountry);
     void updateCity(long hotelId, String newCity);
-
     void deleteHotelLocation(long id);
-    <T> T getHotelLocationById(long hotelId, Class<T> returnType);
+    <T> T getHotelLocationByHotelId(long hotelId, Class<T> returnType);
 
 
 }

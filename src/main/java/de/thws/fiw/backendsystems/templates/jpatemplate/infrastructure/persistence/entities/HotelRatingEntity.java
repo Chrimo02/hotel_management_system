@@ -1,6 +1,7 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities;
 
-import jakarta.persistence.*; 
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Hotel;
+import jakarta.persistence.*;
 import java.util.UUID;
 
 @Entity
@@ -11,48 +12,74 @@ public class HotelRatingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING) // Maps the enum as a string in the database
     @Column(name = "star_rating", nullable = false)
-    private HotelRatingEntity starRating;
+    private HotelRatingEntityEnum starRating;
 
     @Column(name = "comment_rating")
     private String commentRating;
 
-    protected HotelRatingEntity() {
-        // Default-Konstruktor für JPA
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hotel_id", nullable = false) // Ensure this maps to the correct column
+    private HotelEntity hotel;
+
+    // Default constructor for JPA
+    protected HotelRatingEntity() {}
+
+    private HotelRatingEntity(Builder builder) {
+        this.starRating = builder.starRating;
+        this.commentRating = builder.commentRating;
     }
 
-    public HotelRatingEntity(HotelRatingEntity starRating, String commentRating) {
-        this.starRating = starRating;
-        this.commentRating = commentRating;
-    }
-
+    // Getters
     public Long getId() {
         return id;
     }
 
-    public HotelRatingEntity getStarRating() {
+    public HotelRatingEntityEnum getStarRating() {
         return starRating;
-    }
-
-    public void setStarRating(HotelRatingEntity starRating) {
-        this.starRating = starRating;
     }
 
     public String getCommentRating() {
         return commentRating;
     }
 
-    public void setCommentRating(String commentRating) {
-        this.commentRating = commentRating;
+    public HotelEntity getHotel() {
+        return hotel;
     }
 
-    @Override
-    public String toString() {
-        return "HotelRatingEntity{" +
-                "id=" + id +
-                ", starRating=" + starRating +
-                ", commentRating='" + commentRating + '\'' +
-                '}';
+    public void setHotel(HotelEntity hotel) {
+        this.hotel = hotel;
+    }
+
+    // Builder Class
+    public static class Builder {
+        private HotelRatingEntityEnum starRating;
+        private String commentRating;
+        private HotelEntity hotelEntity;
+
+        public Builder(HotelEntity hotelEntity){
+            this.hotelEntity = hotelEntity;
+        }
+
+        // Builder method for starRating (mandatory field)
+        public Builder withStarRating(HotelRatingEntityEnum starRating) {
+            this.starRating = starRating;
+            return this;
+        }
+
+        // Builder method for commentRating (optional field)
+        public Builder withCommentRating(String commentRating) {
+            this.commentRating = commentRating;
+            return this;
+        }
+
+        // Build method to create the instance
+        public HotelRatingEntity build() {
+            if (starRating == null) {
+                throw new IllegalStateException("Star rating must not be null");
+            }
+            return new HotelRatingEntity(this);
+        }
     }
 }

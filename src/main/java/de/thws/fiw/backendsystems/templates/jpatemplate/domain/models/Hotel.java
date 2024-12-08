@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class Hotel {
 
-    private final long id;
+    private Long id;
     private String name;
     private String description;
     private HotelLocation location;
@@ -24,7 +24,7 @@ public class Hotel {
         this.averageRating = 0.0;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
     public String getName() {
@@ -49,6 +49,7 @@ public class Hotel {
     public void setName(String name) {
         this.name = name;
     }
+    public void setId(Long id) { this.id = id; }
     public void setDescription(String description) {
         this.description = description;
     }
@@ -70,12 +71,19 @@ public class Hotel {
 
 
     public static class HotelBuilder {
+
+        private Long id;
         private String name;
         private String description;
         private HotelLocation location;
         private List<Room> rooms;
 
         public HotelBuilder() {
+        }
+
+        public HotelBuilder withId(Long id){
+            this.id = id;
+            return this;
         }
 
         public HotelBuilder withName(String name) {

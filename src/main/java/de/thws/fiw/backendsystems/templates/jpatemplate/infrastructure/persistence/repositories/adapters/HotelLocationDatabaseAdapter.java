@@ -2,6 +2,7 @@ package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persiste
 
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Hotel;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.HotelLocation;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.interfaces.HotelDAO;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.interfaces.HotelLocationDAO;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelEntity;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelLocationEntity;
@@ -12,9 +13,11 @@ import java.util.List;
 public class HotelLocationDatabaseAdapter implements HotelLocationRepository {
 // hier werden daos aufgerufen
     private final HotelLocationDAO hotelLocationDAO;
+    private final HotelDAO hotelDAO;
 
-    public HotelLocationDatabaseAdapter(HotelLocationDAO hotelLocationDAO) {
+    public HotelLocationDatabaseAdapter(HotelLocationDAO hotelLocationDAO, HotelDAO hotelDAO) {
         this.hotelLocationDAO = hotelLocationDAO;
+        this.hotelDAO = hotelDAO;
     }
 
     @Override
@@ -25,21 +28,21 @@ public class HotelLocationDatabaseAdapter implements HotelLocationRepository {
 
     @Override
     public void updateAddress(long hotelId, String newAddress) {
-        HotelLocationEntity hotelLocationEntity = getHotelLocationById(hotelId, HotelLocationEntity.class);
+        HotelLocationEntity hotelLocationEntity = getHotelLocationByHotelId(hotelId, HotelLocationEntity.class);
         hotelLocationEntity.setAddress(newAddress);
         hotelLocationDAO.update(hotelLocationEntity);
     }
 
     @Override
     public void updateCity(long hotelId, String newCity) {
-        HotelLocationEntity hotelLocationEntity = getHotelLocationById(hotelId, HotelLocationEntity.class);
+        HotelLocationEntity hotelLocationEntity = getHotelLocationByHotelId(hotelId, HotelLocationEntity.class);
         hotelLocationEntity.setCity(newCity);
         hotelLocationDAO.update(hotelLocationEntity);
     }
 
     @Override
     public void updateCountry(long hotelId, String newCountry) {
-        HotelLocationEntity hotelLocationEntity = getHotelLocationById(hotelId, HotelLocationEntity.class);
+        HotelLocationEntity hotelLocationEntity = getHotelLocationByHotelId(hotelId, HotelLocationEntity.class);
         hotelLocationEntity.setCountry(newCountry);
         hotelLocationDAO.update(hotelLocationEntity);
     }
@@ -51,8 +54,8 @@ public class HotelLocationDatabaseAdapter implements HotelLocationRepository {
     }
 
     @Override
-    public <T> T getHotelLocationById(long id, Class<T> returnType) {
-        HotelLocationEntity hotelLocationEntity = hotelLocationDAO.read(id);
+    public <T> T getHotelLocationByHotelId(long hotelId, Class<T> returnType) {
+        HotelLocationEntity hotelLocationEntity = hotelDAO.findById(hotelId).get().getLocation();
 
         if (returnType.isAssignableFrom(HotelLocationEntity.class)) {
             return returnType.cast(hotelLocationEntity);
@@ -83,7 +86,7 @@ public class HotelLocationDatabaseAdapter implements HotelLocationRepository {
     }
 
     private HotelLocation mapToDomain(HotelLocationEntity hotelLocationEntity) {
-        return new HotelLocation.HotelLocationBuilder()
+        return new HotelLocation.HotelLocationBuilder(hotelLocationEntity.getId())
                     .withCity(hotelLocationEntity.getCity())
                         .withAddress(hotelLocationEntity.getAddress())
                             .withCountry(hotelLocationEntity.getCountry())

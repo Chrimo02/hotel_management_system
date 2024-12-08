@@ -3,7 +3,7 @@ package de.thws.fiw.backendsystems.templates.jpatemplate.domain.models;
 import java.util.UUID;
 
 public class HotelLocation {
-    private final long id;
+    private Long id;
     private String address;
     private String city;
     private String country;
@@ -14,6 +14,7 @@ public class HotelLocation {
         this.country = hotelLocationBuilder.country;
     }
 
+    public Long getId(){ return id; }
     public String getAddress() {
         return address;
     }
@@ -24,6 +25,7 @@ public class HotelLocation {
         return country;
     }
 
+    public void setId(Long id) { this.id = id; }
     public void setAddress(String address) {
         this.address = address;
     }
@@ -35,11 +37,13 @@ public class HotelLocation {
     }
 
     public static class HotelLocationBuilder {
+        private Long id;
         private String address;
         private String city;
         private String country;
 
-        public HotelLocationBuilder(){
+        public HotelLocationBuilder(Long id){
+            this.id = id;
         }
 
         public HotelLocationBuilder withAddress(String address){

@@ -57,9 +57,13 @@ public class HotelLocationEntity {
     }
 
     public static class HotelLocationBuilder {
+
         private String address;
         private String city;
         private String country;
+
+        public HotelLocationBuilder(){
+        }
 
         public HotelLocationBuilder withAddress(String address) {
             this.address = address;

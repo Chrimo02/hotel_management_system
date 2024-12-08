@@ -16,5 +16,5 @@ public interface HotelRepository {
 
     void deleteById(Long id);
 
-    boolean createHotel(Hotel hotel);
+    Hotel createHotel(Hotel hotel);
 }
