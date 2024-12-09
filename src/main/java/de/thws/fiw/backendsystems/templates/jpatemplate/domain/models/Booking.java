@@ -10,7 +10,7 @@ public class Booking {
     private LocalDate checkInDate;
     private LocalDate checkOutDate; //final oder nicht? Verlängerung?
     private double totalPrice;
-    private Room room;
+    private List<Room> rooms;
     private List<Guest> guests;
     private HotelRating rating; //wird in der Booking-Klasse nicht weiter benutzt, lediglich von der zugehörigen Methode im BookingService in der jeweiligen Buchung gespeichert
     private boolean status; // shows true if the booking is confirmed and active or false if the booking was canceled --> true after initializing
@@ -20,11 +20,11 @@ public class Booking {
     private boolean checkedOut;
 
     // Private constructor for the builder pattern
-    public Booking(long id, LocalDate checkInDate,LocalDate checkOutDate, Room room, Guest ... guests) {
+    public Booking(long id, LocalDate checkInDate,LocalDate checkOutDate, List<Room> rooms, Guest ... guests) {
         this.id = id;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
-        this.room = room;
+        this.rooms = rooms;
         for (Guest g : guests) this.guests.add(g);
         this.totalPrice = calculateTotalPrice();
         this.status = true;
@@ -51,7 +51,11 @@ public class Booking {
     }
     private double calculateTotalPrice(){
         long nights = calculateNights(getCheckInDate(), getCheckOutDate());
-        return this.room.getPricePerNight()*nights;
+        double price = 0;
+        for (Room room : rooms) {
+            price += room.getPricePerNight() * nights;
+        }
+        return price;
     }
 
     // Getters and setters
@@ -71,8 +75,24 @@ public class Booking {
         return totalPrice;
     }
 
-    public Room getRoom() {
-        return room;
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setCheckInTime(LocalDateTime checkInTime) {
+        this.checkInTime = checkInTime;
+    }
+
+    public void setCheckOutTime(LocalDateTime checkOutTime) {
+        this.checkOutTime = checkOutTime;
+    }
+
+    public void setCheckedIn(boolean checkedIn) {
+        this.checkedIn = checkedIn;
+    }
+
+    public void setCheckedOut(boolean checkedOut) {
+        this.checkedOut = checkedOut;
     }
 
     public List<Guest> getGuests() {
