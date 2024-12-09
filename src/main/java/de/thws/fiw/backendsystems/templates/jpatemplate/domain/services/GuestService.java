@@ -3,16 +3,33 @@ package de.thws.fiw.backendsystems.templates.jpatemplate.domain.services;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.exceptions.GuestNotFoundException;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Booking;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Guest;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.HotelRating;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.GuestRepository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class GuestService {
     private final GuestRepository guestRepository;
-    public GuestService(GuestRepository guestRepository){
-        this.guestRepository = guestRepository;
+
+    private GuestService(GuestServiceBuilder builder) {
+        this.guestRepository = builder.guestRepository;
+    }
+    public static GuestServiceBuilder builder() {
+        return new GuestServiceBuilder();
+    }
+    public static class GuestServiceBuilder {
+        private GuestRepository guestRepository;
+
+        public GuestServiceBuilder guestRepository(GuestRepository guestRepository) {
+            this.guestRepository = guestRepository;
+            return this;
+        }
+
+        public GuestService build() {
+            if (guestRepository == null) {
+                throw new IllegalStateException("GuestRepository must not be null");
+            }
+            return new GuestService(this);
+        }
     }
     void createGuest(String firstName, String lastName, String title, int yearBirthday,int monthBirtday, int dayBirthday, String eMail, String phoneNumber){
         guestRepository.createGuest(firstName,lastName,title,yearBirthday,monthBirtday,dayBirthday,eMail,phoneNumber);
