@@ -2,12 +2,15 @@ package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persiste
 
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.interfaces.RoomDAO;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.RoomEntity;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-
+@ApplicationScoped
 public class RoomDAOImpl implements RoomDAO {
     EntityManagerFactory emf;
+    @Inject
     public RoomDAOImpl() {
         emf = Persistence.createEntityManagerFactory("my-persistence-unit");
     }

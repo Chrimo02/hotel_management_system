@@ -3,18 +3,21 @@ package de.thws.fiw.backendsystems.templates.jpatemplate.domain.services;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.*;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelRepository;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.RoomRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.time.LocalDate;
 import java.util.Map;
-
+@ApplicationScoped
 public class RoomService {
-
     private final RoomRepository roomRepository;
     private final HotelService hotelService;
+    @Inject
     public RoomService(RoomRepository roomRepository, HotelService hotelService) {
         this.roomRepository = roomRepository;
         this.hotelService = hotelService;
     }
+
     private Room getRoomById(long roomId) {
         Room room = roomRepository.findRoomById(roomId);
         if (room == null) throw new IllegalArgumentException("There is no room with id: " + roomId);
