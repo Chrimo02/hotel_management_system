@@ -112,6 +112,3 @@ scheduler.scheduleAtFixedRate(() -> {
         this.hotel = hotel;
     }
 }
-
-public class RoomEntity {
-}

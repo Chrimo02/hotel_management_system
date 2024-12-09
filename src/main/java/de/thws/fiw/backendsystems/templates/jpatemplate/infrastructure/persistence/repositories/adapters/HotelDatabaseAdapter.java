@@ -6,15 +6,18 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persisten
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelEntity;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelLocationEntity;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@ApplicationScoped
 public class HotelDatabaseAdapter implements HotelRepository {
 
     private final HotelDAO hotelDAO;
-
+    @Inject
     public HotelDatabaseAdapter(HotelDAO hotelDAO) {
         this.hotelDAO = hotelDAO;
     }
@@ -47,7 +50,7 @@ public class HotelDatabaseAdapter implements HotelRepository {
     public void update(Hotel hotel) {
         try {
             // Map the domain object to the entity and pass it to the DAO for updating
-            hotelDAO.update(mapToEntity(hotel));
+            hotelDAO.updateHotel(mapToEntity(hotel));
         } catch (Exception e) {
             throw new RuntimeException("Error updating Hotel", e);
         }

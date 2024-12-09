@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.List;
 
 public interface HotelRepository {
-    void save(Hotel hotel);
 
     Optional<Hotel> findById(Long id);
 

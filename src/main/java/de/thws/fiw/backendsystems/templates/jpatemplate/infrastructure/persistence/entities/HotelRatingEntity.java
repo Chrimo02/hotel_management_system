@@ -14,7 +14,7 @@ public class HotelRatingEntity {
 
     @Enumerated(EnumType.STRING) // Maps the enum as a string in the database
     @Column(name = "star_rating", nullable = false)
-    private HotelRatingEntityEnum starRating;
+    private int starRating;
 
     @Column(name = "comment_rating")
     private String commentRating;
@@ -36,7 +36,7 @@ public class HotelRatingEntity {
         return id;
     }
 
-    public HotelRatingEntityEnum getStarRating() {
+    public int getStarRating() {
         return starRating;
     }
 
@@ -54,7 +54,7 @@ public class HotelRatingEntity {
 
     // Builder Class
     public static class Builder {
-        private HotelRatingEntityEnum starRating;
+        private int starRating;
         private String commentRating;
         private HotelEntity hotelEntity;
 
@@ -63,7 +63,7 @@ public class HotelRatingEntity {
         }
 
         // Builder method for starRating (mandatory field)
-        public Builder withStarRating(HotelRatingEntityEnum starRating) {
+        public Builder withStarRating(int starRating) {
             this.starRating = starRating;
             return this;
         }
@@ -76,9 +76,7 @@ public class HotelRatingEntity {
 
         // Build method to create the instance
         public HotelRatingEntity build() {
-            if (starRating == null) {
-                throw new IllegalStateException("Star rating must not be null");
-            }
+
             return new HotelRatingEntity(this);
         }
     }

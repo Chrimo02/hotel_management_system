@@ -2,6 +2,7 @@ package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persiste
 
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Guest;
 
+
 public interface GuestRepository {
     void createGuest(String firstName, String lastName, String title, int yearBirthday, int monthBirthday, int dayBirthday, String eMail, String phoneNumber);
     void updateEmail(long guestId, String newEmail);

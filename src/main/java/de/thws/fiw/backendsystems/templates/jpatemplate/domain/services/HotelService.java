@@ -3,17 +3,21 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.*;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelLocationRepository;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelRatingRepository;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@ApplicationScoped
 public class HotelService {
 
     private final HotelRepository hotelRepository;
     private final HotelLocationRepository hotelLocationRepository;
     private final HotelRatingRepository hotelRatingRepository;
 
+    @Inject
     public HotelService(HotelRepository hotelRepository, HotelLocationRepository hotelLocationRepository, HotelRatingRepository hotelRatingRepository) {
         this.hotelRepository = hotelRepository;
         this.hotelLocationRepository = hotelLocationRepository;
@@ -169,6 +173,7 @@ public class HotelService {
     private double calculateHotelRating(List<Booking> bookings) {
         double totalRating = 0;
         int count = 0;
+        bookings.stream().filter()
         for (Booking booking : bookings) {
             int rating = booking.getRating();
             if (rating != null) {
@@ -178,6 +183,7 @@ public class HotelService {
         }
         return count > 0 ? totalRating / count : 0.0;
     }
+
     private  Map<Long, HotelRating> validateHotelRatings(long hotelID) {
         Map<Long, HotelRating> ratings = validateHotelIdAndReturnObject(hotelID).getRatings();
         if (ratings.isEmpty()) {
