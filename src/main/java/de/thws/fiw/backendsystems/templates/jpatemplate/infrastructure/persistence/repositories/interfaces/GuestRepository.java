@@ -2,5 +2,4 @@ package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persiste
 
 public interface GuestRepository {
 
-
 }
