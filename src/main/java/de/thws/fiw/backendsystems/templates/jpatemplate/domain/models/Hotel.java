@@ -1,10 +1,12 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.domain.models;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Hotel {
 
-    private final long id;
+    private Long id;
     private String name;
     private String description;
     private HotelLocation location;
@@ -12,62 +14,96 @@ public class Hotel {
 
     private List<Room> rooms;
     private List<Booking> bookings;
+    private final Map<Long, HotelRating> ratings;
 
-    public Hotel(long id, String name, String description, HotelLocation location) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.location = location;
+    private Hotel(HotelBuilder hotelBuilder) {
+        this.name = hotelBuilder.name;
+        this.description = hotelBuilder.description;
+        this.location = hotelBuilder.location;
+        this.ratings = new HashMap<>();
+        this.averageRating = 0.0;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
-
     public String getName() {
         return name;
     }
+    public String getDescription() {
+        return description;
+    }
+    public HotelLocation getLocation() {
+        return location;
+    }
+    public double getAverageRating(){
+        return this.averageRating;
+    }
+    public List<Room> getRooms() {
+        return rooms;
+    }
+    public List<Booking> getBookings() {return bookings;}
+    public Map<Long, HotelRating> getRatings() {return ratings;}
+
 
     public void setName(String name) {
         this.name = name;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
+    public void setId(Long id) { this.id = id; }
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public HotelLocation getLocation() {
-        return location;
+    public void setAverageRating(double averageRating) {
+        this.averageRating = averageRating;
     }
-
     public void setLocation(HotelLocation location) {
         this.location = location;
     }
-
-    public double getAverageRating(){
-        return this.averageRating;
-    }
-
-    public List<Room> getRooms() {
-        return rooms;
-    }
-
     public void setRoom(List<Room> rooms) {
         this.rooms = rooms;
     }
-
-    public List<Booking> getBookings() {
-        return bookings;
-    }
-
     public void setBookings(List<Booking> bookings) {
         this.bookings = bookings;
     }
-    public void addRoom(Room room){
-        rooms.add(room);
+
+    public void addRating(long guestId, HotelRating rating) { this.ratings.put(guestId, rating);}
+    public void addRoom(Room room){rooms.add(room);}
+
+
+    public static class HotelBuilder {
+
+        private Long id;
+        private String name;
+        private String description;
+        private HotelLocation location;
+        private List<Room> rooms;
+
+        public HotelBuilder() {
+        }
+
+        public HotelBuilder withId(Long id){
+            this.id = id;
+            return this;
+        }
+
+        public HotelBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public HotelBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public HotelBuilder withLocation(HotelLocation location) {
+            this.location = location;
+            return this;
+        }
+
+        public Hotel build() {
+            return new Hotel(this);
+        }
+
     }
 }

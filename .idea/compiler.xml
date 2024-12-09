@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="plain-java" />
+        <module name="hotel-management-system" />
       </profile>
     </annotationProcessing>
   </component>

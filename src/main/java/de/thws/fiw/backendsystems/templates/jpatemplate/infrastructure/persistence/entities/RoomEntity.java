@@ -1,44 +1,59 @@
-package de.thws.fiw.backendsystems.templates.jpatemplate.domain.models;
-import java.util.HashMap;
-import java.util.Map;
+package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities;
+
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Booking;
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Hotel;
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.RoomIdentifier;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
-
-public abstract class Room {
-
+import java.util.HashMap;
+import java.util.Map;
+@Entity
+@Table(name = "room")
+public class RoomEntity {
     //einzelne Room-types mit Vererbung implementieren
+    @Id
+    @GeneratedValue
+    @Column(nullable = false, updatable = false)
     private long id;
     private double pricePerNight;
-    private RoomIdentifier roomIdentifier;
-    private Hotel hotel;
+    @OneToOne
+    private RoomIdentifierEntity roomIdentifier;
+    @ManyToOne
+    @JoinColumn(name = "hotel_id")
+    private HotelEntity hotel;
+    @OneToOne
+    private BookingEntity currentBooking;
 
-    // Availability map for specific dates
+    // muss die map gespeichert werden?
     private Map<LocalDate, Boolean> availabilityMap = new HashMap<>();
+    public RoomEntity() {
 
-    public Room(long id, double pricePerNight, RoomIdentifier roomIdentifier, Hotel hotel) {
+    }
+    public RoomEntity(long id, double pricePerNight, RoomIdentifierEntity roomIdentifierEntity, HotelEntity hotelEntity) {
         this.id = id;
         this.pricePerNight = pricePerNight;
-        this.roomIdentifier = roomIdentifier;
-        this.hotel = hotel;
+        this.roomIdentifier = roomIdentifierEntity;
+        this.hotel = hotelEntity;
 
         // Initialize the availability for two years from today
-        initializeAvailability();
+        //initializeAvailability();
     }
-    public Room(double pricePerNight, RoomIdentifier roomIdentifier, Hotel hotel) {
+    public RoomEntity(double pricePerNight, RoomIdentifierEntity roomIdentifierEntity, HotelEntity hotelEntity) {
         this.pricePerNight = pricePerNight;
-        this.roomIdentifier = roomIdentifier;
-        this.hotel = hotel;
+        this.roomIdentifier = roomIdentifierEntity;
+        this.hotel = hotelEntity;
 
         // Initialize the availability for two years from today
-        initializeAvailability();
+        //initializeAvailability();
     }
 
-    private void initializeAvailability() {
+    /*private void initializeAvailability() {
         LocalDate today = LocalDate.now();
         for (int i = 0; i < 730; i++) {
             availabilityMap.put(today.plusDays(i), true); // Initially, all days are available
         }
-    }
+    }*/
 
     //TODO: cleanupolddates in roomservice/hotelservice und scheduler? wöchentlich/monatlich aufruf von allen räumen
    /* ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -63,12 +78,12 @@ scheduler.scheduleAtFixedRate(() -> {
     }
 
 
-    public Booking getCurrentBooking() {
+    public BookingEntity getCurrentBooking() {
         return currentBooking;
     }
-    public Map<LocalDate, Boolean> getAvailabilityMap() {
+    /*public Map<LocalDate, Boolean> getAvailabilityMap() {
         return availabilityMap;
-    }
+    }*/
     public long getId() {
         return id;
     }
@@ -81,19 +96,22 @@ scheduler.scheduleAtFixedRate(() -> {
         this.pricePerNight = pricePerNight;
     }
 
-    public RoomIdentifier getRoomIdentifier() {
+    public RoomIdentifierEntity getRoomIdentifier() {
         return roomIdentifier;
     }
 
-    public void setRoomIdentifier(RoomIdentifier roomIdentifier) {
+    public void setRoomIdentifier(RoomIdentifierEntity roomIdentifier) {
         this.roomIdentifier = roomIdentifier;
     }
 
-    public Hotel getHotel() {
+    public HotelEntity getHotel() {
         return hotel;
     }
 
-    public void setHotel(Hotel hotel) {
+    public void setHotel(HotelEntity hotel) {
         this.hotel = hotel;
     }
+}
+
+public class RoomEntity {
 }
