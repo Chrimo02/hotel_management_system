@@ -1,5 +1,7 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.domain.services;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.*;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.implementation.RoomDAOImpl;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.adapters.RoomDatabaseAdapter;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelLocationRepository;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelRatingRepository;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelRepository;
@@ -14,10 +16,10 @@ public class HotelService {
     private final HotelLocationRepository hotelLocationRepository;
     private final HotelRatingRepository hotelRatingRepository;
 
-    public HotelService(HotelRepository hotelRepository, HotelLocationRepository hotelLocationRepository, HotelRatingRepository hotelRatingRepository) {
-        this.hotelRepository = hotelRepository;
-        this.hotelLocationRepository = hotelLocationRepository;
-        this.hotelRatingRepository = hotelRatingRepository;
+    private HotelService(HotelServiceBuilder hotelServiceBuilder) {
+        this.hotelRepository = hotelServiceBuilder.hotelRepository;
+        this.hotelLocationRepository = hotelServiceBuilder.hotelLocationRepository;
+        this.hotelRatingRepository = hotelServiceBuilder.hotelRatingRepository;
     }
 
     public Hotel createHotel(String name, String description, HotelLocation hotelLocation) throws Exception {
@@ -113,7 +115,10 @@ public class HotelService {
     }
     public List<Room> findAvailableRooms(long hotelID, Class<? extends Room> roomType) {
         Hotel hotel = validateHotelIdAndReturnObject(hotelID);
-        RoomService roomService = new RoomService();
+        RoomService roomService = new RoomService.RoomServiceBuilder()
+                .withHotelService(this)
+                .withRoomRepository(new RoomDatabaseAdapter( new RoomDAOImpl()))
+                .build();
         List<Room> availableRooms = new ArrayList<>();
         for (Room room : hotel.getRooms()) {
             if (roomService.isAvailable(room, LocalDate.now(), LocalDate.now().plusDays(1)) && (roomType == null || roomType.isInstance(room))) {
@@ -184,6 +189,41 @@ public class HotelService {
             throw new IllegalArgumentException("No Ratings so far");
         }
         return ratings;
+    }
+
+
+    public static class HotelServiceBuilder {
+        private HotelRepository hotelRepository;
+        private HotelLocationRepository hotelLocationRepository;
+        private HotelRatingRepository hotelRatingRepository;
+
+        public HotelServiceBuilder withHotelRepository(HotelRepository hotelRepository) {
+            this.hotelRepository = hotelRepository;
+            return this;
+        }
+
+        public HotelServiceBuilder withHotelLocationRepository(HotelLocationRepository hotelLocationRepository) {
+            this.hotelLocationRepository = hotelLocationRepository;
+            return this;
+        }
+
+        public HotelServiceBuilder withHotelRatingRepository(HotelRatingRepository hotelRatingRepository) {
+            this.hotelRatingRepository = hotelRatingRepository;
+            return this;
+        }
+
+        public HotelService build() {
+            if (hotelRepository == null) {
+                throw new IllegalStateException("HotelRepository must not be null");
+            }
+            if (hotelLocationRepository == null) {
+                throw new IllegalStateException("HotelLocationRepository must not be null");
+            }
+            if (hotelRatingRepository == null) {
+                throw new IllegalStateException("HotelRatingRepository must not be null");
+            }
+            return new HotelService(this);
+        }
     }
 
 }

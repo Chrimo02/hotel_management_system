@@ -11,7 +11,7 @@ public class RoomDatabaseAdapter implements RoomRepository {
         this.roomDAO = roomDAO;
     }
     @Override
-    public Room findRoomById(long roomId, ) {
+    public Room findRoomById(long roomId) {
         RoomEntity roomEntity = roomDAO.read(roomId);
         return entityToDomain(roomEntity);
     }

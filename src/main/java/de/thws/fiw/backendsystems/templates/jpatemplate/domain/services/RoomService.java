@@ -11,9 +11,9 @@ public class RoomService {
 
     private final RoomRepository roomRepository;
     private final HotelService hotelService;
-    public RoomService(RoomRepository roomRepository, HotelService hotelService) {
-        this.roomRepository = roomRepository;
-        this.hotelService = hotelService;
+    private RoomService(RoomServiceBuilder builder) {
+        this.roomRepository = builder.roomRepository;
+        this.hotelService = builder.hotelService;
     }
     private Room getRoomById(long roomId) {
         Room room = roomRepository.findRoomById(roomId);
@@ -62,5 +62,31 @@ public class RoomService {
     public boolean removeRoom(long roomId) {
         roomRepository.removeRoom(roomId);
         return (getRoomById(roomId) == null);
+    }
+
+    // Builder class
+    public static class RoomServiceBuilder {
+        private RoomRepository roomRepository;
+        private HotelService hotelService;
+
+        public RoomServiceBuilder withRoomRepository(RoomRepository roomRepository) {
+            this.roomRepository = roomRepository;
+            return this;
+        }
+
+        public RoomServiceBuilder withHotelService(HotelService hotelService) {
+            this.hotelService = hotelService;
+            return this;
+        }
+
+        public RoomService build() {
+            if (roomRepository == null) {
+                throw new IllegalStateException("RoomRepository must not be null");
+            }
+            if (hotelService == null) {
+                throw new IllegalStateException("HotelService must not be null");
+            }
+            return new RoomService(this);
+        }
     }
 }
