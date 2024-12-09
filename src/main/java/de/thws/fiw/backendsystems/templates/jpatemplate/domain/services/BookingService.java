@@ -24,7 +24,7 @@ public class BookingService {
     public void cancelBooking(long bookingID){
         Booking booking = getBookingById(bookingID);
         for(Room room : booking.getRooms()){
-            roomService.cancelRoom(room, booking);
+            roomService.cancelRoom(room.getId(), booking.getCheckInDate(),booking.getCheckOutDate());
         }
         booking.setStatus(false);
         //update booking repo

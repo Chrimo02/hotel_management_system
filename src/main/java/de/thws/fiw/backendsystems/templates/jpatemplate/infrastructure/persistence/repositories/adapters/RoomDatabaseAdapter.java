@@ -7,6 +7,7 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persisten
 
 public class RoomDatabaseAdapter implements RoomRepository {
     private final RoomDAO roomDAO;
+    @Inject
     public RoomDatabaseAdapter(RoomDAO roomDAO) {
         this.roomDAO = roomDAO;
     }

@@ -1,19 +1,19 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.implementation;
 
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.HotelRating;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.interfaces.HotelRatingDAO;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelRatingEntity;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
+@ApplicationScoped
 public class HotelRatingDAOImpl implements HotelRatingDAO {
 
     private final EntityManager entityManager;
-
+    @Inject
     public HotelRatingDAOImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }

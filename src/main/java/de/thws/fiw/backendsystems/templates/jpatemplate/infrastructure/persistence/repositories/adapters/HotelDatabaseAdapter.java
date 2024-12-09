@@ -28,6 +28,7 @@ public class HotelDatabaseAdapter implements HotelRepository {
         }
     }
 
+
     @Override
     public Optional<Hotel> findById(Long id) {
         return hotelDAO.findById(id)

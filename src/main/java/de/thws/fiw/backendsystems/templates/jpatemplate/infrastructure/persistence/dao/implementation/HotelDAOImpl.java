@@ -6,6 +6,7 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persisten
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelEntity;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelLocationEntity;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelRepository;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 public class HotelDAOImpl implements HotelDAO {
 
     private final EntityManager entityManager;
-
+    @Inject
     public HotelDAOImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }

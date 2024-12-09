@@ -28,7 +28,7 @@ public class RoomService {
         updateAvailabilityMap(roomId, checkIn, checkOut, true);
     }
     public void createRoom(double pricePerNight, RoomIdentifier roomIdentifier, long hotelId, Class<? extends Room> roomType) {
-        Hotel hotel = hotelService.getHotelById(hotelId);
+        Hotel hotel = hotelService.getHotelByHotelId(hotelId);
         Room room;
         if (roomType.equals(SingleRoom.class)) {
             room = new SingleRoom(pricePerNight, roomIdentifier, hotel);

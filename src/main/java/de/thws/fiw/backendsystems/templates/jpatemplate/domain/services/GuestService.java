@@ -3,14 +3,16 @@ package de.thws.fiw.backendsystems.templates.jpatemplate.domain.services;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.exceptions.GuestNotFoundException;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Booking;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Guest;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.HotelRating;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.GuestRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
-import java.time.LocalDate;
 import java.util.List;
-
+@ApplicationScoped
 public class GuestService {
     private final GuestRepository guestRepository;
+
+    @Inject
     public GuestService(GuestRepository guestRepository){
         this.guestRepository = guestRepository;
     }

@@ -14,7 +14,7 @@ public class HotelLocationDatabaseAdapter implements HotelLocationRepository {
 // hier werden daos aufgerufen
     private final HotelLocationDAO hotelLocationDAO;
     private final HotelDAO hotelDAO;
-
+    @Inject
     public HotelLocationDatabaseAdapter(HotelLocationDAO hotelLocationDAO, HotelDAO hotelDAO) {
         this.hotelLocationDAO = hotelLocationDAO;
         this.hotelDAO = hotelDAO;

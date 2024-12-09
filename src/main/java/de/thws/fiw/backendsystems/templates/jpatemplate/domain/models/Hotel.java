@@ -66,7 +66,7 @@ public class Hotel {
         this.bookings = bookings;
     }
 
-    public void addRating(long guestId, HotelRating rating) { this.ratings.put(guestId, rating);}
+    public void addRating(long guestId, int rating) { this.ratings.put(guestId, rating);}
     public void addRoom(Room room){rooms.add(room);}
 
 

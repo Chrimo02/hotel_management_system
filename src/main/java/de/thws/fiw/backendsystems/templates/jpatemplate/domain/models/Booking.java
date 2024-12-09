@@ -12,7 +12,7 @@ public class Booking {
     private double totalPrice;
     private List<Room> rooms;
     private List<Guest> guests;
-    private HotelRating rating; //wird in der Booking-Klasse nicht weiter benutzt, lediglich von der zugehörigen Methode im BookingService in der jeweiligen Buchung gespeichert
+    private int rating; //wird in der Booking-Klasse nicht weiter benutzt, lediglich von der zugehörigen Methode im BookingService in der jeweiligen Buchung gespeichert
     private boolean status; // shows true if the booking is confirmed and active or false if the booking was canceled --> true after initializing
     private LocalDateTime checkInTime;
     private LocalDateTime checkOutTime;
@@ -38,11 +38,11 @@ public class Booking {
         return this.status;
     }
 
-    public HotelRating getRating() {
+    public int getRating() {
         return rating;
     }
 
-    public void setRating(HotelRating rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
 

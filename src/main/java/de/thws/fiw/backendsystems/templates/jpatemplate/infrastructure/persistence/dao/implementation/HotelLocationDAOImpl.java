@@ -3,14 +3,18 @@ package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persiste
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.HotelLocation;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.interfaces.HotelLocationDAO;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelLocationEntity;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
 
+@ApplicationScoped
 public class HotelLocationDAOImpl implements HotelLocationDAO {
     //manager for managing databse entries
+    @Inject
     public EntityManager entityManager() {
         return JpaUtil.getEntityManagerFactory().createEntityManager();
     }

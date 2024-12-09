@@ -2,9 +2,12 @@ package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persiste
 
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.interfaces.GuestDAO;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.GuestEntity;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-
+@ApplicationScoped
 public class GuestDAOImpl implements GuestDAO {
+    @Inject
     public EntityManager entityManager() {
         return JpaUtil.getEntityManagerFactory().createEntityManager();
     }

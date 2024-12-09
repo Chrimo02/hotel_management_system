@@ -4,9 +4,13 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Guest;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.interfaces.GuestDAO;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.GuestEntity;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.GuestRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
+@ApplicationScoped
 public class GuestDatabaseAdapter implements GuestRepository {
     private final GuestDAO guestDAO;
+    @Inject
     public GuestDatabaseAdapter(GuestDAO guestDAO){
         this.guestDAO = guestDAO;
     }

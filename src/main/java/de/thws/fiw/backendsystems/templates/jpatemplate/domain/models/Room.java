@@ -63,9 +63,6 @@ scheduler.scheduleAtFixedRate(() -> {
     }
 
 
-    public Booking getCurrentBooking() {
-        return currentBooking;
-    }
     public Map<LocalDate, Boolean> getAvailabilityMap() {
         return availabilityMap;
     }

@@ -122,8 +122,8 @@ public class HotelService {
         }
         return availableRooms;
     }
-    public List<HotelRating> filterHotelRatings(long hotelID, int starRating, boolean onlyWithComment) {
-        Map<Long, HotelRating> hotelRatingMap = validateHotelRatings(hotelID);
+    public List<HotelRatingEnum> filterHotelRatings(long hotelID, int starRating, boolean onlyWithComment) {
+        Map<Long, HotelRatingEnum> hotelRatingMap = validateHotelRatings(hotelID);
         return hotelRatingMap.values().stream()
                 .filter(rating -> rating.getStarRating() == starRating)
                 .filter(rating -> {
@@ -170,7 +170,7 @@ public class HotelService {
         double totalRating = 0;
         int count = 0;
         for (Booking booking : bookings) {
-            HotelRating rating = booking.getRating();
+            int rating = booking.getRating();
             if (rating != null) {
                 totalRating += rating.getStarRating();
                 count++;
