@@ -1,9 +1,10 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.domain.models;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Guest {
-    private final long id;
+    private long id;
     private String firstName;
     private String lastName;
     private String title;
@@ -12,15 +13,16 @@ public class Guest {
     private String phoneNumber;
     private List<Booking> bookingsHistory;  // --> aufpassen, dass beim Erstellen jeder Buchung auch die Buchung zur History hinzugefügt wird
 
-    public Guest(long id, String firstName, String lastName, String title, int yearBirthday,int monthBirtday, int dayBirthday, String eMail, String phoneNumber) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.title = title;
-        this.birthday = LocalDate.of(yearBirthday,monthBirtday,dayBirthday);
-        this.id = id;
-        this.eMail = eMail;
-        this.phoneNumber = phoneNumber;
+    private Guest(GuestBuilder guestBuilder) {
+        this.firstName = guestBuilder.firstName;
+        this.lastName = guestBuilder.lastName;
+        this.title = guestBuilder.title;
+        this.birthday = guestBuilder.birthday;
+        this.eMail = guestBuilder.eMail;
+        this.phoneNumber = guestBuilder.phoneNumber;
+        this.bookingsHistory = new ArrayList<>();
     }
+
 
     public List<Booking> getBookingsHistory(){
         return this.bookingsHistory;
@@ -52,5 +54,48 @@ public class Guest {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setBookingsHistory(List<Booking> bookingsHistory) {
+        this.bookingsHistory = bookingsHistory;
+    }
+
+    public static class GuestBuilder{
+        long id;
+        String firstName;
+        String lastName;
+        String title;
+        LocalDate birthday;
+        String eMail;
+        String phoneNumber;
+
+        public GuestBuilder(){};
+        public GuestBuilder withFirstName(String firstName){
+            this.firstName = firstName;
+            return this;
+        }
+        public GuestBuilder withLastName(String lastName){
+            this.lastName = lastName;
+            return this;
+        }
+        public GuestBuilder withTitle(String title){
+            this.title = title;
+            return this;
+        }
+        public GuestBuilder withBirthday(int year, int month, int day){
+            this.birthday = LocalDate.of(year,month,day);
+            return this;
+        }
+        public GuestBuilder withEMail(String eMail){
+            this.eMail = eMail;
+            return this;
+        }
+        public GuestBuilder withPhoneNumber(String phoneNumber){
+            this.phoneNumber = phoneNumber;
+            return this;
+        }
+        public Guest build(){
+            return new Guest(this);
+        }
     }
 }

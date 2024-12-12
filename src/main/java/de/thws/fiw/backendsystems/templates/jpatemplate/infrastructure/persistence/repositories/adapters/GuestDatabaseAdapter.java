@@ -1,11 +1,15 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.adapters;
 
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Booking;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Guest;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.interfaces.GuestDAO;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.BookingEntity;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.GuestEntity;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.GuestRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class GuestDatabaseAdapter implements GuestRepository {
@@ -58,6 +62,15 @@ public class GuestDatabaseAdapter implements GuestRepository {
     @Override
     public Guest getGuestById(long id) {
         GuestEntity guest = guestDAO.read(id);
-        return new Guest(guest.getId(), guest.getFirstName(), guest.getLastName(), guest.getTitle(), guest.getBirthday().getYear(),guest.getBirthday().getMonthValue(),guest.getBirthday().getDayOfMonth(),guest.geteMail(),guest.getPhoneNumber());
+        Guest newGuest = new Guest.GuestBuilder()
+                .withFirstName(guest.getFirstName())
+                .withLastName(guest.getLastName())
+                .withTitle(guest.getTitle())
+                .withBirthday(guest.getBirthday().getYear(),guest.getBirthday().getMonthValue(),guest.getBirthday().getDayOfMonth())
+                .withEMail(guest.geteMail())
+                .withPhoneNumber(guest.getPhoneNumber())
+                .build();
+        newGuest.setBookingsHistory(guest.getBookingsHistory()); //TODO: Konvertierungs-Methoden für Entity zu Domain-Objekten implementieren
+        return newGuest;
     }
 }

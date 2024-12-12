@@ -19,6 +19,19 @@ public class GuestService {
     void createGuest(String firstName, String lastName, String title, int yearBirthday,int monthBirtday, int dayBirthday, String eMail, String phoneNumber){
         guestRepository.createGuest(firstName,lastName,title,yearBirthday,monthBirtday,dayBirthday,eMail,phoneNumber);
     }
+    /*
+    public void createGuest(String firstName, String lastName, String title, int year, int month, int day, String eMail, String phoneNumber){
+        Guest guest = new Guest.GuestBuilder()
+                .withFirstName(firstName)
+                .withLastName(lastName)
+                .withTitle(title)
+                .withBirthday(year,month,day)
+                .withEMail(eMail)
+                .withPhoneNumber(phoneNumber)
+                .build();
+    }
+
+     */
     private Guest getNotNullGuest(long guestId) throws GuestNotFoundException{
         Guest guest = guestRepository.getGuestById(guestId);
         if (guest == null) throw new GuestNotFoundException("There is no Guest with the specified ID!");
