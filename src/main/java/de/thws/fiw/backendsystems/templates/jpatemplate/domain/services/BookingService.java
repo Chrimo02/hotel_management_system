@@ -16,11 +16,14 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final RoomService roomService;
     private final HotelService hotelService;
+    private final GuestService guestService;
+
     @Inject
-    public BookingService (BookingRepository bookingRepository, RoomService roomService, HotelService hotelService){
+    public BookingService (BookingRepository bookingRepository, RoomService roomService, HotelService hotelService, GuestService guestService){
         this.bookingRepository = bookingRepository;
         this.roomService = roomService;
         this.hotelService = hotelService;
+        this.guestService = guestService;
     }
 
     private Booking getNotNullBooking(long bookingId) throws BookingNotFoundException {
@@ -29,15 +32,24 @@ public class BookingService {
         else return booking;
     }
 
-    public void makeBooking(long hotelId, LocalDate checkInDate, LocalDate checkOutDate, List<Class<? extends Room>> roomTypes, List<long> guests){
-        List<long> roomIds = new ArrayList<long>();
+    public void makeBooking(long hotelId, LocalDate checkInDate, LocalDate checkOutDate, List<Class<? extends Room>> roomTypes, List<Long> guests){
+        List<Room> rooms = new ArrayList<>();
         Room foundRoom;
         for(Class<? extends Room> roomType : roomTypes){
             foundRoom = findAvailableRoom(hotelId, roomType, checkInDate, checkOutDate);
             if(foundRoom == null) throw new RuntimeException("Available Room not found");
-            roomIds.add(foundRoom.getId());
+            rooms.add(foundRoom);
         }
-        bookingRepository.createBooking(hotelId, checkInDate, checkOutDate, roomIds, guests);
+        List<Guest> guestList = new ArrayList<>();
+        for(long guestId : guests){
+            try{
+                 Guest guest = guestService.getGuestById(guestId);
+                 guestList.add(guest);
+            } catch (GuestNotFoundException e) {
+                 throw new RuntimeException("Guest with Id" + guestId + " not found");
+            }
+      }
+        bookingRepository.createBooking(hotelId, checkInDate, checkOutDate, rooms, guestList);
     }
 
     public void cancelBooking(long bookingID) throws BookingNotFoundException{
@@ -61,26 +73,19 @@ public class BookingService {
         return null;
     }
 
-    void guestCheckIn(long bookingID){
-        Booking booking = getBookingById(bookingID);
-        if (booking != null) {
-            booking.setCheckedIn(true);
-            booking.setCheckInTime(LocalDateTime.now());
-            //update booking repo
-        }
+    void guestCheckIn(long bookingId) throws BookingNotFoundException {
+        Booking booking = getNotNullBooking(bookingId);
+        booking.setCheckInTime(LocalDateTime.now());
+        bookingRepository.updateBooking(booking);
     }
 
-    void guestCheckOut(long bookingID){
-        Booking booking = getBookingById(bookingID);
-        if (booking != null) {
-            booking.setCheckedOut(true);
-            booking.setCheckOutTime(LocalDateTime.now());
-            //update booking repo
-        }
+    void guestCheckOut(long bookingId) throws BookingNotFoundException {
+        Booking booking = getNotNullBooking(bookingId);
+        booking.setCheckOutTime(LocalDateTime.now());
+        bookingRepository.updateBooking(booking);
     }
 
     private Booking getBookingById(long bookingID){
-        //access repo
-        return null;
+        return bookingRepository.getBookingById(bookingID);
     }
 }

@@ -67,7 +67,7 @@ public class GuestService {
         Guest guest = getNotNullGuest(guestId);
         guestRepository.deleteGuest(guestId);
     }
-    private Guest getGuestById(long guestId) throws GuestNotFoundException {
+    public Guest getGuestById(long guestId) throws GuestNotFoundException {
         return getNotNullGuest(guestId);
     }
 }
