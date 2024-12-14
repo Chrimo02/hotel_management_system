@@ -34,10 +34,10 @@ public class RoomService {
         Hotel hotel = hotelService.getHotelByHotelId(hotelId);
         Room room;
         if (roomType.equals(SingleRoom.class)) {
-            room = new SingleRoom(pricePerNight, roomIdentifier, hotel);
+            room = new SingleRoom.Builder(pricePerNight, roomIdentifier, hotel).build();
         }
         else if (roomType.equals(DoubleRoom.class)) {
-            room = new DoubleRoom(pricePerNight, roomIdentifier, hotel);
+            room = new DoubleRoom.Builder(pricePerNight, roomIdentifier, hotel).build();
         }
         else throw new RuntimeException("Invalid room type!"); //wird nicht gebraucht, wenn wir sicher sind, dass nur 2 mögliche Room Arten bekommen werden
         roomRepository.saveRoom(room);

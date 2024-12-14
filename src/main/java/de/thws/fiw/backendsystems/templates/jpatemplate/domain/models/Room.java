@@ -15,7 +15,7 @@ public abstract class Room {
     // Availability map for specific dates
     private Map<LocalDate, Boolean> availabilityMap = new HashMap<>();
 
-    public Room(long id, double pricePerNight, RoomIdentifier roomIdentifier, Hotel hotel) {
+    protected Room(long id, double pricePerNight, RoomIdentifier roomIdentifier, Hotel hotel) {
         this.id = id;
         this.pricePerNight = pricePerNight;
         this.roomIdentifier = roomIdentifier;
@@ -24,7 +24,7 @@ public abstract class Room {
         // Initialize the availability for two years from today
         initializeAvailability();
     }
-    public Room(double pricePerNight, RoomIdentifier roomIdentifier, Hotel hotel) {
+    protected Room(double pricePerNight, RoomIdentifier roomIdentifier, Hotel hotel) {
         this.pricePerNight = pricePerNight;
         this.roomIdentifier = roomIdentifier;
         this.hotel = hotel;
@@ -95,5 +95,27 @@ scheduler.scheduleAtFixedRate(() -> {
 
     public void setHotel(Hotel hotel) {
         this.hotel = hotel;
+    }
+
+    public static class RoomBuilder {
+        private long id;
+        private double pricePerNight;
+        private RoomIdentifier roomIdentifier;
+        private Hotel hotel;
+        public RoomBuilder(long id, double pricePerNight) {
+            this.id = id;
+            this.pricePerNight = pricePerNight;
+        }
+        public RoomBuilder withRoomIdentifier(RoomIdentifier roomIdentifier) {
+            this.roomIdentifier = roomIdentifier;
+            return this;
+        }
+        public RoomBuilder withHotel(Hotel hotel) {
+            this.hotel = hotel;
+            return this;
+        }
+        public Room build() {
+            return new
+        }
     }
 }
