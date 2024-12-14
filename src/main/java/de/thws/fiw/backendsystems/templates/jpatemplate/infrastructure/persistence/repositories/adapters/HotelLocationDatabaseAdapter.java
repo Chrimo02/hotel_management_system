@@ -6,6 +6,7 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persisten
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.interfaces.HotelLocationDAO;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelEntity;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelLocationEntity;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.mapper.HotelLocationMapper;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelLocationRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -17,15 +18,17 @@ public class HotelLocationDatabaseAdapter implements HotelLocationRepository {
 // hier werden daos aufgerufen
     private final HotelLocationDAO hotelLocationDAO;
     private final HotelDAO hotelDAO;
+    private final HotelLocationMapper hotelLocationMapper;
     @Inject
-    public HotelLocationDatabaseAdapter(HotelLocationDAO hotelLocationDAO, HotelDAO hotelDAO) {
+    public HotelLocationDatabaseAdapter(HotelLocationDAO hotelLocationDAO, HotelDAO hotelDAO, HotelLocationMapper hotelLocationMapper) {
         this.hotelLocationDAO = hotelLocationDAO;
         this.hotelDAO = hotelDAO;
+        this.hotelLocationMapper = hotelLocationMapper;
     }
 
     @Override
     public void createHotelLocation(HotelLocation hotelLocation) {
-        HotelLocationEntity hotelLocationEntity = mapToEntity(hotelLocation);
+        HotelLocationEntity hotelLocationEntity = hotelLocationMapper.mapToEntity(hotelLocation);
         hotelLocationDAO.create(hotelLocationEntity);
     }
 
@@ -63,7 +66,7 @@ public class HotelLocationDatabaseAdapter implements HotelLocationRepository {
         if (returnType.isAssignableFrom(HotelLocationEntity.class)) {
             return returnType.cast(hotelLocationEntity);
         } else if (returnType.isAssignableFrom(HotelLocation.class)) {
-            return returnType.cast(mapToDomain(hotelLocationEntity));
+            return returnType.cast(hotelLocationMapper.mapToDomain(hotelLocationEntity));
         } else {
             throw new IllegalArgumentException("Unsupported return type: " + returnType.getName());
         }
@@ -73,27 +76,10 @@ public class HotelLocationDatabaseAdapter implements HotelLocationRepository {
     public List<HotelLocation> findAll() {
         return hotelLocationDAO.readAll()
                 .stream()
-                .map(this::mapToDomain) // Convert each HotelLocationEntity to HotelLocation
+                .map(hotelLocationMapper::mapToDomain) // Convert each HotelLocationEntity to HotelLocation
                 .toList(); // Collect results into a List
     }
 
 
 
-    private HotelLocationEntity mapToEntity(HotelLocation hotelLocation) {
-        return new HotelLocationEntity.HotelLocationBuilder()
-                    .withCity(hotelLocation.getCity())
-                        .withAddress(hotelLocation.getAddress())
-                            .withCountry(hotelLocation.getCountry())
-                                .build();
-
-    }
-
-    private HotelLocation mapToDomain(HotelLocationEntity hotelLocationEntity) {
-        return new HotelLocation.HotelLocationBuilder(hotelLocationEntity.getId())
-                    .withCity(hotelLocationEntity.getCity())
-                        .withAddress(hotelLocationEntity.getAddress())
-                            .withCountry(hotelLocationEntity.getCountry())
-                                .build();
-
-    }
 }

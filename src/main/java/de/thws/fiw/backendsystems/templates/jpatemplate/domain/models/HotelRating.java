@@ -2,13 +2,16 @@ package de.thws.fiw.backendsystems.templates.jpatemplate.domain.models;
 
 public class HotelRating {
 
+    private Long id;
     private String commentRating;
     private int rating;
     private Booking booking;
 
-    private HotelRating(int rating) {
-        this.rating = rating;
-        this.commentRating = "";
+    private HotelRating(Builder builder) {
+        this.rating = builder.rating;
+        this.commentRating = builder.commentRating;
+        this.id = builder.id;
+        this.booking = builder.booking;
     }
 
     // Getter für die Sternebewertung
@@ -16,15 +19,29 @@ public class HotelRating {
         return rating;
     }
 
+
+    public Long getId() {
+        return id;
+    }
+
+    public Booking getBooking(){
+        return booking;
+    }
+
     //Getter for the comment
     public String getGuestComment() {
         return commentRating;
     }
 
-    public boolean setCommentRating(String commentRating){
+    public boolean setCommentRating(String commentRating) {
         this.commentRating = commentRating;
         return true;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 
     // Methode zur Ausgabe der Sternebewertung
     public void displayRating() {
@@ -37,8 +54,15 @@ public class HotelRating {
     public static class Builder {
         private int rating; // Pflichtfeld
         private String commentRating = ""; // Optional, Standardwert
-
+        private Long id;
+        private Booking booking;
         // Pflichtfeld-Methode
+
+        public Builder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
         public Builder withRating(int rating) {
             this.rating = rating;
             return this;
@@ -50,9 +74,15 @@ public class HotelRating {
             return this;
         }
 
+        public Builder withBooking(Booking booking) {
+            this.booking = booking;
+            return this;
+        }
+
         // Build-Methode zum Erstellen eines HotelRating-Objekts
         public HotelRating build() {
 
             return new HotelRating(this);
         }
+    }
 }

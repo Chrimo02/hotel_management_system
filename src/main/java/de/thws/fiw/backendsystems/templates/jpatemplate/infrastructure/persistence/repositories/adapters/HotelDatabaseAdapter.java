@@ -5,6 +5,7 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.HotelLocat
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.interfaces.HotelDAO;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelEntity;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelLocationEntity;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.mapper.HotelMapper;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -17,15 +18,19 @@ import java.util.stream.Collectors;
 public class HotelDatabaseAdapter implements HotelRepository {
 
     private final HotelDAO hotelDAO;
+    private final HotelMapper hotelMapper;
     @Inject
-    public HotelDatabaseAdapter(HotelDAO hotelDAO) {
+    public HotelDatabaseAdapter(HotelDAO hotelDAO, HotelMapper hotelMapper) {
+
         this.hotelDAO = hotelDAO;
+        this.hotelMapper = hotelMapper;
+
     }
 
     @Override
     public Hotel createHotel(Hotel hotel) {
         try {
-            return mapToDomain(hotelDAO.createHotel(mapToEntity(hotel)));
+            return hotelMapper.mapHotelEntityToDomainHotel(hotelDAO.createHotel(hotelMapper.mapDomainHotelToHotelEntity(hotel)));
         } catch (Exception e) {
             throw new RuntimeException("Error saving Hotel", e);
         }
@@ -35,14 +40,14 @@ public class HotelDatabaseAdapter implements HotelRepository {
     @Override
     public Optional<Hotel> findById(Long id) {
         return hotelDAO.findById(id)
-                .map(this::mapToDomain);
+                .map(hotelMapper::mapHotelEntityToDomainHotel);
     }
 
     @Override
     public List<Hotel> findAll() {
         // Retrieve all entities from the DAO and map them to domain objects
         return hotelDAO.findAll().stream()
-                .map(this::mapToDomain)
+                .map(hotelMapper::mapHotelEntityToDomainHotel)
                 .collect(Collectors.toList());
     }
 
@@ -50,7 +55,7 @@ public class HotelDatabaseAdapter implements HotelRepository {
     public void update(Hotel hotel) {
         try {
             // Map the domain object to the entity and pass it to the DAO for updating
-            hotelDAO.updateHotel(mapToEntity(hotel));
+            hotelDAO.updateHotel(hotelMapper.mapDomainHotelToHotelEntity(hotel));
         } catch (Exception e) {
             throw new RuntimeException("Error updating Hotel", e);
         }
@@ -66,38 +71,4 @@ public class HotelDatabaseAdapter implements HotelRepository {
         }
     }
 
-    private HotelEntity mapToEntity(Hotel hotel) {
-        return new HotelEntity.HotelBuilder()
-                .withId(hotel.getId())
-                .withName(hotel.getName())
-                .withDescription(hotel.getDescription())
-                .withLocation(mapLocationToEntity(hotel.getLocation()))
-                .build();
-    }
-
-    private Hotel mapToDomain(HotelEntity entity) {
-        return new Hotel.HotelBuilder()
-                .withName(entity.getName())
-                .withDescription(entity.getDescription())
-                .withLocation(mapLocationToDomain(entity.getLocation()))
-                .build();
-    }
-
-    private HotelLocationEntity mapLocationToEntity(HotelLocation location) {
-        if (location == null) return null;
-        return new HotelLocationEntity.HotelLocationBuilder()
-                .withAddress(location.getAddress())
-                .withCity(location.getCity())
-                .withCountry(location.getCountry())
-                .build();
-    }
-
-    private HotelLocation mapLocationToDomain(HotelLocationEntity entity) {
-        if (entity == null) return null;
-        return new HotelLocation.HotelLocationBuilder(entity.getId())
-                .withAddress(entity.getAddress())
-                .withCity(entity.getCity())
-                .withCountry(entity.getCountry())
-                .build();
-    }
 }

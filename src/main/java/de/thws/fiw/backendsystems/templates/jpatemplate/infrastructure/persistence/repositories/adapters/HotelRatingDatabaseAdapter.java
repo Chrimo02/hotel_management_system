@@ -4,6 +4,7 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.HotelRatin
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.HotelRatingEnum;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.interfaces.HotelRatingDAO;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelRatingEntity;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.mapper.HotelRatingMapper;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelRatingRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -16,49 +17,43 @@ import java.util.stream.Collectors;
 public class HotelRatingDatabaseAdapter implements HotelRatingRepository {
 
     private final HotelRatingDAO hotelRatingDAO;
+    private final HotelRatingMapper hotelRatingMapper;
 
     @Inject
-    public HotelRatingDatabaseAdapter(HotelRatingDAO hotelRatingDAO) {
+    public HotelRatingDatabaseAdapter(HotelRatingDAO hotelRatingDAO, HotelRatingMapper hotelRatingMapper) {
+
         this.hotelRatingDAO = hotelRatingDAO;
+        this.hotelRatingMapper = hotelRatingMapper;
+
     }
 
     @Override
-    public HotelRatingEnum save(HotelRatingEnum rating) {
+    public HotelRating save(HotelRating rating) {
         return null;
     }
 
     @Override
-    public HotelRatingEnum findById(Long id) {
+    public HotelRating findById(Long id) {
         return null;
     }
 
     @Override
-    public List<HotelRatingEnum> findByStarRating(String starRating) {
+    public List<HotelRating> findByStarRating(String starRating) {
         return null;
     }
 
     @Override
-    public void delete(HotelRatingEnum rating) {
+    public void delete(HotelRating rating) {
 
     }
 
     @Override
     public List<HotelRating> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment) {
         return hotelRatingDAO.findFilteredRatings(hotelID, starRating, onlyWithComment)
-                .map(this::mapToDomainList) // Mappen der Liste von Entity auf Domain
+                .map(hotelRatingMapper::mapToDomainList) // Mappen der Liste von Entity auf Domain
                 .orElse(Collections.emptyList()); // Fallback: leere Liste
     }
 
-    private List<HotelRating> mapToDomainList(List<HotelRatingEntity> hotelRatingEntities) {
-        return hotelRatingEntities.stream()
-                .map(this::mapToDomain)// Jedes Entity mappen
-                .collect(Collectors.toList());// Als Liste zurückgeben
-    }
 
-    private HotelRating mapToDomain(HotelRatingEntity entity) {
-        // Erstellen der Domain-Instanz basierend auf der Entity
-        HotelRating hotelRating = new HotelRating.Builder(entity.getStarRating());
-        return hotelRating;
-    }
 
 }

@@ -1,6 +1,5 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.domain.models;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,8 +19,9 @@ public class Hotel {
         this.name = hotelBuilder.name;
         this.description = hotelBuilder.description;
         this.location = hotelBuilder.location;
-        this.ratings = new HashMap<>();
+        this.ratings = hotelBuilder.ratings;
         this.averageRating = 0.0;
+        this.bookings = hotelBuilder.bookings;
     }
 
     public Long getId() {
@@ -66,7 +66,7 @@ public class Hotel {
         this.bookings = bookings;
     }
 
-    public void addRating(long guestId, int rating) { this.ratings.put(guestId, rating);}
+    public void addRating(long guestId, HotelRating rating) { this.ratings.put(guestId, rating);}
     public void addRoom(Room room){rooms.add(room);}
 
 
@@ -77,11 +77,13 @@ public class Hotel {
         private String description;
         private HotelLocation location;
         private List<Room> rooms;
+        private List<Booking> bookings;
+        private Map<Long, HotelRating> ratings;
 
         public HotelBuilder() {
         }
 
-        public HotelBuilder withId(Long id){
+        public HotelBuilder withId(Long id) {
             this.id = id;
             return this;
         }
@@ -100,6 +102,22 @@ public class Hotel {
             this.location = location;
             return this;
         }
+
+        public HotelBuilder withRoomsList(List<Room> rooms){
+            this.rooms = rooms;
+            return this;
+        }
+
+        public HotelBuilder withBookingList(List<Booking> bookings){
+            this.bookings = bookings;
+            return this;
+        }
+
+        public HotelBuilder withRatingMap(Map<Long, HotelRating> ratings){
+            this.ratings = ratings;
+            return this;
+        }
+
 
         public Hotel build() {
             return new Hotel(this);

@@ -16,12 +16,13 @@ public class HotelService {
     private final HotelRepository hotelRepository;
     private final HotelLocationRepository hotelLocationRepository;
     private final HotelRatingRepository hotelRatingRepository;
-
+    private final RoomService roomService;
     @Inject
-    public HotelService(HotelRepository hotelRepository, HotelLocationRepository hotelLocationRepository, HotelRatingRepository hotelRatingRepository) {
+    public HotelService(RoomService roomService, HotelRepository hotelRepository, HotelLocationRepository hotelLocationRepository, HotelRatingRepository hotelRatingRepository) {
         this.hotelRepository = hotelRepository;
         this.hotelLocationRepository = hotelLocationRepository;
         this.hotelRatingRepository = hotelRatingRepository;
+        this.roomService = roomService;
     }
 
     public Hotel createHotel(String name, String description, HotelLocation hotelLocation) throws Exception {
@@ -112,12 +113,11 @@ public class HotelService {
     public void rateHotel(long guestID, long hotelID, HotelRating rating) {
         Hotel hotel = validateInputs(hotelID,guestID);
         hotel.addRating(guestID, rating);
-        hotel.setAverageRating(calculateHotelRating(hotel.getBookings()));
+        hotel.setAverageRating(calculateHotelRating(hotel));
         hotelRepository.update(hotel);
     }
     public List<Room> findAvailableRooms(long hotelID, Class<? extends Room> roomType) {
         Hotel hotel = validateHotelIdAndReturnObject(hotelID);
-        RoomService roomService = new RoomService();
         List<Room> availableRooms = new ArrayList<>();
         for (Room room : hotel.getRooms()) {
             if (roomService.isAvailable(room.getId(), LocalDate.now(), LocalDate.now().plusDays(1)) && (roomType == null || roomType.isInstance(room))) {
@@ -126,8 +126,8 @@ public class HotelService {
         }
         return availableRooms;
     }
-    public List<HotelRatingEnum> filterHotelRatings(long hotelID, int starRating, boolean onlyWithComment) {
-        Map<Long, HotelRatingEnum> hotelRatingMap = validateHotelRatings(hotelID);
+    public List<HotelRating> filterHotelRatings(long hotelID, int starRating, boolean onlyWithComment) {
+        Map<Long, HotelRating> hotelRatingMap = validateHotelRatings(hotelID);
         return hotelRatingMap.values().stream()
                 .filter(rating -> rating.getStarRating() == starRating)
                 .filter(rating -> {
@@ -170,19 +170,15 @@ public class HotelService {
             throw new IllegalArgumentException("Guest with ID " + guestID + " has no booking in this hotel!");
         }
     }
-    private double calculateHotelRating(List<Booking> bookings) {
-        double totalRating = 0;
-        int count = 0;
-        bookings.stream().filter()
-        for (Booking booking : bookings) {
-            int rating = booking.getRating();
-            if (rating != null) {
-                totalRating += rating.getStarRating();
-                count++;
-            }
-        }
-        return count > 0 ? totalRating / count : 0.0;
+
+    private double calculateHotelRating(Hotel hotel) {
+        return hotel.getRatings().values().stream()
+                .filter(Objects::nonNull)
+                .mapToDouble(HotelRating::getStarRating)
+                .average()
+                .orElse(0.0);
     }
+
 
     private  Map<Long, HotelRating> validateHotelRatings(long hotelID) {
         Map<Long, HotelRating> ratings = validateHotelIdAndReturnObject(hotelID).getRatings();

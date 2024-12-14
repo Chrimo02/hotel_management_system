@@ -1,6 +1,8 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities;
 
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Booking;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Hotel;
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.HotelRating;
 import jakarta.persistence.*;
 import java.util.UUID;
 
@@ -23,12 +25,20 @@ public class HotelRatingEntity {
     @JoinColumn(name = "hotel_id", nullable = false) // Ensure this maps to the correct column
     private HotelEntity hotel;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "booking_id", nullable = false)
+    private BookingEntity booking;
+
+
     // Default constructor for JPA
     protected HotelRatingEntity() {}
 
     private HotelRatingEntity(Builder builder) {
-        this.starRating = builder.starRating;
+        this.starRating = builder.rating;
         this.commentRating = builder.commentRating;
+        this.id = builder.id;
+        this.booking = builder.booking;
+        this.hotel = builder.hotel;
     }
 
     // Getters
@@ -52,29 +62,48 @@ public class HotelRatingEntity {
         this.hotel = hotel;
     }
 
+    public BookingEntity getBooking(){
+        return this.getBooking();
+    }
+
     // Builder Class
     public static class Builder {
-        private int starRating;
-        private String commentRating;
-        private HotelEntity hotelEntity;
+        private int rating; // Pflichtfeld
+        private String commentRating = ""; // Optional, Standardwert
+        private Long id;
+        private BookingEntity booking;
+        private HotelEntity hotel;
+        // Pflichtfeld-Methode
 
-        public Builder(HotelEntity hotelEntity){
-            this.hotelEntity = hotelEntity;
-        }
-
-        // Builder method for starRating (mandatory field)
-        public Builder withStarRating(int starRating) {
-            this.starRating = starRating;
+        public HotelRatingEntity.Builder withId(Long id) {
+            this.id = id;
             return this;
         }
 
-        // Builder method for commentRating (optional field)
-        public Builder withCommentRating(String commentRating) {
+        public HotelRatingEntity.Builder withRating(int rating) {
+            this.rating = rating;
+            return this;
+        }
+
+        // Optionales Feld
+        public HotelRatingEntity.Builder withComment(String commentRating) {
             this.commentRating = commentRating;
             return this;
         }
 
-        // Build method to create the instance
+        public HotelRatingEntity.Builder withBooking(BookingEntity booking) {
+            this.booking = booking;
+            return this;
+        }
+
+
+        public HotelRatingEntity.Builder withHotel(HotelEntity hotel) {
+            this.hotel = hotel;
+            return this;
+        }
+
+
+        // Build-Methode zum Erstellen eines HotelRating-Objekts
         public HotelRatingEntity build() {
 
             return new HotelRatingEntity(this);
