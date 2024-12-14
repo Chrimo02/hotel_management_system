@@ -16,11 +16,7 @@ public class GuestService {
     public GuestService(GuestRepository guestRepository){
         this.guestRepository = guestRepository;
     }
-    void createGuest(String firstName, String lastName, String title, int yearBirthday,int monthBirtday, int dayBirthday, String eMail, String phoneNumber){
-        guestRepository.createGuest(firstName,lastName,title,yearBirthday,monthBirtday,dayBirthday,eMail,phoneNumber);
-    }
-    /*
-    public void createGuest(String firstName, String lastName, String title, int year, int month, int day, String eMail, String phoneNumber){
+    void createGuest(String firstName, String lastName, String title, int year,int month, int day, String eMail, String phoneNumber){
         Guest guest = new Guest.GuestBuilder()
                 .withFirstName(firstName)
                 .withLastName(lastName)
@@ -29,9 +25,9 @@ public class GuestService {
                 .withEMail(eMail)
                 .withPhoneNumber(phoneNumber)
                 .build();
+        guestRepository.createGuest(guest);
     }
 
-     */
     private Guest getNotNullGuest(long guestId) throws GuestNotFoundException{
         Guest guest = guestRepository.getGuestById(guestId);
         if (guest == null) throw new GuestNotFoundException("There is no Guest with the specified ID!");

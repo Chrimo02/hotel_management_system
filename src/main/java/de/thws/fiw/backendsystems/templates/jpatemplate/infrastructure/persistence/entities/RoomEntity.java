@@ -111,4 +111,20 @@ scheduler.scheduleAtFixedRate(() -> {
     public void setHotel(HotelEntity hotel) {
         this.hotel = hotel;
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setCurrentBooking(BookingEntity currentBooking) {
+        this.currentBooking = currentBooking;
+    }
+
+    public Map<LocalDate, Boolean> getAvailabilityMap() {
+        return availabilityMap;
+    }
+
+    public void setAvailabilityMap(Map<LocalDate, Boolean> availabilityMap) {
+        this.availabilityMap = availabilityMap;
+    }
 }

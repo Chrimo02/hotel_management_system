@@ -4,7 +4,7 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Guest;
 
 
 public interface GuestRepository {
-    void createGuest(String firstName, String lastName, String title, int yearBirthday, int monthBirthday, int dayBirthday, String eMail, String phoneNumber);
+    void createGuest(Guest guest);
     void updateEmail(long guestId, String newEmail);
     void updatePhone(long guestId, String newPhone);
     void updateLastName(long guestId, String newLastName);

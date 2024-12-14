@@ -120,7 +120,7 @@ public class HotelService {
         RoomService roomService = new RoomService();
         List<Room> availableRooms = new ArrayList<>();
         for (Room room : hotel.getRooms()) {
-            if (roomService.isAvailable(room, LocalDate.now(), LocalDate.now().plusDays(1)) && (roomType == null || roomType.isInstance(room))) {
+            if (roomService.isAvailable(room.getId(), LocalDate.now(), LocalDate.now().plusDays(1)) && (roomType == null || roomType.isInstance(room))) {
                 availableRooms.add(room);
             }
         }

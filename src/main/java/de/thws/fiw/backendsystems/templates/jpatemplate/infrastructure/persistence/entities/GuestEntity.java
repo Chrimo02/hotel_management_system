@@ -67,6 +67,10 @@ public class GuestEntity {
         return bookingsHistory;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }

@@ -3,25 +3,30 @@ package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persiste
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Booking;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Guest;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.interfaces.GuestDAO;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.BookingEntity;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.GuestEntity;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.mapper.BookingMapper;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.mapper.GuestMapper;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.GuestRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-import java.util.stream.Collectors;
+import java.util.List;
 
 @ApplicationScoped
 public class GuestDatabaseAdapter implements GuestRepository {
     private final GuestDAO guestDAO;
+    private final BookingMapper bookingMapper;
+    private final GuestMapper guestMapper;
     @Inject
-    public GuestDatabaseAdapter(GuestDAO guestDAO){
+    public GuestDatabaseAdapter(GuestDAO guestDAO, BookingMapper bookingMapper, GuestMapper guestMapper){
         this.guestDAO = guestDAO;
+        this.bookingMapper = bookingMapper;
+        this.guestMapper = guestMapper;
     }
 
     @Override
-    public void createGuest(String firstName, String lastName, String title, int yearBirthday, int monthBirthday, int dayBirthday, String eMail, String phoneNumber) {
-        GuestEntity guestEntity = new GuestEntity(firstName,lastName,title,yearBirthday,monthBirthday,dayBirthday,eMail,phoneNumber);
+    public void createGuest(Guest guest) {
+        GuestEntity guestEntity = guestMapper.guestToGuestEntity(guest);
         guestDAO.create(guestEntity);
     }
 
@@ -61,16 +66,17 @@ public class GuestDatabaseAdapter implements GuestRepository {
 
     @Override
     public Guest getGuestById(long id) {
-        GuestEntity guest = guestDAO.read(id);
+        GuestEntity entity = guestDAO.read(id);
         Guest newGuest = new Guest.GuestBuilder()
-                .withFirstName(guest.getFirstName())
-                .withLastName(guest.getLastName())
-                .withTitle(guest.getTitle())
-                .withBirthday(guest.getBirthday().getYear(),guest.getBirthday().getMonthValue(),guest.getBirthday().getDayOfMonth())
-                .withEMail(guest.geteMail())
-                .withPhoneNumber(guest.getPhoneNumber())
+                .withFirstName(entity.getFirstName())
+                .withLastName(entity.getLastName())
+                .withTitle(entity.getTitle())
+                .withBirthday(entity.getBirthday().getYear(), entity.getBirthday().getMonthValue(), entity.getBirthday().getDayOfMonth())
+                .withEMail(entity.geteMail())
+                .withPhoneNumber(entity.getPhoneNumber())
                 .build();
-        newGuest.setBookingsHistory(guest.getBookingsHistory()); //TODO: Konvertierungs-Methoden für Entity zu Domain-Objekten implementieren
+        List<Booking> history = bookingMapper.toDomainList(entity.getBookingsHistory());
+        newGuest.setBookingsHistory(history);
         return newGuest;
     }
 }

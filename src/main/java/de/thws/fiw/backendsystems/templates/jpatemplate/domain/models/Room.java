@@ -62,6 +62,9 @@ scheduler.scheduleAtFixedRate(() -> {
         }
     }
 
+    public void setAvailabilityMap(Map<LocalDate, Boolean> availabilityMap) {
+        this.availabilityMap = availabilityMap;
+    }
 
     public Map<LocalDate, Boolean> getAvailabilityMap() {
         return availabilityMap;

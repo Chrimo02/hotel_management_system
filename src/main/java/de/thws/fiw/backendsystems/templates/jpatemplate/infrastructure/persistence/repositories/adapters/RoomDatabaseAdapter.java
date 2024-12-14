@@ -3,25 +3,28 @@ package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persiste
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Room;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.interfaces.RoomDAO;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.RoomEntity;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.mapper.RoomMapper;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.RoomRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
 public class RoomDatabaseAdapter implements RoomRepository {
+    private final RoomMapper roomMapper;
     private final RoomDAO roomDAO;
     @Inject
-    public RoomDatabaseAdapter(RoomDAO roomDAO) {
+    public RoomDatabaseAdapter(RoomDAO roomDAO, RoomMapper roomMapper) {
         this.roomDAO = roomDAO;
+        this.roomMapper = roomMapper;
     }
     @Override
-    public Room findRoomById(long roomId, ) {
+    public Room findRoomById(long roomId) {
         RoomEntity roomEntity = roomDAO.read(roomId);
-        return entityToDomain(roomEntity);
+        return roomMapper.entityToDomain(roomEntity);
     }
     @Override
     public void saveRoom(Room room) {
-        RoomEntity entity = domainToEntity(room);
+        RoomEntity entity = roomMapper.domainToEntity(room);
         roomDAO.create(entity);
     }
     @Override
@@ -33,13 +36,5 @@ public class RoomDatabaseAdapter implements RoomRepository {
         RoomEntity roomEntity = roomDAO.read(roomId);
         roomEntity.setPricePerNight(pricePerNight);
         roomDAO.update(roomEntity);
-    }
-
-    private Room entityToDomain(RoomEntity entity, Class<? extends Room> roomType) {
-        //entweder room nicht abstract machen, oder roomType als parameter auch übergeben
-        //return new Room(entity.getId(), entity.getPricePerNight(), entity.getRoomIdentifier(), entity.getHotel())
-    }
-    private RoomEntity domainToEntity(Room room) {
-
     }
 }
