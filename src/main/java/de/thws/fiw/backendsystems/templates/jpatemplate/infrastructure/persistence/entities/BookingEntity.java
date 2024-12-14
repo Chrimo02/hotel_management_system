@@ -12,8 +12,11 @@ public class BookingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column (nullable = false)
-    private long hotelId; //long oder HotelEntity oder evtl gar nicht speichern?
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "hotel_id", nullable = false)
+    private HotelEntity hotel;
+
     @Column (nullable = false)
     private LocalDate checkInDate;
     @Column (nullable = false)
@@ -26,10 +29,9 @@ public class BookingEntity {
             joinColumns = @JoinColumn(name = "booking_id"), // FK zur Booking-Tabelle
             inverseJoinColumns = @JoinColumn(name = "guest_id") // FK zur Guest-Tabelle
     )
-    //Wofür: @JoinColumn(name = "bookingsHistory") // Name der Fremdschlüsselspalte
     private List<GuestEntity> guests;
 
-    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomEntity> rooms;
 
     @Column (nullable = false)
@@ -39,13 +41,27 @@ public class BookingEntity {
     @Column (nullable = true)
     private LocalDateTime checkOutTime;
 
-    public BookingEntity(long hotelId, LocalDate checkInDate, LocalDate checkOutDate, List<RoomEntity> rooms, List<GuestEntity> guests) {
-        this.hotelId = hotelId;
+    public BookingEntity() {}
+
+    public BookingEntity(HotelEntity hotel, LocalDate checkInDate, LocalDate checkOutDate, List<RoomEntity> rooms, List<GuestEntity> guests) {
+        this.hotel = hotel;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.rooms = rooms;
         this.guests = guests;
         this.status = true;
+    }
+
+    public BookingEntity(long id, HotelEntity hotel, LocalDate checkInDate, LocalDate checkOutDate, List<RoomEntity> rooms, List<GuestEntity> guests, boolean status, LocalDateTime checkInTime, LocalDateTime checkOutTime) {
+        this.id = id;
+        this.hotel = hotel;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.rooms = rooms;
+        this.guests = guests;
+        this.status = status;
+        this.checkInTime = checkInTime;
+        this.checkOutTime = checkOutTime;
     }
 
     public void setStatus(boolean status) {
@@ -64,9 +80,7 @@ public class BookingEntity {
         return id;
     }
 
-    public long getHotelId() {
-        return hotelId;
-    }
+    public HotelEntity getHotel() { return hotel; }
 
     public LocalDate getCheckInDate() {
         return checkInDate;

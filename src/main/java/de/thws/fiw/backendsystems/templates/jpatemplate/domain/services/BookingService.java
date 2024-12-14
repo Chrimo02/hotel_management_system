@@ -50,11 +50,13 @@ public class BookingService {
                  throw new RuntimeException("Guest with Id" + guestId + " not found");
             }
       }
-        bookingRepository.createBooking(hotelId, checkInDate, checkOutDate, rooms, guestList);
+        Hotel hotel = hotelService.getHotelByHotelId(hotelId);
+        bookingRepository.createBooking(hotel, checkInDate, checkOutDate, rooms, guestList);
     }
 
     public void cancelBooking(long bookingID) throws BookingNotFoundException{
         Booking booking = getNotNullBooking(bookingID);
+        if(ChronoUnit.DAYS.between(LocalDate.now(), booking.getCheckInDate()) < 2) throw new RuntimeException("Sorry, the cancellation deadline has already expired!");
         for(Room room : booking.getRooms()){
             roomService.cancelRoom(room.getId(), booking.getCheckInDate(),booking.getCheckOutDate());
         }

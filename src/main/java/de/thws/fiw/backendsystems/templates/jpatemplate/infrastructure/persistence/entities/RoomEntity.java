@@ -9,13 +9,13 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 @Entity
-@Table(name = "room")
-public class RoomEntity {
-    //einzelne Room-types mit Vererbung implementieren
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // oder andere Strategien je nach Bedarf
+@DiscriminatorColumn(name = "room_type", discriminatorType = DiscriminatorType.STRING)
+public abstract class RoomEntity {
     @Id
-    @GeneratedValue
-    @Column(nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private double pricePerNight;
     @OneToOne
     private RoomIdentifierEntity roomIdentifier;

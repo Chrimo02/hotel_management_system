@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Booking {
     private final long id; //final
-    private final long hotelId;
+    private final Hotel hotel;
     private LocalDate checkInDate;
     private LocalDate checkOutDate; //final oder nicht? Verlängerung?
     private double totalPrice;
@@ -18,9 +18,9 @@ public class Booking {
     private LocalDateTime checkInTime;
     private LocalDateTime checkOutTime;
 
-    public Booking(long id, long hotelId, LocalDate checkInDate,LocalDate checkOutDate, List<Room> rooms, List<Guest> guests, boolean status, LocalDateTime checkInTime, LocalDateTime checkOutTime) {
+    public Booking(long id, Hotel hotel, LocalDate checkInDate,LocalDate checkOutDate, List<Room> rooms, List<Guest> guests, boolean status, LocalDateTime checkInTime, LocalDateTime checkOutTime) {
         this.id = id;
-        this.hotelId = hotelId;
+        this.hotel = hotel;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.rooms = rooms;
@@ -55,6 +55,7 @@ public class Booking {
     public long getId() {
         return id;
     }
+    public Hotel getHotel() { return hotel; }
 
     public LocalDate getCheckInDate() {
         return checkInDate;
