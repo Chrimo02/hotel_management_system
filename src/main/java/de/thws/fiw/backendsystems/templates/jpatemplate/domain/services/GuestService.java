@@ -16,7 +16,7 @@ public class GuestService {
     public GuestService(GuestRepository guestRepository){
         this.guestRepository = guestRepository;
     }
-    void createGuest(String firstName, String lastName, String title, int year,int month, int day, String eMail, String phoneNumber){
+    public void createGuest(String firstName, String lastName, String title, int year,int month, int day, String eMail, String phoneNumber){
         Guest guest = new Guest.GuestBuilder()
                 .withFirstName(firstName)
                 .withLastName(lastName)
@@ -59,7 +59,7 @@ public class GuestService {
         guestRepository.updateTitle(guestId,newTitle);
 
     }
-    void deleteGuest(long guestId) throws GuestNotFoundException {
+    public void deleteGuest(long guestId) throws GuestNotFoundException {
         Guest guest = getNotNullGuest(guestId);
         guestRepository.deleteGuest(guestId);
     }
