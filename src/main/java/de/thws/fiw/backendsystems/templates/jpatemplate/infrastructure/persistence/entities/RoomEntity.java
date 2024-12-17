@@ -7,7 +7,10 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // oder andere Strategien je nach Bedarf
 @DiscriminatorColumn(name = "room_type", discriminatorType = DiscriminatorType.STRING)
@@ -25,8 +28,9 @@ public abstract class RoomEntity {
     @OneToOne
     private BookingEntity currentBooking;
 
-    // muss die map gespeichert werden?
-    private Map<LocalDate, Boolean> availabilityMap = new HashMap<>();
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<BookingEntity> bookings = new HashSet<>();
+
     public RoomEntity() {
 
     }
@@ -36,54 +40,19 @@ public abstract class RoomEntity {
         this.roomIdentifier = roomIdentifierEntity;
         this.hotel = hotelEntity;
 
-        // Initialize the availability for two years from today
-        //initializeAvailability();
+
     }
     public RoomEntity(double pricePerNight, RoomIdentifierEntity roomIdentifierEntity, HotelEntity hotelEntity) {
         this.pricePerNight = pricePerNight;
         this.roomIdentifier = roomIdentifierEntity;
         this.hotel = hotelEntity;
 
-        // Initialize the availability for two years from today
-        //initializeAvailability();
     }
-
-    /*private void initializeAvailability() {
-        LocalDate today = LocalDate.now();
-        for (int i = 0; i < 730; i++) {
-            availabilityMap.put(today.plusDays(i), true); // Initially, all days are available
-        }
-    }*/
-
-    //TODO: cleanupolddates in roomservice/hotelservice und scheduler? wöchentlich/monatlich aufruf von allen räumen
-   /* ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-scheduler.scheduleAtFixedRate(() -> {
-        for (Room room : hotel.getRooms()) {
-            room.cleanupOldDates();
-        }
-    }, 0, 1, TimeUnit.DAYS); // Führt das tägliche Update durch*/
-
-
-    public void cleanupOldDates() {
-        LocalDate today = LocalDate.now();
-
-        // Entfernt alle vergangenen Daten
-        availabilityMap.keySet().removeIf(date -> date.isBefore(today));
-
-        // Fügt neue Daten für zwei Jahre im Voraus hinzu
-        for (int i = 0; i < 730; i++) {
-            LocalDate futureDate = today.plusDays(i);
-            availabilityMap.putIfAbsent(futureDate, true); // Nur hinzufügen, falls das Datum noch nicht vorhanden ist
-        }
-    }
-
 
     public BookingEntity getCurrentBooking() {
         return currentBooking;
     }
-    /*public Map<LocalDate, Boolean> getAvailabilityMap() {
-        return availabilityMap;
-    }*/
+
     public long getId() {
         return id;
     }
@@ -120,11 +89,11 @@ scheduler.scheduleAtFixedRate(() -> {
         this.currentBooking = currentBooking;
     }
 
-    public Map<LocalDate, Boolean> getAvailabilityMap() {
-        return availabilityMap;
+    public Set<BookingEntity> getBookings() {
+        return bookings;
     }
 
-    public void setAvailabilityMap(Map<LocalDate, Boolean> availabilityMap) {
-        this.availabilityMap = availabilityMap;
+    public void setBookings(Set<BookingEntity> bookings) {
+        this.bookings = bookings;
     }
 }

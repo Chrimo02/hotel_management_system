@@ -9,6 +9,7 @@ import jakarta.inject.Inject;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.GuestEntity;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.RoomEntity;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Guest;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Room;
@@ -76,5 +77,14 @@ public class BookingMapper {
         if(resultList == null) return null;
 
         return resultList.stream( ).map( this::bookingToBookingEntity ).collect( Collectors.toList( ) );
+    }
+    public Set<BookingEntity> toEntitySet(Set<Booking> bookings) {
+        if (bookings == null) return null;
+        return bookings.stream().map(this::bookingToBookingEntity).collect(Collectors.toSet());
+    }
+
+    public Set<Booking> toDomainSet(Set<BookingEntity> bookingEntities) {
+        if (bookingEntities == null) return null;
+        return bookingEntities.stream().map(this::bookingEntityToBooking).collect(Collectors.toSet());
     }
 }

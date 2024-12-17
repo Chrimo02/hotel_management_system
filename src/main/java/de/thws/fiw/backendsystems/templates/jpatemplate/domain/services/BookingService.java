@@ -30,28 +30,14 @@ public class BookingService {
     private Booking getNotNullBooking(long bookingId) throws BookingNotFoundException {
         Booking booking = bookingRepository.getBookingById(bookingId);
         if (booking == null) throw new BookingNotFoundException("There is no Booking with the specified ID!");
-        else return booking;
+        return booking;
     }
 
-    public void makeBooking(long hotelId, LocalDate checkInDate, LocalDate checkOutDate, List<Class<? extends Room>> roomTypes, List<Long> guests){
-        List<Room> rooms = new ArrayList<>();
-        Room foundRoom;
-        for(Class<? extends Room> roomType : roomTypes){
-            foundRoom = findAvailableRoom(hotelId, roomType, checkInDate, checkOutDate);
-            if(foundRoom == null) throw new RuntimeException("Available Room not found");
-            rooms.add(foundRoom);
-        }
-        List<Guest> guestList = new ArrayList<>();
-        for(long guestId : guests){
-            try{
-                 Guest guest = guestService.getGuestById(guestId);
-                 guestList.add(guest);
-            } catch (GuestNotFoundException e) {
-                 throw new RuntimeException("Guest with Id" + guestId + " not found");
-            }
-      }
+    public void makeBooking(long hotelId, LocalDate checkInDate, LocalDate checkOutDate, List<Class<? extends Room>> roomTypes, List<Long> guestIds){
+        List<Room> rooms = roomService.findAvailableRooms(hotelId, roomTypes, checkInDate, checkOutDate);
+        List<Guest> guests = guestService.loadGuests(guestIds);
         Hotel hotel = hotelService.getHotelByHotelId(hotelId);
-        bookingRepository.createBooking(hotel, checkInDate, checkOutDate, rooms, guestList);
+        bookingRepository.createBooking(hotel, checkInDate, checkOutDate, rooms, guests);
     }
 
     public void cancelBooking(long bookingID) throws BookingNotFoundException{
@@ -62,18 +48,6 @@ public class BookingService {
         }
         booking.setStatus(false);
         bookingRepository.updateBooking(booking);
-    }
-
-    private Room findAvailableRoom(long hotelID, Class<? extends Room> roomType, LocalDate checkInToCheck, LocalDate checkOutToCheck) {
-        Hotel hotel = hotelService.getHotelByHotelId(hotelID);
-        for (Room room : hotel.getRooms()) {
-            if (roomType.isInstance(room)) {
-                if (roomService.isAvailable(room.getId(), checkInToCheck, checkOutToCheck)) {
-                    return room;
-                }
-            }
-        }
-        return null;
     }
 
     void guestCheckIn(long bookingId) throws BookingNotFoundException {

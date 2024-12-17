@@ -6,4 +6,6 @@ public interface RoomRepository {
     public Room findRoomById(long roomId);
     public void saveRoom(Room room);
     public void removeRoom(long roomId);
+    public void updateRoom(Room room);
+
 }

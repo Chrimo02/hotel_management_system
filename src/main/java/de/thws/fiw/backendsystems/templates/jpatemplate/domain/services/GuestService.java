@@ -7,6 +7,7 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persisten
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+import java.util.ArrayList;
 import java.util.List;
 @ApplicationScoped
 public class GuestService {
@@ -60,10 +61,21 @@ public class GuestService {
 
     }
     public void deleteGuest(long guestId) throws GuestNotFoundException {
-        Guest guest = getNotNullGuest(guestId);
         guestRepository.deleteGuest(guestId);
     }
     public Guest getGuestById(long guestId) throws GuestNotFoundException {
         return getNotNullGuest(guestId);
+    }
+    public List<Guest> loadGuests(List<Long> guestIds) {
+        List<Guest> guests = new ArrayList<>();
+        for (long guestId : guestIds) {
+            try {
+                Guest guest = getNotNullGuest(guestId);
+                guests.add(guest);
+            } catch (GuestNotFoundException e) {
+                throw new RuntimeException("Guest with Id " + guestId + " not found");
+            }
+        }
+        return guests;
     }
 }

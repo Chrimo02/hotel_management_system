@@ -6,7 +6,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 
-public class Booking {
+public class Booking implements Comparable<Booking> {
     private final long id; //final
     private final Hotel hotel;
     private LocalDate checkInDate;
@@ -99,5 +99,11 @@ public class Booking {
 
     public boolean isCheckedOut() {
         return checkOutTime != null; // Checked out if checkOutTime is not null
+    }
+
+    @Override
+    public int compareTo(Booking other) {
+        return this.checkInDate.compareTo(other.checkInDate);
+
     }
 }
