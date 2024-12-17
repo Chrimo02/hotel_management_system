@@ -1,4 +1,5 @@
 package serviceTest;
+
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.exceptions.GuestNotFoundException;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Booking;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Guest;
@@ -24,107 +25,143 @@ public class GuestServiceTest {
     @InjectMocks
     private GuestService guestService;
 
+    @Mock
+    private Guest mockGuest;
+
+    @Mock
+    private Booking mockBooking;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void testCreateGuest() {
-        doNothing().when(guestRepository).createGuest(any(Guest.class));
-
+    public void testCreateGuest_Success() {
         guestService.createGuest("John", "Doe", "Mr.", 1990, 5, 20, "john.doe@example.com", "1234567890");
-
         verify(guestRepository, times(1)).createGuest(any(Guest.class));
     }
 
     @Test
-    public void testGetNotNullGuestWhenGuestExists() throws GuestNotFoundException {
-        Guest mockGuest = new Guest.GuestBuilder().withFirstName("John").build();
+    public void testGetAllBookingsFromGuest_Success() throws GuestNotFoundException {
+        List<Booking> bookings = new ArrayList<>();
+        bookings.add(mockBooking);
+
+        when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
+        when(mockGuest.getBookingsHistory()).thenReturn(bookings);
+
+        List<Booking> result = guestService.getAllBookingsFromGuest(1L);
+
+        assertEquals(1, result.size());
+        verify(guestRepository, times(1)).getGuestById(1L);
+        verify(mockGuest, times(1)).getBookingsHistory();
+    }
+
+    @Test
+    public void testGetAllBookingsFromGuest_GuestNotFound() {
+        when(guestRepository.getGuestById(1L)).thenReturn(null);
+
+        assertThrows(GuestNotFoundException.class, () -> guestService.getAllBookingsFromGuest(1L));
+        verify(guestRepository, times(1)).getGuestById(1L);
+    }
+
+    @Test
+    public void testUpdateEMail_Success() throws GuestNotFoundException {
+        when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
+
+        guestService.updateEMail(1L, "new.email@example.com");
+
+        verify(mockGuest, times(1)).seteMail("new.email@example.com");
+        verify(guestRepository, times(1)).updateEmail(mockGuest);
+    }
+
+    @Test
+    public void testUpdatePhone_Success() throws GuestNotFoundException {
+        when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
+
+        guestService.updatePhone(1L, "9876543210");
+
+        verify(mockGuest, times(1)).setPhoneNumber("9876543210");
+        verify(guestRepository, times(1)).updatePhone(mockGuest);
+    }
+
+    @Test
+    public void testUpdateLastName_Success() throws GuestNotFoundException {
+        when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
+
+        guestService.updateLastName(1L, "Smith");
+
+        verify(mockGuest, times(1)).setLastName("Smith");
+        verify(guestRepository, times(1)).updateLastName(mockGuest);
+    }
+
+    @Test
+    public void testUpdateTitle_Success() throws GuestNotFoundException {
+        when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
+
+        guestService.updateTitle(1L, "Dr.");
+
+        verify(mockGuest, times(1)).setTitle("Dr.");
+        verify(guestRepository, times(1)).updateTitle(mockGuest);
+    }
+
+    @Test
+    public void testDeleteGuest_Success() throws GuestNotFoundException {
+        when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
+
+        guestService.deleteGuest(1L);
+
+        verify(guestRepository, times(1)).deleteGuest(1L);
+    }
+
+    @Test
+    public void testDeleteGuest_GuestNotFound() {
+        when(guestRepository.getGuestById(1L)).thenReturn(null);
+
+        assertThrows(GuestNotFoundException.class, () -> guestService.deleteGuest(1L));
+        verify(guestRepository, times(1)).getGuestById(1L);
+    }
+
+    @Test
+    public void testGetGuestById_Success() throws GuestNotFoundException {
         when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
 
         Guest result = guestService.getGuestById(1L);
 
-        assertNotNull(result);
-        assertEquals("John", result.getFirstName());
+        assertEquals(mockGuest, result);
+        verify(guestRepository, times(1)).getGuestById(1L);
     }
 
     @Test
-    public void testGetNotNullGuestWhenGuestDoesNotExist() {
+    public void testGetGuestById_GuestNotFound() {
         when(guestRepository.getGuestById(1L)).thenReturn(null);
 
         assertThrows(GuestNotFoundException.class, () -> guestService.getGuestById(1L));
     }
 
     @Test
-    public void testGetAllBookingsFromGuest() throws GuestNotFoundException {
-        Guest mockGuest = new Guest.GuestBuilder().withFirstName("John").build();
-        List<Booking> mockBookings = new ArrayList<>();
-        mockGuest.setBookingsHistory(mockBookings);
-        when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
+    public void testLoadGuests_Success() {
+        List<Long> guestIds = List.of(1L, 2L);
+        Guest guest1 = mock(Guest.class);
+        Guest guest2 = mock(Guest.class);
 
-        List<Booking> result = guestService.getAllBookingsFromGuest(1L);
+        when(guestRepository.getGuestById(1L)).thenReturn(guest1);
+        when(guestRepository.getGuestById(2L)).thenReturn(guest2);
 
-        assertNotNull(result);
-        assertTrue(result.isEmpty());
+        List<Guest> result = guestService.loadGuests(guestIds);
+
+        assertEquals(2, result.size());
+        verify(guestRepository, times(1)).getGuestById(1L);
+        verify(guestRepository, times(1)).getGuestById(2L);
     }
 
     @Test
-    public void testUpdateEmail() throws GuestNotFoundException {
-        Guest mockGuest = new Guest.GuestBuilder().withFirstName("John").build();
-        when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
-        doNothing().when(guestRepository).updateEmail(1L, "new.email@example.com");
+    public void testLoadGuests_ThrowsRuntimeExceptionWhenGuestNotFound() {
+        List<Long> guestIds = List.of(1L, 2L);
 
-        guestService.updateEMail(1L, "new.email@example.com");
+        when(guestRepository.getGuestById(1L)).thenReturn(null);
 
-        verify(guestRepository, times(1)).updateEmail(1L, "new.email@example.com");
-        assertEquals("new.email@example.com", mockGuest.geteMail());
-    }
-
-    @Test
-    public void testUpdatePhone() throws GuestNotFoundException {
-        Guest mockGuest = new Guest.GuestBuilder().withFirstName("John").build();
-        when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
-        doNothing().when(guestRepository).updatePhone(1L, "9876543210");
-
-        guestService.updatePhone(1L, "9876543210");
-
-        verify(guestRepository, times(1)).updatePhone(1L, "9876543210");
-        assertEquals("9876543210", mockGuest.getPhoneNumber());
-    }
-
-    @Test
-    public void testUpdateLastName() throws GuestNotFoundException {
-        Guest mockGuest = new Guest.GuestBuilder().withFirstName("John").build();
-        when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
-        doNothing().when(guestRepository).updateLastName(1L, "Smith");
-
-        guestService.updateLastName(1L, "Smith");
-
-        verify(guestRepository, times(1)).updateLastName(1L, "Smith");
-        assertEquals("Smith", mockGuest.getLastName());
-    }
-
-    @Test
-    public void testUpdateTitle() throws GuestNotFoundException {
-        Guest mockGuest = new Guest.GuestBuilder().withFirstName("John").build();
-        when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
-        doNothing().when(guestRepository).updateTitle(1L, "Dr.");
-
-        guestService.updateTitle(1L, "Dr.");
-
-        verify(guestRepository, times(1)).updateTitle(1L, "Dr.");
-        assertEquals("Dr.", mockGuest.getTitle());
-    }
-
-    @Test
-    public void testDeleteGuest() throws GuestNotFoundException {
-        Guest mockGuest = new Guest.GuestBuilder().withFirstName("John").build();
-        when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
-        doNothing().when(guestRepository).deleteGuest(1L);
-
-        guestService.deleteGuest(1L);
-
-        verify(guestRepository, times(1)).deleteGuest(1L);
+        assertThrows(RuntimeException.class, () -> guestService.loadGuests(guestIds));
+        verify(guestRepository, times(1)).getGuestById(1L);
     }
 }

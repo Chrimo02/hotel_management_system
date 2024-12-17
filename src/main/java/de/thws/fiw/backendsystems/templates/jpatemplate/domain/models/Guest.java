@@ -21,6 +21,7 @@ public class Guest {
         this.eMail = guestBuilder.eMail;
         this.phoneNumber = guestBuilder.phoneNumber;
         this.bookingsHistory = new ArrayList<>();
+        this.id = guestBuilder.id;
     }
 
 
@@ -30,9 +31,6 @@ public class Guest {
 
     public long getId() {
         return id;
-    }
-    public void setId(long id){
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -75,9 +73,7 @@ public class Guest {
         this.title = title;
     }
 
-    public void setBookingsHistory(List<Booking> bookingsHistory) {
-        this.bookingsHistory = bookingsHistory;
-    }
+
 
     public static class GuestBuilder{
         long id;
@@ -87,6 +83,7 @@ public class Guest {
         LocalDate birthday;
         String eMail;
         String phoneNumber;
+        List<Booking> bookingsHistory;
 
         public GuestBuilder(){};
         public GuestBuilder withFirstName(String firstName){
@@ -111,6 +108,14 @@ public class Guest {
         }
         public GuestBuilder withPhoneNumber(String phoneNumber){
             this.phoneNumber = phoneNumber;
+            return this;
+        }
+        public GuestBuilder withId(long id){
+            this.id = id;
+            return this;
+        }
+        public GuestBuilder withBookingsHistory(List<Booking> bookingsHistory){
+            this.bookingsHistory = bookingsHistory;
             return this;
         }
         public Guest build(){

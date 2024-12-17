@@ -37,17 +37,18 @@ public class GuestMapper {
         return result;
     }
     public Guest guestEntityToGuest(GuestEntity guestEntity){
+        List<Booking> history = guestEntity.getBookingsHistory().stream().map(bookingMapper::bookingEntityToBooking).toList();
+
         Guest guest = new Guest.GuestBuilder()
+                .withId(guestEntity.getId())
                 .withFirstName(guestEntity.getFirstName())
                 .withLastName(guestEntity.getLastName())
                 .withTitle(guestEntity.getTitle())
                 .withBirthday(guestEntity.getBirthday().getYear(),guestEntity.getBirthday().getMonthValue(),guestEntity.getBirthday().getDayOfMonth())
                 .withEMail(guestEntity.geteMail())
                 .withPhoneNumber(guestEntity.getPhoneNumber())
+                .withBookingsHistory(history)
                 .build();
-        List<Booking> history = guestEntity.getBookingsHistory().stream().map(bookingMapper::bookingEntityToBooking).toList();
-        guest.setBookingsHistory(history);
-        guest.setId(guestEntity.getId());
         return guest;
     }
     public List<Guest> guestEntitiesToGuests(List<GuestEntity> guestEntities){

@@ -31,30 +31,30 @@ public class GuestDatabaseAdapter implements GuestRepository {
     }
 
     @Override
-    public void updateEmail(long guestId, String newMail) {
-        GuestEntity guestEntity = guestDAO.read(guestId);
-        guestEntity.seteMail(newMail);
+    public void updateEmail(Guest guest) {
+        GuestEntity guestEntity = guestDAO.read(guest.getId());
+        guestEntity.seteMail(guest.geteMail());
         guestDAO.update(guestEntity);
     }
 
     @Override
-    public void updatePhone(long guestId, String newPhone) {
-        GuestEntity guestEntity = guestDAO.read(guestId);
-        guestEntity.setPhoneNumber(newPhone);
+    public void updatePhone(Guest guest) {
+        GuestEntity guestEntity = guestDAO.read(guest.getId());
+        guestEntity.setPhoneNumber(guest.getPhoneNumber());
         guestDAO.update(guestEntity);
     }
 
     @Override
-    public void updateLastName(long guestId, String newLastName) {
-        GuestEntity guestEntity = guestDAO.read(guestId);
-        guestEntity.setLastName(newLastName);
+    public void updateLastName(Guest guest) {
+        GuestEntity guestEntity = guestDAO.read(guest.getId());
+        guestEntity.setLastName(guest.getLastName());
         guestDAO.update(guestEntity);
     }
 
     @Override
-    public void updateTitle(long guestId, String newTitle) {
-        GuestEntity guestEntity = guestDAO.read(guestId);
-        guestEntity.setTitle(newTitle);
+    public void updateTitle(Guest guest) {
+        GuestEntity guestEntity = guestDAO.read(guest.getId());
+        guestEntity.setTitle(guest.getTitle());
         guestDAO.update(guestEntity);
     }
 
@@ -67,16 +67,16 @@ public class GuestDatabaseAdapter implements GuestRepository {
     @Override
     public Guest getGuestById(long id) {
         GuestEntity entity = guestDAO.read(id);
-        Guest newGuest = new Guest.GuestBuilder()
+        List<Booking> history = bookingMapper.toDomainList(entity.getBookingsHistory());
+        return new Guest.GuestBuilder()
+                .withId(entity.getId())
                 .withFirstName(entity.getFirstName())
                 .withLastName(entity.getLastName())
                 .withTitle(entity.getTitle())
                 .withBirthday(entity.getBirthday().getYear(), entity.getBirthday().getMonthValue(), entity.getBirthday().getDayOfMonth())
                 .withEMail(entity.geteMail())
                 .withPhoneNumber(entity.getPhoneNumber())
+                .withBookingsHistory(history)
                 .build();
-        List<Booking> history = bookingMapper.toDomainList(entity.getBookingsHistory());
-        newGuest.setBookingsHistory(history);
-        return newGuest;
     }
 }

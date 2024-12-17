@@ -42,22 +42,22 @@ public class GuestService {
     public void updateEMail(long guestId, String newMail) throws GuestNotFoundException {
         Guest guest = getNotNullGuest(guestId);
         guest.seteMail(newMail); //führt Änderung in der Business-logic aus
-        guestRepository.updateEmail(guestId,newMail); //callt den GuestDatabaseAdapter, damit die Änderung auch in der Datenbank gespeichert wird
+        guestRepository.updateEmail(guest); //callt den GuestDatabaseAdapter, damit die Änderung auch in der Datenbank gespeichert wird
     }
     public void updatePhone(long guestId, String newPhone) throws GuestNotFoundException {
         Guest guest = getNotNullGuest(guestId);
         guest.setPhoneNumber(newPhone);
-        guestRepository.updatePhone(guestId,newPhone);
+        guestRepository.updatePhone(guest);
     }
     public void updateLastName(long guestId, String newLastName) throws GuestNotFoundException {
         Guest guest = getNotNullGuest(guestId);
         guest.setLastName(newLastName);
-        guestRepository.updateLastName(guestId,newLastName);
+        guestRepository.updateLastName(guest);
     }
     public void updateTitle(long guestId, String newTitle) throws GuestNotFoundException {
         Guest guest = getNotNullGuest(guestId);
         guest.setTitle(newTitle);
-        guestRepository.updateTitle(guestId,newTitle);
+        guestRepository.updateTitle(guest);
 
     }
     public void deleteGuest(long guestId) throws GuestNotFoundException {
