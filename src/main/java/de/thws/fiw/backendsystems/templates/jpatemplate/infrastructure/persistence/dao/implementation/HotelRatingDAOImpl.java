@@ -8,7 +8,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
+import java.util.Map;
+
+
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 @ApplicationScoped
 public class HotelRatingDAOImpl implements HotelRatingDAO {
 
@@ -40,13 +46,26 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
     }
 
     @Override
-    public Optional<List<HotelRatingEntity>> findAll() {
-        TypedQuery<HotelRatingEntity> query = entityManager.createQuery("SELECT r FROM HotelRatingEntity r", HotelRatingEntity.class);
-        return Optional.of(query.getResultList());
+    public Optional<Map<Long, HotelRatingEntity>> findAll() {
+        TypedQuery<HotelRatingEntity> query = entityManager.createQuery(
+                "SELECT r FROM HotelRatingEntity r",
+                HotelRatingEntity.class
+        );
+        List<HotelRatingEntity> resultList = query.getResultList();
+
+        if (resultList.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Map<Long, HotelRatingEntity> ratingMap = resultList.stream()
+                .collect(Collectors.toMap(HotelRatingEntity::getId, Function.identity()));
+
+        return Optional.of(ratingMap);
     }
 
+
     @Override
-    public Optional<List<HotelRatingEntity>> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment) {
+    public Optional<Map<Long, HotelRatingEntity>> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment) {
         String queryString = "SELECT r FROM HotelRatingEntity r WHERE r.hotel.id = :hotelID AND r.starRating = :starRating";
         if (onlyWithComment) {
             queryString += " AND r.commentRating IS NOT NULL AND r.commentRating != ''";
@@ -56,8 +75,18 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
         query.setParameter("hotelID", hotelID);
         query.setParameter("starRating", starRating);
 
-        return Optional.of(query.getResultList());
+        List<HotelRatingEntity> resultList = query.getResultList();
+
+        if (resultList.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Map<Long, HotelRatingEntity> ratingMap = resultList.stream()
+                .collect(Collectors.toMap(HotelRatingEntity::getId, Function.identity()));
+
+        return Optional.of(ratingMap);
     }
+
 
 
     @Override

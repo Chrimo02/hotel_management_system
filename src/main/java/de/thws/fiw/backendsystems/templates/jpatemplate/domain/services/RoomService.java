@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class RoomService {
@@ -30,17 +31,12 @@ public class RoomService {
         if (room == null) throw new RoomNotFoundException("There is no Booking with the specified ID!");
         return room;
     }
-    public void bookRoom(Booking booking) throws RoomNotFoundException {
-        Room room = getRoomById(booking.getRooms().get(0).getId()); // Assuming only 1 room per booking for simplicity
-
-        // Check if the room is available
-        if (!isAvailable(room, booking)) {
-            throw new RuntimeException("Room is not available for the selected dates.");
+    public void bookRooms(Booking booking) {
+        List<Room> rooms = booking.getRooms();
+        for(Room room : rooms){
+            room.getBookings().add(booking);
+            roomRepository.updateRoom(room);
         }
-
-        // Add the booking to the room's booking set
-        room.getBookings().add(booking);
-        roomRepository.updateRoom(room); // Persist the room with the new booking
     }
 
     public void cancelRoom(long roomId, LocalDate checkIn, LocalDate checkOut) throws RoomNotFoundException, BookingNotFoundException {

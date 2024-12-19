@@ -11,6 +11,7 @@ import jakarta.inject.Inject;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -38,7 +39,7 @@ public class HotelRatingDatabaseAdapter implements HotelRatingRepository {
     }
 
     @Override
-    public List<HotelRating> findByStarRating(String starRating) {
+    public Map<Long, HotelRating> findByStarRating(String starRating) {
         return null;
     }
 
@@ -48,10 +49,10 @@ public class HotelRatingDatabaseAdapter implements HotelRatingRepository {
     }
 
     @Override
-    public List<HotelRating> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment) {
+    public Map<Long, HotelRating> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment) {
         return hotelRatingDAO.findFilteredRatings(hotelID, starRating, onlyWithComment)
-                .map(hotelRatingMapper::mapToDomainList) // Mappen der Liste von Entity auf Domain
-                .orElse(Collections.emptyList()); // Fallback: leere Liste
+                .map(hotelRatingMapper::mapToDomainMap) // Mappen der Liste von Entity auf Domain
+                .orElse(Collections.emptyMap()); // Fallback: leere Liste
     }
 
 

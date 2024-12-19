@@ -1,6 +1,7 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.domain.services;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.exceptions.BookingNotFoundException;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.exceptions.GuestNotFoundException;
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.exceptions.RoomNotFoundException;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.*;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.BookingRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -41,7 +42,7 @@ public class BookingService {
         roomService.bookRooms(booking);
     }
 
-    public void cancelBooking(long bookingID) throws BookingNotFoundException{
+    public void cancelBooking(long bookingID) throws BookingNotFoundException, RoomNotFoundException {
         Booking booking = getNotNullBooking(bookingID);
         if(ChronoUnit.DAYS.between(LocalDate.now(), booking.getCheckInDate()) < 2) throw new RuntimeException("Sorry, the cancellation deadline has already expired!");
         for(Room room : booking.getRooms()){

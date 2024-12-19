@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface BookingRepository {
-    void createBooking(Hotel hotel, LocalDate checkInDate, LocalDate checkOutDate, List<Room> rooms, List<Guest> guests);
+    Booking createBooking(Hotel hotel, LocalDate checkInDate, LocalDate checkOutDate, List<Room> rooms, List<Guest> guests);
     void updateBooking(Booking booking);
     Booking getBookingById(long bookingId);
 }

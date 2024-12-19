@@ -14,10 +14,13 @@ import java.util.stream.Collectors;
 public class RoomMapper {
     HotelMapper hotelMapper;
     RoomIdentifierMapper roomIdentifierMapper;
+    BookingMapper bookingMapper;
+
     @Inject
-    public RoomMapper(HotelMapper hotelMapper, RoomIdentifierMapper roomIdentifierMapper) {
+    public RoomMapper(HotelMapper hotelMapper, RoomIdentifierMapper roomIdentifierMapper, BookingMapper bookingMapper) {
         this.hotelMapper = hotelMapper;
         this.roomIdentifierMapper = roomIdentifierMapper;
+        this.bookingMapper = bookingMapper;
     }
 
     public Room entityToDomain(RoomEntity roomEntity) {
@@ -44,14 +47,14 @@ public class RoomMapper {
     }
     public RoomEntity domainToEntity(Room room) {
         if (room instanceof SingleRoom){
-            RoomEntity entity = new SingleRoomEntity(room.getId(),room.getPricePerNight(),roomIdentifierMapper.domainToEntity(room.getRoomIdentifier()),hotelMapper.mapDomainHotelToHotelEntity(room.getHotel()));
-            entity.setAvailabilityMap(room.getAvailabilityMap());
-            return entity;
+            RoomEntity roomEntity = new SingleRoomEntity(room.getId(),room.getPricePerNight(),roomIdentifierMapper.domainToEntity(room.getRoomIdentifier()),hotelMapper.mapDomainHotelToHotelEntity(room.getHotel()));
+            roomEntity.setBookings(bookingMapper.toEntitySet(room.getBookings()));
+            return roomEntity;
         }
         else if (room instanceof DoubleRoom){
-            RoomEntity entity = new DoubleRoomEntity(room.getId(), room.getPricePerNight(), roomIdentifierMapper.domainToEntity(room.getRoomIdentifier()), hotelMapper.mapDomainHotelToHotelEntity(room.getHotel()));
-            entity.setAvailabilityMap(room.getAvailabilityMap());
-            return entity;
+            RoomEntity roomEntity = new DoubleRoomEntity(room.getId(), room.getPricePerNight(), roomIdentifierMapper.domainToEntity(room.getRoomIdentifier()), hotelMapper.mapDomainHotelToHotelEntity(room.getHotel()));
+            roomEntity.setBookings(bookingMapper.toEntitySet(room.getBookings()));
+            return roomEntity;
         }
         return null;
     }
