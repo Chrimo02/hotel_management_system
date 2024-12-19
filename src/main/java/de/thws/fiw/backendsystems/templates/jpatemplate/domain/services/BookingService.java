@@ -37,7 +37,8 @@ public class BookingService {
         List<Room> rooms = roomService.findAvailableRooms(hotelId, roomTypes, checkInDate, checkOutDate);
         List<Guest> guests = guestService.loadGuests(guestIds);
         Hotel hotel = hotelService.getHotelByHotelId(hotelId);
-        bookingRepository.createBooking(hotel, checkInDate, checkOutDate, rooms, guests);
+        Booking booking = bookingRepository.createBooking(hotel, checkInDate, checkOutDate, rooms, guests);
+        roomService.bookRooms(booking);
     }
 
     public void cancelBooking(long bookingID) throws BookingNotFoundException{

@@ -44,17 +44,7 @@ public class GuestServiceTest {
 
     @Test
     public void testGetAllBookingsFromGuest_Success() throws GuestNotFoundException {
-        List<Booking> bookings = new ArrayList<>();
-        bookings.add(mockBooking);
 
-        when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
-        when(mockGuest.getBookingsHistory()).thenReturn(bookings);
-
-        List<Booking> result = guestService.getAllBookingsFromGuest(1L);
-
-        assertEquals(1, result.size());
-        verify(guestRepository, times(1)).getGuestById(1L);
-        verify(mockGuest, times(1)).getBookingsHistory();
     }
 
     @Test

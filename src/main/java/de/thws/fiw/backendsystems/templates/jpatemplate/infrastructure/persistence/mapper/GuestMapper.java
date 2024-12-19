@@ -20,15 +20,12 @@ public class GuestMapper {
     }
     public GuestEntity guestToGuestEntity(Guest guest){
         GuestEntity guestEntity = new GuestEntity(guest.getFirstName(), guest.getLastName(), guest.getTitle(),guest.getBirthday().getYear(),guest.getBirthday().getMonthValue(),guest.getBirthday().getDayOfMonth(),guest.geteMail(),guest.getPhoneNumber());
-        List<BookingEntity> history = guest.getBookingsHistory().stream().map(bookingMapper::bookingToBookingEntity).toList();
-        guestEntity.setBookingsHistory(history);
         guestEntity.setId(guest.getId());
         return guestEntity;
     }
 
     public List<GuestEntity> guestsToGuestEntities(List<Guest> guests){
         if(guests == null) return null;
-
         List<GuestEntity> result = new ArrayList<>();
         for (Guest g : guests){
             GuestEntity entity = this.guestToGuestEntity(g);
@@ -37,8 +34,6 @@ public class GuestMapper {
         return result;
     }
     public Guest guestEntityToGuest(GuestEntity guestEntity){
-        List<Booking> history = guestEntity.getBookingsHistory().stream().map(bookingMapper::bookingEntityToBooking).toList();
-
         Guest guest = new Guest.GuestBuilder()
                 .withId(guestEntity.getId())
                 .withFirstName(guestEntity.getFirstName())
@@ -47,7 +42,6 @@ public class GuestMapper {
                 .withBirthday(guestEntity.getBirthday().getYear(),guestEntity.getBirthday().getMonthValue(),guestEntity.getBirthday().getDayOfMonth())
                 .withEMail(guestEntity.geteMail())
                 .withPhoneNumber(guestEntity.getPhoneNumber())
-                .withBookingsHistory(history)
                 .build();
         return guest;
     }

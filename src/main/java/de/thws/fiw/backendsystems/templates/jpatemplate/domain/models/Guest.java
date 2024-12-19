@@ -11,7 +11,6 @@ public class Guest {
     private LocalDate birthday;
     private String eMail;
     private String phoneNumber;
-    private List<Booking> bookingsHistory;  // --> aufpassen, dass beim Erstellen jeder Buchung auch die Buchung zur History hinzugefügt wird
 
     private Guest(GuestBuilder guestBuilder) {
         this.firstName = guestBuilder.firstName;
@@ -20,13 +19,7 @@ public class Guest {
         this.birthday = guestBuilder.birthday;
         this.eMail = guestBuilder.eMail;
         this.phoneNumber = guestBuilder.phoneNumber;
-        this.bookingsHistory = new ArrayList<>();
         this.id = guestBuilder.id;
-    }
-
-
-    public List<Booking> getBookingsHistory(){
-        return this.bookingsHistory;
     }
 
     public long getId() {
@@ -83,7 +76,6 @@ public class Guest {
         LocalDate birthday;
         String eMail;
         String phoneNumber;
-        List<Booking> bookingsHistory;
 
         public GuestBuilder(){};
         public GuestBuilder withFirstName(String firstName){
@@ -114,10 +106,7 @@ public class Guest {
             this.id = id;
             return this;
         }
-        public GuestBuilder withBookingsHistory(List<Booking> bookingsHistory){
-            this.bookingsHistory = bookingsHistory;
-            return this;
-        }
+
         public Guest build(){
             return new Guest(this);
         }

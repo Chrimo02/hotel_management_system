@@ -48,7 +48,6 @@ public class GuestTest {
         assertEquals(LocalDate.of(1990, 5, 20), guest.getBirthday());
         assertEquals("john.doe@example.com", guest.geteMail());
         assertEquals("1234567890", guest.getPhoneNumber());
-        assertTrue(guest.getBookingsHistory().isEmpty());
     }
 
     @Test
@@ -76,70 +75,13 @@ public class GuestTest {
     }
 
     @Test
-    public void testBookingsHistory_AddBookingsUsingMocks() {
-        // Mocked Bookings
-        List<Booking> mockedBookings = new ArrayList<>();
-        mockedBookings.add(mockBooking1);
-        mockedBookings.add(mockBooking2);
-
-        guest.getBookingsHistory().addAll(mockedBookings);
-
-        List<Booking> bookings = guest.getBookingsHistory();
-        assertEquals(2, bookings.size());
-        assertTrue(bookings.contains(mockBooking1));
-        assertTrue(bookings.contains(mockBooking2));
-
-        // Verify no methods are called on mock objects (isolated)
-        verifyNoInteractions(mockBooking1, mockBooking2);
-    }
-
-    @Test
-    public void testBookingsHistory_AddBookingDoesNotModifyExternalList() {
-        List<Booking> externalBookings = new ArrayList<>();
-        externalBookings.add(mockBooking1);
-
-        guest = new Guest.GuestBuilder()
-                .withBookingsHistory(externalBookings)
-                .build();
-
-        // Add another booking internally
-        guest.getBookingsHistory().add(mockBooking2);
-
-        assertEquals(2, guest.getBookingsHistory().size());
-        assertTrue(guest.getBookingsHistory().contains(mockBooking1));
-        assertTrue(guest.getBookingsHistory().contains(mockBooking2));
-
-        // Verify external list remains unchanged
-        assertEquals(1, externalBookings.size());
-        assertTrue(externalBookings.contains(mockBooking1));
-    }
-
-    @Test
     public void testGuestBuilder_WithOptionalFieldsAndMockedBookings() {
-        List<Booking> mockedBookings = new ArrayList<>();
-        mockedBookings.add(mockBooking1);
-
         Guest guestWithBookings = new Guest.GuestBuilder()
                 .withId(2L)
                 .withFirstName("Jane")
-                .withBookingsHistory(mockedBookings)
                 .build();
-
         assertEquals(2L, guestWithBookings.getId());
         assertEquals("Jane", guestWithBookings.getFirstName());
-        assertEquals(1, guestWithBookings.getBookingsHistory().size());
-        assertTrue(guestWithBookings.getBookingsHistory().contains(mockBooking1));
-    }
-
-    @Test
-    public void testGuestBuilder_NullBookingsHistoryIsHandledGracefully() {
-        Guest guestWithNullBookings = new Guest.GuestBuilder()
-                .withFirstName("Jane")
-                .withBookingsHistory(null)
-                .build();
-
-        assertNotNull(guestWithNullBookings.getBookingsHistory());
-        assertTrue(guestWithNullBookings.getBookingsHistory().isEmpty());
     }
 
     @Test
@@ -154,6 +96,5 @@ public class GuestTest {
         assertNull(minimalGuest.getBirthday());
         assertNull(minimalGuest.geteMail());
         assertNull(minimalGuest.getPhoneNumber());
-        assertTrue(minimalGuest.getBookingsHistory().isEmpty());
     }
 }

@@ -67,7 +67,6 @@ public class GuestDatabaseAdapter implements GuestRepository {
     @Override
     public Guest getGuestById(long id) {
         GuestEntity entity = guestDAO.read(id);
-        List<Booking> history = bookingMapper.toDomainList(entity.getBookingsHistory());
         return new Guest.GuestBuilder()
                 .withId(entity.getId())
                 .withFirstName(entity.getFirstName())
@@ -76,7 +75,6 @@ public class GuestDatabaseAdapter implements GuestRepository {
                 .withBirthday(entity.getBirthday().getYear(), entity.getBirthday().getMonthValue(), entity.getBirthday().getDayOfMonth())
                 .withEMail(entity.geteMail())
                 .withPhoneNumber(entity.getPhoneNumber())
-                .withBookingsHistory(history)
                 .build();
     }
 }

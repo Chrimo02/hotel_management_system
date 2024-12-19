@@ -9,6 +9,7 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persisten
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.GuestEntity;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelEntity;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.RoomEntity;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.mapper.BookingMapper;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.mapper.HotelMapper;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.mapper.RoomMapper;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.mapper.GuestMapper;
@@ -29,17 +30,19 @@ public class BookingDatabaseAdapter implements BookingRepository {
     private final RoomMapper roomMapper;
     private final GuestMapper guestMapper;
     private final HotelMapper hotelMapper;
+    private final BookingMapper bookingMapper;
 
     @Inject
-    public BookingDatabaseAdapter(BookingDAO bookingDAO, RoomMapper roomMapper, GuestMapper guestMapper, HotelMapper hotelMapper) {
+    public BookingDatabaseAdapter(BookingDAO bookingDAO, RoomMapper roomMapper, GuestMapper guestMapper, HotelMapper hotelMapper, BookingMapper bookingMapper) {
         this.bookingDAO = bookingDAO;
         this.roomMapper = roomMapper;
         this.guestMapper = guestMapper;
         this.hotelMapper = hotelMapper;
+        this.bookingMapper = bookingMapper;
     }
 
     @Override
-    public void createBooking(Hotel hotel, LocalDate checkInDate, LocalDate checkOutDate, List<Room> rooms, List<Guest> guests) {
+    public Booking createBooking(Hotel hotel, LocalDate checkInDate, LocalDate checkOutDate, List<Room> rooms, List<Guest> guests) {
 
         List<RoomEntity> roomEntities = roomMapper.toEntityList(rooms);
         List<GuestEntity> guestEntities = guestMapper.guestsToGuestEntities(guests);
@@ -47,7 +50,8 @@ public class BookingDatabaseAdapter implements BookingRepository {
 
         BookingEntity bookingEntity = new BookingEntity(hotelEntity, checkInDate, checkOutDate, roomEntities, guestEntities);
 
-        bookingDAO.create(bookingEntity);
+        return bookingMapper.bookingEntityToBooking(bookingDAO.create(bookingEntity));
+
     }
 
     //can only change status, checkintime and checkouttime as everything other than that is permanent.

@@ -22,7 +22,6 @@ public class BookingEntity {
     @Column (nullable = false)
     private LocalDate checkOutDate;
 
-    // beziehung mit Guest ---> Buchung hat mehrere Gäste und ein Gast hat mehrere Buchungen
     @ManyToMany
     @JoinTable(
             name = "booking_guest", // Name der Zwischentabelle

@@ -50,7 +50,6 @@ public class GuestRepoTest {
                 .withBirthday(1990, 5, 20)
                 .withEMail("john.doe@example.com")
                 .withPhoneNumber("1234567890")
-                .withBookingsHistory(Collections.emptyList())
                 .build();
 
         mockGuestEntity = new GuestEntity();
@@ -61,7 +60,6 @@ public class GuestRepoTest {
         mockGuestEntity.setBirthday(LocalDate.of(1990, 5, 20));
         mockGuestEntity.seteMail("john.doe@example.com");
         mockGuestEntity.setPhoneNumber("1234567890");
-        mockGuestEntity.setBookingsHistory(Collections.emptyList());
     }
 
     @Test
@@ -143,21 +141,16 @@ public class GuestRepoTest {
     @Test
     public void testGetGuestById_Success() {
         when(guestDAO.read(1L)).thenReturn(mockGuestEntity);
-        when(bookingMapper.toDomainList(mockGuestEntity.getBookingsHistory())).thenReturn(Collections.emptyList());
-
         Guest result = guestDatabaseAdapter.getGuestById(1L);
-
         assertNotNull(result);
         assertEquals(1L, result.getId());
         assertEquals("John", result.getFirstName());
         verify(guestDAO, times(1)).read(1L);
-        verify(bookingMapper, times(1)).toDomainList(mockGuestEntity.getBookingsHistory());
     }
 
     @Test
     public void testGetGuestById_NullEntity() {
         when(guestDAO.read(1L)).thenReturn(null);
-
         assertThrows(NullPointerException.class, () -> guestDatabaseAdapter.getGuestById(1L));
         verify(guestDAO, times(1)).read(1L);
     }

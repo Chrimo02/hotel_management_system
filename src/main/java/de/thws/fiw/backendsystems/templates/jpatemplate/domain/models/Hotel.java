@@ -9,7 +9,7 @@ public class Hotel {
     private String name;
     private String description;
     private HotelLocation location;
-    private double averageRating;     //Todo: Im Hotel-service noch Methode die alle bookings durchläuft und dann eine Durchschnittsbewertung speichert implementieren
+    private double averageRating;
 
     private List<Room> rooms;
     private List<Booking> bookings;

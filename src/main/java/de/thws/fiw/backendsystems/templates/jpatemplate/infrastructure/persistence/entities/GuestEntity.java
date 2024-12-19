@@ -22,8 +22,7 @@ public class GuestEntity {
     private String eMail;
     @Column (nullable = false)
     private String phoneNumber;
-    @ManyToMany (mappedBy = "guests")
-    private List<BookingEntity> bookingsHistory;
+
 
     public GuestEntity(String firstName, String lastName, String title, int yearBirthday,int monthBirtday, int dayBirthday, String eMail, String phoneNumber) {
         this.firstName = firstName;
@@ -63,9 +62,6 @@ public class GuestEntity {
         return phoneNumber;
     }
 
-    public List<BookingEntity> getBookingsHistory() {
-        return bookingsHistory;
-    }
 
     public void setId(long id) {
         this.id = id;
@@ -95,7 +91,4 @@ public class GuestEntity {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setBookingsHistory(List<BookingEntity> bookingsHistory) {
-        this.bookingsHistory = bookingsHistory;
-    }
 }

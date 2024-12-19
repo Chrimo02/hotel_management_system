@@ -12,10 +12,12 @@ import java.util.List;
 @ApplicationScoped
 public class GuestService {
     private final GuestRepository guestRepository;
+    private final HotelService hotelService;
 
     @Inject
-    public GuestService(GuestRepository guestRepository){
+    public GuestService(GuestRepository guestRepository, HotelService hotelService){
         this.guestRepository = guestRepository;
+        this.hotelService = hotelService;
     }
     public void createGuest(String firstName, String lastName, String title, int year,int month, int day, String eMail, String phoneNumber){
         Guest guest = new Guest.GuestBuilder()
@@ -34,9 +36,8 @@ public class GuestService {
         if (guest == null) throw new GuestNotFoundException("There is no Guest with the specified ID!");
         else return guest;
     }
-    public List<Booking> getAllBookingsFromGuest(long guestId) throws GuestNotFoundException{
-        Guest guest = getNotNullGuest(guestId);
-        return guest.getBookingsHistory();
+    public List<Booking> getAllBookingsFromGuest(long guestId){
+        return guestRepository.getBookingsByGuestId(guestId);
     }
 
     public void updateEMail(long guestId, String newMail) throws GuestNotFoundException {
