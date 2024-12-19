@@ -37,6 +37,7 @@ public class RoomMapper {
                     hotelMapper.mapHotelEntityToDomainHotel(roomEntity.getHotel()))
                     .withId(roomEntity.getId())
                     .build();
+            room.setBookings(bookingMapper.toDomainSet(roomEntity.getBookings()));
             return room;
         }
         return null;

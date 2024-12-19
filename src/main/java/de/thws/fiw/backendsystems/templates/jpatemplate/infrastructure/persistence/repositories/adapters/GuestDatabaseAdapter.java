@@ -9,8 +9,9 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persisten
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.GuestRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.BookingEntity;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class GuestDatabaseAdapter implements GuestRepository {
@@ -76,5 +77,12 @@ public class GuestDatabaseAdapter implements GuestRepository {
                 .withEMail(entity.geteMail())
                 .withPhoneNumber(entity.getPhoneNumber())
                 .build();
+    }
+
+    public List<Booking> getBookingsByGuestId(long guestId) {
+        List<BookingEntity> bookingEntities = guestDAO.findBookingsByGuestId(guestId);
+        return bookingEntities.stream()
+                .map(bookingMapper::bookingEntityToBooking)
+                .collect(Collectors.toList());
     }
 }

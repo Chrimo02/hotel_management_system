@@ -14,13 +14,14 @@ public class BookingDAOImpl implements BookingDAO {
     }
 
     @Override
-    public void create(BookingEntity bookingEntity) {
+    public BookingEntity create(BookingEntity bookingEntity) {
         EntityManager em = null;
         try {
             em = entityManager();
             em.getTransaction().begin();
             em.persist(bookingEntity);
             em.getTransaction().commit();
+            return bookingEntity;
         } catch (Exception e) {
             if (em != null && em.getTransaction().isActive()) {
                 em.getTransaction().rollback();

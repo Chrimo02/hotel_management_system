@@ -111,7 +111,7 @@ public class RoomService {
         return rooms;
     }
 
-    private boolean isAvailable(Room room, LocalDate checkIn, LocalDate checkOut) {
+    public boolean isAvailable(Room room, LocalDate checkIn, LocalDate checkOut) {
         Set<Booking> bookings = room.getBookings();
         for (Booking existingBooking : bookings) {
             if (isOverlapping(existingBooking, checkIn, checkOut)) {
