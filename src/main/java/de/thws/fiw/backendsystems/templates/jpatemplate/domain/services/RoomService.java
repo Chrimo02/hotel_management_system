@@ -18,6 +18,7 @@ import java.util.Set;
 public class RoomService {
     private final RoomRepository roomRepository;
     private final HotelService hotelService;
+
     @Inject
     public RoomService(RoomRepository roomRepository, HotelService hotelService) {
         this.roomRepository = roomRepository;
