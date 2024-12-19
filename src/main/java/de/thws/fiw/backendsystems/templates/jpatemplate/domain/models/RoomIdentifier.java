@@ -1,11 +1,18 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.domain.models;
 
 public class RoomIdentifier {
+    private long id;
     private String building;
     private int floor;
     private String roomNumber;
 
     public RoomIdentifier(String building, int floor, String roomNumber) {
+        this.building = building;
+        this.floor = floor;
+        this.roomNumber = roomNumber;
+    }
+    public RoomIdentifier(long id, String building, int floor, String roomNumber) {
+        this.id = id;
         this.building = building;
         this.floor = floor;
         this.roomNumber = roomNumber;

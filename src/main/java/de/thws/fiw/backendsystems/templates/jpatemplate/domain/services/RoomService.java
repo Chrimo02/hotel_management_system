@@ -4,6 +4,7 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.domain.exceptions.Bookin
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.exceptions.RoomNotFoundException;
 import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.*;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.HotelRepository;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.RoomIdentifierRepository;
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.RoomRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -19,11 +20,13 @@ import java.util.stream.Collectors;
 public class RoomService {
     private final RoomRepository roomRepository;
     private final HotelService hotelService;
+    private final RoomIdentifierRepository roomIdentifierRepository;
 
     @Inject
-    public RoomService(RoomRepository roomRepository, HotelService hotelService) {
+    public RoomService(RoomRepository roomRepository, HotelService hotelService, RoomIdentifierRepository roomIdentifierRepository) {
         this.roomRepository = roomRepository;
         this.hotelService = hotelService;
+        this.roomIdentifierRepository = roomIdentifierRepository;
     }
 
     private Room getRoomById(long roomId) throws RoomNotFoundException{
@@ -89,6 +92,7 @@ public class RoomService {
         }
         else throw new RuntimeException("Invalid room type!"); //wird nicht gebraucht, wenn wir sicher sind, dass nur 2 mögliche Room Arten bekommen werden
         roomRepository.saveRoom(room);
+        roomIdentifierRepository.saveRoomIdentifier(roomIdentifier);
     }
 
     public void removeRoom(long roomId) {

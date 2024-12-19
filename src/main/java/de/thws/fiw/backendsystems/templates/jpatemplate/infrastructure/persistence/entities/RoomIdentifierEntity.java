@@ -6,9 +6,10 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "room_identifier")
 public class RoomIdentifierEntity {
+    @Id
+    private long id;
     private String building;
     private int floor;
-    @Id
     private String roomNumber;
     @OneToOne
     @JoinColumn(name = "room_id")
@@ -17,6 +18,12 @@ public class RoomIdentifierEntity {
 
     }
     public RoomIdentifierEntity(String building, int floor, String roomNumber) {
+        this.building = building;
+        this.floor = floor;
+        this.roomNumber = roomNumber;
+    }
+    public RoomIdentifierEntity(long id, String building, int floor, String roomNumber) {
+        this.id = id;
         this.building = building;
         this.floor = floor;
         this.roomNumber = roomNumber;
