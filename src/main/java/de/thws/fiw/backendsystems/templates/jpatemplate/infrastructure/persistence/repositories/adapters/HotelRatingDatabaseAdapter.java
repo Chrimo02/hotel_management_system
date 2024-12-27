@@ -49,11 +49,12 @@ public class HotelRatingDatabaseAdapter implements HotelRatingRepository {
     }
 
     @Override
-    public Map<Long, HotelRating> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment) {
+    public List<HotelRating> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment) {
         return hotelRatingDAO.findFilteredRatings(hotelID, starRating, onlyWithComment)
-                .map(hotelRatingMapper::mapToDomainMap) // Mappen der Liste von Entity auf Domain
-                .orElse(Collections.emptyMap()); // Fallback: leere Liste
+                .map(hotelRatingMapper::mapToDomainList) // Map the list of entities to domain models
+                .orElse(Collections.emptyList()); // Fallback: empty list
     }
+
 
 
 

@@ -65,7 +65,7 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
 
 
     @Override
-    public Optional<Map<Long, HotelRatingEntity>> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment) {
+    public Optional<List<HotelRatingEntity>> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment) {
         String queryString = "SELECT r FROM HotelRatingEntity r WHERE r.hotel.id = :hotelID AND r.starRating = :starRating";
         if (onlyWithComment) {
             queryString += " AND r.commentRating IS NOT NULL AND r.commentRating != ''";
@@ -81,10 +81,7 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
             return Optional.empty();
         }
 
-        Map<Long, HotelRatingEntity> ratingMap = resultList.stream()
-                .collect(Collectors.toMap(HotelRatingEntity::getId, Function.identity()));
-
-        return Optional.of(ratingMap);
+        return Optional.of(resultList);
     }
 
 

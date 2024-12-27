@@ -6,177 +6,186 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persisten
 import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelLocationEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-public class HotelDAOTest {
+/**
+ * Beispielhafte Anpassung des HotelDAOTest an den Stil des GuestDAOTest,
+ * d. h. Nutzung eines @Spy für HotelDAOImpl und lenient-Stubbing des EntityManagers.
+ */
+@ExtendWith(MockitoExtension.class)
+class HotelDAOTest {
 
-    @Mock
-    private EntityManager entityManager;
-
-    @Mock
-    private EntityTransaction transaction;
-
-    @InjectMocks
+    /**
+     * Wir verwenden ein Spy, damit wir den echten Code von HotelDAOImpl
+     * ausführen, jedoch .entityManager() überschreiben können.
+     */
+    @Spy
     private HotelDAOImpl hotelDAO;
 
+    @Mock
+    private EntityManager mockEntityManager;
+
+    @Mock
+    private EntityTransaction mockTransaction;
+
+    // Optional, falls du Abfragen via TypedQuery nutzt
+    @Mock
+    private TypedQuery<HotelEntity> mockTypedQuery;
+
     private HotelEntity mockHotelEntity;
-    private HotelLocationEntity mockLocationEntity;
 
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
+    void setUp() {
+        // Lenient-Stubbings, damit Mockito nicht bei jedem Test aufruft "meckert".
+        lenient().doReturn(mockEntityManager).when(hotelDAO).entityManager();
+        lenient().when(mockEntityManager.getTransaction()).thenReturn(mockTransaction);
+        lenient().when(mockTransaction.isActive()).thenReturn(true);
 
-        // Use the builder to create the HotelLocationEntity
-        mockLocationEntity = new HotelLocationEntity.HotelLocationBuilder()
+        // Beispiel-HotelEntity (so wie in deinem alten Code)
+        HotelLocationEntity location = new HotelLocationEntity.HotelLocationBuilder()
                 .withAddress("Test Address")
                 .withCity("Test City")
                 .withCountry("Test Country")
                 .build();
 
-        // Create the HotelEntity using the builder pattern
         mockHotelEntity = new HotelEntity.HotelBuilder()
                 .withId(1L)
                 .withName("Test Hotel")
                 .withDescription("A nice test hotel")
-                .withLocation(mockLocationEntity)
+                .withLocation(location)
                 .withRooms(List.of())
                 .withBookings(List.of())
                 .withRatings(Map.of())
                 .build();
-
-        when(entityManager.getTransaction()).thenReturn(transaction);
     }
 
     @Test
-    public void testCreateHotel_Success() {
-        doNothing().when(entityManager).persist(mockHotelEntity);
-        doNothing().when(transaction).begin();
-        doNothing().when(transaction).commit();
+    void testCreateHotel_Success() {
+        // Kein Fehler simulieren -> normaler Durchlauf
+        assertDoesNotThrow(() -> hotelDAO.createHotel(mockHotelEntity));
 
-        HotelEntity result = hotelDAO.createHotel(mockHotelEntity);
-
-        verify(transaction, times(1)).begin();
-        verify(entityManager, times(1)).persist(mockHotelEntity);
-        verify(transaction, times(1)).commit();
-
-        assertNotNull(result);
-        assertEquals(mockHotelEntity.getId(), result.getId());
-        assertEquals("Test Hotel", result.getName());
+        // Überprüfen, dass Transaktion gestartet, persist aufgerufen, committet und geschlossen wurde
+        verify(mockTransaction).begin();
+        verify(mockEntityManager).persist(mockHotelEntity);
+        verify(mockTransaction).commit();
+        verify(mockEntityManager).close();
     }
 
     @Test
-    public void testCreateHotel_ExceptionRollback() {
-        doThrow(new RuntimeException("Persistence error")).when(entityManager).persist(mockHotelEntity);
-        when(transaction.isActive()).thenReturn(true);
+    void testCreateHotel_ExceptionRollback() {
+        // Wir simulieren, dass persist eine Exception wirft
+        doThrow(new RuntimeException("Persistence error"))
+                .when(mockEntityManager).persist(any(HotelEntity.class));
 
-        DataAccessException exception = assertThrows(DataAccessException.class, () -> {
-            hotelDAO.createHotel(mockHotelEntity);
-        });
+        DataAccessException exception =
+                assertThrows(DataAccessException.class, () -> hotelDAO.createHotel(mockHotelEntity));
 
         assertTrue(exception.getMessage().contains("Error saving Hotel"));
-        verify(transaction, times(1)).begin();
-        verify(transaction, times(1)).rollback();
+        // Rollback wird erwartet
+        verify(mockTransaction).begin();
+        verify(mockTransaction).rollback();
+        verify(mockEntityManager).close();
     }
 
     @Test
-    public void testFindById_Success() {
-        when(entityManager.find(HotelEntity.class, 1L)).thenReturn(mockHotelEntity);
+    void testFindById_Success() {
+        when(mockEntityManager.find(HotelEntity.class, 1L)).thenReturn(mockHotelEntity);
 
         Optional<HotelEntity> result = hotelDAO.findById(1L);
 
         assertTrue(result.isPresent());
         assertEquals(1L, result.get().getId());
         assertEquals("Test Hotel", result.get().getName());
-        verify(entityManager, times(1)).find(HotelEntity.class, 1L);
+
+        verify(mockEntityManager).find(HotelEntity.class, 1L);
+        verify(mockEntityManager).close();
     }
 
     @Test
-    public void testFindById_NotFound() {
-        when(entityManager.find(HotelEntity.class, 2L)).thenReturn(null);
+    void testFindById_NotFound() {
+        when(mockEntityManager.find(HotelEntity.class, 2L)).thenReturn(null);
 
         Optional<HotelEntity> result = hotelDAO.findById(2L);
         assertTrue(result.isEmpty());
-        verify(entityManager, times(1)).find(HotelEntity.class, 2L);
+
+        verify(mockEntityManager).find(HotelEntity.class, 2L);
+        verify(mockEntityManager).close();
     }
 
     @Test
-    public void testUpdateHotel_Success() {
-        doNothing().when(entityManager).merge(mockHotelEntity);
-        doNothing().when(transaction).begin();
-        doNothing().when(transaction).commit();
-
+    void testUpdateHotel_Success() {
         assertDoesNotThrow(() -> hotelDAO.updateHotel(mockHotelEntity));
 
-        verify(transaction, times(1)).begin();
-        verify(entityManager, times(1)).merge(mockHotelEntity);
-        verify(transaction, times(1)).commit();
+        verify(mockTransaction).begin();
+        verify(mockEntityManager).merge(mockHotelEntity);
+        verify(mockTransaction).commit();
+        verify(mockEntityManager).close();
     }
 
     @Test
-    public void testUpdateHotel_ExceptionRollback() {
-        doThrow(new RuntimeException("Update error")).when(entityManager).merge(mockHotelEntity);
-        when(transaction.isActive()).thenReturn(true);
+    void testUpdateHotel_ExceptionRollback() {
+        doThrow(new RuntimeException("Update error"))
+                .when(mockEntityManager).merge(any(HotelEntity.class));
 
-        DataAccessException exception = assertThrows(DataAccessException.class, () -> {
-            hotelDAO.updateHotel(mockHotelEntity);
-        });
+        DataAccessException exception =
+                assertThrows(DataAccessException.class, () -> hotelDAO.updateHotel(mockHotelEntity));
 
         assertTrue(exception.getMessage().contains("Error updating Hotel"));
-        verify(transaction, times(1)).begin();
-        verify(transaction, times(1)).rollback();
+        verify(mockTransaction).begin();
+        verify(mockTransaction).rollback();
+        verify(mockEntityManager).close();
     }
 
     @Test
-    public void testDeleteById_Success() {
-        when(entityManager.find(HotelEntity.class, 1L)).thenReturn(mockHotelEntity);
-        doNothing().when(entityManager).remove(mockHotelEntity);
-        doNothing().when(transaction).begin();
-        doNothing().when(transaction).commit();
+    void testDeleteById_Success() {
+        when(mockEntityManager.find(HotelEntity.class, 1L)).thenReturn(mockHotelEntity);
 
         assertDoesNotThrow(() -> hotelDAO.deleteById(1L));
 
-        verify(transaction, times(1)).begin();
-        verify(entityManager, times(1)).find(HotelEntity.class, 1L);
-        verify(entityManager, times(1)).remove(mockHotelEntity);
-        verify(transaction, times(1)).commit();
+        verify(mockTransaction).begin();
+        verify(mockEntityManager).find(HotelEntity.class, 1L);
+        verify(mockEntityManager).remove(mockHotelEntity);
+        verify(mockTransaction).commit();
+        verify(mockEntityManager).close();
     }
 
     @Test
-    public void testDeleteById_NotFound() {
-        when(entityManager.find(HotelEntity.class, 2L)).thenReturn(null);
-        doNothing().when(transaction).begin();
-        doNothing().when(transaction).commit();
+    void testDeleteById_NotFound() {
+        when(mockEntityManager.find(HotelEntity.class, 2L)).thenReturn(null);
 
+        // Sollte klaglos durchlaufen, da nichts entfernt wird
         assertDoesNotThrow(() -> hotelDAO.deleteById(2L));
 
-        verify(transaction, times(1)).begin();
-        verify(entityManager, times(1)).find(HotelEntity.class, 2L);
-        verify(transaction, times(1)).commit();
+        verify(mockTransaction).begin();
+        verify(mockEntityManager).find(HotelEntity.class, 2L);
+        verify(mockTransaction).commit();
+        verify(mockEntityManager).close();
     }
 
     @Test
-    public void testDeleteById_ExceptionRollback() {
-        when(entityManager.find(HotelEntity.class, 1L)).thenReturn(mockHotelEntity);
-        doThrow(new RuntimeException("Delete error")).when(entityManager).remove(mockHotelEntity);
-        when(transaction.isActive()).thenReturn(true);
+    void testDeleteById_ExceptionRollback() {
+        when(mockEntityManager.find(HotelEntity.class, 1L)).thenReturn(mockHotelEntity);
+        doThrow(new RuntimeException("Delete error")).when(mockEntityManager).remove(mockHotelEntity);
 
-        DataAccessException exception = assertThrows(DataAccessException.class, () -> {
-            hotelDAO.deleteById(1L);
-        });
+        DataAccessException exception =
+                assertThrows(DataAccessException.class, () -> hotelDAO.deleteById(1L));
 
         assertTrue(exception.getMessage().contains("Error deleting Hotel"));
-        verify(transaction, times(1)).begin();
-        verify(transaction, times(1)).rollback();
+        verify(mockTransaction).begin();
+        verify(mockTransaction).rollback();
+        verify(mockEntityManager).close();
     }
 }

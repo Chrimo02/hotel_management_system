@@ -107,12 +107,12 @@ public class HotelService {
     }
 
     public List<HotelRating> getHotelRatingsByHotelId(long hotelID, int starRating, boolean onlyWithComment) {
-        Map<Long, HotelRating> hotelRatingMap = validateHotelRatings(hotelID);
-        return hotelRatingMap.values().stream().toList();
+        List<HotelRating> hotelRatingMap = validateHotelRatings(hotelID);
+        return hotelRatingMap.stream().toList();
     }
     public void rateHotel(long guestID, long hotelID, HotelRating rating) {
         Hotel hotel = validateInputs(hotelID,guestID);
-        hotel.addRating(guestID, rating);
+        hotel.addRating(rating);
         hotel.setAverageRating(calculateHotelRating(hotel));
         hotelRepository.update(hotel);
     }
@@ -127,8 +127,8 @@ public class HotelService {
         return availableRooms;
     }
     public List<HotelRating> filterHotelRatings(long hotelID, int starRating, boolean onlyWithComment) {
-        Map<Long, HotelRating> hotelRatingMap = validateHotelRatings(hotelID);
-        return hotelRatingMap.values().stream()
+        List<HotelRating> hotelRatingMap = validateHotelRatings(hotelID);
+        return hotelRatingMap.stream()
                 .filter(rating -> rating.getStarRating() == starRating)
                 .filter(rating -> {
                     if (onlyWithComment) {
@@ -172,7 +172,7 @@ public class HotelService {
     }
 
     private double calculateHotelRating(Hotel hotel) {
-        return hotel.getRatings().values().stream()
+        return hotel.getRatings().stream()
                 .filter(Objects::nonNull)
                 .mapToDouble(HotelRating::getStarRating)
                 .average()
@@ -180,8 +180,8 @@ public class HotelService {
     }
 
 
-    private  Map<Long, HotelRating> validateHotelRatings(long hotelID) {
-        Map<Long, HotelRating> ratings = validateHotelIdAndReturnObject(hotelID).getRatings();
+    private  List<HotelRating> validateHotelRatings(long hotelID) {
+        List<HotelRating> ratings = validateHotelIdAndReturnObject(hotelID).getRatings();
         if (ratings.isEmpty()) {
             throw new IllegalArgumentException("No Ratings so far");
         }

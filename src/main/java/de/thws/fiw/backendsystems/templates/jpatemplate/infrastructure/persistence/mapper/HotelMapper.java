@@ -32,7 +32,7 @@ public class HotelMapper {
                 .withDescription(hotel.getDescription())
                 .withLocation(hotelLocationMapper.mapToEntity(hotel.getLocation()))
                 .withBookings(bookingMapper.toEntityList(hotel.getBookings()))
-                .withRatings(hotelRatingMapper.mapToEntityMap(hotel.getRatings()))
+                .withRatings(hotelRatingMapper.mapToEntityList(hotel.getRatings()))
                 .withRooms(roomMapper.toEntityList(hotel.getRooms()))
                 .build();
     }
@@ -45,7 +45,7 @@ public class HotelMapper {
                 .withLocation(hotelLocationMapper.mapToDomain(entity.getLocation()))
                 .withBookingList(bookingMapper.toDomainList(entity.getBookings()))
                 .withRoomsList(roomMapper.toDomainList(entity.getRooms()))
-                .withRatingMap(hotelRatingMapper.mapToDomainMap(entity.getRatings()))
+                .withRatingMap(hotelRatingMapper.mapToDomainList(entity.getRatings()))
                 .build();
     }
 

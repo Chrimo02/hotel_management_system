@@ -31,11 +31,14 @@ public class HotelEntity {
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BookingEntity> bookings;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<HotelRatingEntity> ratings;
+
+    /*@ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "hotel_ratings", joinColumns = @JoinColumn(name = "hotel_id"))
     @MapKeyColumn(name = "guest_id")
     @Column(name = "rating")
-    private Map<Long, HotelRatingEntity> ratings;
+    private Map<Long, HotelRatingEntity> ratings;*/
 
     // Default constructor for JPA
     protected HotelEntity() {}
@@ -80,7 +83,7 @@ public class HotelEntity {
         return bookings;
     }
 
-    public Map<Long, HotelRatingEntity> getRatings() {
+    public List<HotelRatingEntity> getRatings() {
         return ratings;
     }
 
@@ -93,7 +96,7 @@ public class HotelEntity {
         private double averageRating = 0.0; // Default rating
         private List<RoomEntity> rooms;
         private List<BookingEntity> bookings;
-        private Map<Long, HotelRatingEntity> ratings;
+        private List<HotelRatingEntity> ratings;
 
         public HotelBuilder withId(Long id) {
             this.id = id;
@@ -125,10 +128,6 @@ public class HotelEntity {
             return this;
         }
 
-        public HotelBuilder withRatings(Map<Long, HotelRatingEntity> ratings) {
-            this.ratings = ratings;
-            return this;
-        }
 
         public HotelEntity build() {
             return new HotelEntity(this);

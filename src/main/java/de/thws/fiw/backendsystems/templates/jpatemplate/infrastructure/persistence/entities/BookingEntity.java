@@ -30,8 +30,14 @@ public class BookingEntity {
     )
     private List<GuestEntity> guests;
 
-    @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany
+    @JoinTable(
+            name = "booking_room",
+            joinColumns = @JoinColumn(name = "booking_id"),  // Foreign key to the BookingEntity
+            inverseJoinColumns = @JoinColumn(name = "room_id")  // Foreign key to the RoomEntity
+    )
     private List<RoomEntity> rooms;
+
 
     @Column (nullable = false)
     private boolean status;

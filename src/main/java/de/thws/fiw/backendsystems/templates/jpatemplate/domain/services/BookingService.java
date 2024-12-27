@@ -52,13 +52,13 @@ public class BookingService {
         bookingRepository.updateBooking(booking);
     }
 
-    void guestCheckIn(long bookingId) throws BookingNotFoundException {
+    public void guestCheckIn(long bookingId) throws BookingNotFoundException {
         Booking booking = getNotNullBooking(bookingId);
         booking.setCheckInTime(LocalDateTime.now());
         bookingRepository.updateBooking(booking);
     }
 
-    void guestCheckOut(long bookingId) throws BookingNotFoundException {
+    public void guestCheckOut(long bookingId) throws BookingNotFoundException {
         Booking booking = getNotNullBooking(bookingId);
         booking.setCheckOutTime(LocalDateTime.now());
         bookingRepository.updateBooking(booking);

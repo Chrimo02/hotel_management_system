@@ -13,7 +13,7 @@ public class Hotel {
 
     private List<Room> rooms;
     private List<Booking> bookings;
-    private final Map<Long, HotelRating> ratings;
+    private final List<HotelRating> ratings;
 
     private Hotel(HotelBuilder hotelBuilder) {
         this.name = hotelBuilder.name;
@@ -43,7 +43,7 @@ public class Hotel {
         return rooms;
     }
     public List<Booking> getBookings() {return bookings;}
-    public Map<Long, HotelRating> getRatings() {return ratings;}
+    public List<HotelRating> getRatings() {return ratings;}
 
 
     public void setName(String name) {
@@ -66,7 +66,7 @@ public class Hotel {
         this.bookings = bookings;
     }
 
-    public void addRating(long guestId, HotelRating rating) { this.ratings.put(guestId, rating);}
+    public void addRating(HotelRating rating) { this.ratings.add(rating);}
     public void addRoom(Room room){rooms.add(room);}
 
 
@@ -78,7 +78,7 @@ public class Hotel {
         private HotelLocation location;
         private List<Room> rooms;
         private List<Booking> bookings;
-        private Map<Long, HotelRating> ratings;
+        private List<HotelRating> ratings;
 
         public HotelBuilder() {
         }
@@ -113,7 +113,7 @@ public class Hotel {
             return this;
         }
 
-        public HotelBuilder withRatingMap(Map<Long, HotelRating> ratings){
+        public HotelBuilder withRatingMap(List<HotelRating> ratings){
             this.ratings = ratings;
             return this;
         }

@@ -25,8 +25,10 @@ public abstract class RoomEntity {
     @OneToOne
     private BookingEntity currentBooking;
 
-    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(mappedBy = "rooms", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<BookingEntity> bookings = new HashSet<>();
+
+
 
 
 
