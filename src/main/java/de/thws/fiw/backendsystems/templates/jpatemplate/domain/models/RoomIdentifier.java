@@ -17,7 +17,9 @@ public class RoomIdentifier {
         this.floor = floor;
         this.roomNumber = roomNumber;
     }
-
+    public long getId() {
+        return id;
+    }
     public String getBuilding() {
         return building;
     }

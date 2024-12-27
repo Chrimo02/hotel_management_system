@@ -81,7 +81,7 @@ public class RoomService {
         return null; // No matching booking found
     }
 
-    public void createRoom(double pricePerNight, RoomIdentifier roomIdentifier, long hotelId, Class<? extends Room> roomType) {
+    public long createRoom(double pricePerNight, RoomIdentifier roomIdentifier, long hotelId, Class<? extends Room> roomType) {
         Hotel hotel = hotelService.getHotelByHotelId(hotelId);
         Room room;
         if (roomType.equals(SingleRoom.class)) {
@@ -91,8 +91,9 @@ public class RoomService {
             room = new DoubleRoom.Builder(pricePerNight, roomIdentifier, hotel).build();
         }
         else throw new RuntimeException("Invalid room type!"); //wird nicht gebraucht, wenn wir sicher sind, dass nur 2 mögliche Room Arten bekommen werden
-        roomRepository.saveRoom(room);
+        long id = roomRepository.saveRoom(room);
         roomIdentifierRepository.saveRoomIdentifier(roomIdentifier);
+        return id;
     }
 
     public void removeRoom(long roomId) {

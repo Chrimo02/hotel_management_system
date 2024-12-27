@@ -11,21 +11,24 @@ import jakarta.persistence.Persistence;
 public class RoomDAOImpl implements RoomDAO {
     EntityManagerFactory emf;
     @Inject
-    public RoomDAOImpl() {
-        emf = Persistence.createEntityManagerFactory("my-persistence-unit");
+    public RoomDAOImpl(EntityManagerFactory emf) {
+        this.emf = emf;
     }
     public void create(RoomEntity roomEntity) {
         EntityManager em = emf.createEntityManager();
+        long id = -1;
         try {
             em.getTransaction().begin();
             em.persist(roomEntity);
             em.getTransaction().commit();
+            id = roomEntity.getId();
         } catch (Exception e) {
             em.getTransaction().rollback();
             e.printStackTrace();
         } finally {
             em.close();
         }
+        return id;
     }
     public RoomEntity read(long roomId) {
         try(EntityManager em = emf.createEntityManager()) {
