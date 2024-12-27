@@ -1,5 +1,6 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities;
 
+import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.HotelRating;
 import jakarta.persistence.*;
 import java.util.List;
 import java.util.Map;
@@ -125,6 +126,11 @@ public class HotelEntity {
 
         public HotelBuilder withBookings(List<BookingEntity> bookings) {
             this.bookings = bookings;
+            return this;
+        }
+
+        public HotelBuilder withRatings(List<HotelRatingEntity> ratings) {
+            this.ratings = ratings;
             return this;
         }
 

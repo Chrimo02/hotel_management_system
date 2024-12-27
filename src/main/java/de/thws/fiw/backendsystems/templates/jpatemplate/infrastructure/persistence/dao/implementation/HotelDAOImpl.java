@@ -16,15 +16,17 @@ import java.util.stream.Collectors;
 
 public class HotelDAOImpl implements HotelDAO {
 
-    private final EntityManager entityManager;
     @Inject
-    public HotelDAOImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public EntityManager entityManager() {
+
+      return JpaUtil.getEntityManagerFactory().createEntityManager();
     }
 
     @Override
     public HotelEntity createHotel(HotelEntity hotel) {
+        EntityManager entityManager = null;
         try {
+            entityManager = entityManager();
             entityManager.getTransaction().begin();
             entityManager.persist(hotel);
             entityManager.getTransaction().commit();
@@ -35,22 +37,28 @@ public class HotelDAOImpl implements HotelDAO {
             }
             throw new RuntimeException("Error saving Hotel", e);
         }
+        finally {
+            entityManager.close();
+        }
     }
 
     @Override
     public Optional<HotelEntity> findById(Long id) {
+        EntityManager entityManager = entityManager();
         HotelEntity entity = entityManager.find(HotelEntity.class, id);
         return entity != null ? Optional.of(entity) : Optional.empty();
     }
 
     @Override
     public List<HotelEntity> findAll() {
+        EntityManager entityManager = entityManager();
         TypedQuery<HotelEntity> query = entityManager.createQuery("SELECT h FROM HotelEntity h", HotelEntity.class);
         return query.getResultList();
     }
 
     @Override
     public void updateHotel(HotelEntity hotel) {
+        EntityManager entityManager = entityManager();
             try {
                 entityManager.getTransaction().begin();
                 entityManager.merge(hotel);
@@ -61,10 +69,14 @@ public class HotelDAOImpl implements HotelDAO {
                 }
                 throw new RuntimeException("Error updating Hotel", e);
             }
+            finally {
+                entityManager.close();
+            }
     }
 
     @Override
     public void deleteById(Long id) {
+        EntityManager entityManager = entityManager();
         try {
             entityManager.getTransaction().begin();
             HotelEntity entity = entityManager.find(HotelEntity.class, id);
@@ -77,6 +89,9 @@ public class HotelDAOImpl implements HotelDAO {
                 entityManager.getTransaction().rollback();
             }
             throw new RuntimeException("Error deleting Hotel", e);
-        }
+
+    } finally {
+        entityManager.close();
+    }
     }
 }

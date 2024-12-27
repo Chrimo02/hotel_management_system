@@ -14,7 +14,7 @@ public class RoomDAOImpl implements RoomDAO {
     public RoomDAOImpl(EntityManagerFactory emf) {
         this.emf = emf;
     }
-    public void create(RoomEntity roomEntity) {
+    public long create(RoomEntity roomEntity) {
         EntityManager em = emf.createEntityManager();
         long id = -1;
         try {

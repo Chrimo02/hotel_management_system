@@ -68,7 +68,7 @@ class HotelDAOTest {
                 .withLocation(location)
                 .withRooms(List.of())
                 .withBookings(List.of())
-                .withRatings(Map.of())
+                .withRatings(List .of())
                 .build();
     }
 
