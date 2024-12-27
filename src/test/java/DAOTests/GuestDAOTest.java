@@ -1,151 +1,202 @@
-    package DAOTests;
+package DAOTests;
 
-    import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.implementation.DataAccessException;
-    import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.interfaces.GuestDAO;
-    import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.GuestEntity;
-    import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.implementation.GuestDAOImpl;
-    import jakarta.persistence.EntityManager;
-    import jakarta.persistence.EntityTransaction;
-    import org.junit.jupiter.api.BeforeEach;
-    import org.junit.jupiter.api.Test;
-    import org.mockito.InjectMocks;
-    import org.mockito.Mock;
-    import org.mockito.MockitoAnnotations;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.implementation.DataAccessException;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.implementation.GuestDAOImpl;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.BookingEntity;
+import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.GuestEntity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Spy;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-    import static org.junit.jupiter.api.Assertions.*;
-    import static org.mockito.Mockito.*;
+import java.util.List;
 
-    public class GuestDAOTest {
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.lenient;
 
-        @Mock
-        private EntityManager entityManager;
+/**
+ * Vollständige Testklasse für GuestDAOImpl mit Spy-Ansatz und Lenient-Stubbing,
+ * sodass u. a. das Rollback in Ausnahmefällen funktioniert.
+ */
+@ExtendWith(MockitoExtension.class)
+class GuestDAOTest {
 
-        @Mock
-        private EntityTransaction transaction;
+    /**
+     * Wir verwenden ein Spy, damit wir den echten Code von GuestDAOImpl
+     * ausführen, jedoch .entityManager() überschreiben können.
+     */
+    @Spy
+    private GuestDAOImpl guestDAO;
 
-        @InjectMocks
-        private GuestDAOImpl guestDAOImpl;
+    @Mock
+    private EntityManager mockEntityManager;
 
-        private GuestEntity mockGuestEntity;
+    @Mock
+    private EntityTransaction mockTransaction;
 
-        @BeforeEach
-        public void setUp() {
-            MockitoAnnotations.openMocks(this);
+    @Mock
+    private TypedQuery<BookingEntity> mockTypedQuery;
 
-            // Initialisiere Mock GuestEntity
-            mockGuestEntity = new GuestEntity();
-            mockGuestEntity.setId(1L);
-            mockGuestEntity.setFirstName("John");
-            mockGuestEntity.setLastName("Doe");
-            mockGuestEntity.setTitle("Mr.");
-            mockGuestEntity.seteMail("john.doe@example.com");
-            mockGuestEntity.setPhoneNumber("1234567890");
+    @BeforeEach
+    void setUp() {
+        // Wir benutzen lenient() für die Stubbings, damit Mockito nicht meckert,
+        // falls einzelne Tests die Stub-Aufrufe nicht nutzen.
+        lenient().doReturn(mockEntityManager).when(guestDAO).entityManager();
+        lenient().when(mockEntityManager.getTransaction()).thenReturn(mockTransaction);
 
-            // EntityManager simulieren
-            when(entityManager.getTransaction()).thenReturn(transaction);
-        }
-
-        @Test
-        public void testCreate_Success() {
-            doNothing().when(entityManager).persist(mockGuestEntity);
-            doNothing().when(transaction).begin();
-            doNothing().when(transaction).commit();
-
-            guestDAOImpl.create(mockGuestEntity);
-
-            verify(transaction, times(1)).begin();
-            verify(entityManager, times(1)).persist(mockGuestEntity);
-            verify(transaction, times(1)).commit();
-        }
-
-        @Test
-        public void testCreate_ExceptionRollback() {
-            doThrow(new RuntimeException("Persistence error")).when(entityManager).persist(mockGuestEntity);
-            when(transaction.isActive()).thenReturn(true);
-
-            Exception exception = assertThrows(DataAccessException.class, () -> {
-                guestDAOImpl.create(mockGuestEntity);
-            });
-
-            assertTrue(exception.getMessage().contains("Error while creating guest entity"));
-            verify(transaction, times(1)).begin();
-            verify(transaction, times(1)).rollback();
-        }
-
-        @Test
-        public void testRead_Success() {
-            when(entityManager.find(GuestEntity.class, 1L)).thenReturn(mockGuestEntity);
-
-            GuestEntity result = guestDAOImpl.read(1L);
-
-            assertNotNull(result);
-            assertEquals(1L, result.getId());
-            verify(entityManager, times(1)).find(GuestEntity.class, 1L);
-        }
-
-        @Test
-        public void testRead_Exception() {
-            when(entityManager.find(GuestEntity.class, 1L)).thenThrow(new RuntimeException("Read error"));
-
-            Exception exception = assertThrows(DataAccessException.class, () -> {
-                guestDAOImpl.read(1L);
-            });
-
-            assertTrue(exception.getMessage().contains("Error while reading guest entity"));
-        }
-
-        @Test
-        public void testUpdate_Success() {
-            doNothing().when(entityManager).merge(mockGuestEntity);
-            doNothing().when(transaction).begin();
-            doNothing().when(transaction).commit();
-
-            guestDAOImpl.update(mockGuestEntity);
-
-            verify(transaction, times(1)).begin();
-            verify(entityManager, times(1)).merge(mockGuestEntity);
-            verify(transaction, times(1)).commit();
-        }
-
-        @Test
-        public void testUpdate_ExceptionRollback() {
-            doThrow(new RuntimeException("Update error")).when(entityManager).merge(mockGuestEntity);
-            when(transaction.isActive()).thenReturn(true);
-
-            Exception exception = assertThrows(DataAccessException.class, () -> {
-                guestDAOImpl.update(mockGuestEntity);
-            });
-
-            assertTrue(exception.getMessage().contains("Error while updating guest entity"));
-            verify(transaction, times(1)).begin();
-            verify(transaction, times(1)).rollback();
-        }
-
-        @Test
-        public void testDelete_Success() {
-            doNothing().when(entityManager).remove(mockGuestEntity);
-            doNothing().when(transaction).begin();
-            doNothing().when(transaction).commit();
-
-            guestDAOImpl.delete(mockGuestEntity);
-
-            verify(transaction, times(1)).begin();
-            verify(entityManager, times(1)).remove(mockGuestEntity);
-            verify(transaction, times(1)).commit();
-        }
-
-        @Test
-        public void testDelete_ExceptionRollback() {
-            doThrow(new RuntimeException("Delete error")).when(entityManager).remove(mockGuestEntity);
-            when(transaction.isActive()).thenReturn(true);
-
-            Exception exception = assertThrows(DataAccessException.class, () -> {
-                guestDAOImpl.delete(mockGuestEntity);
-            });
-
-            assertTrue(exception.getMessage().contains("Error while deleting guest entity"));
-            verify(transaction, times(1)).begin();
-            verify(transaction, times(1)).rollback();
-        }
+        // Damit ein Rollback wirklich aufgerufen werden kann, stubben wir isActive() auf true
+        lenient().when(mockTransaction.isActive()).thenReturn(true);
     }
 
+    @Test
+    void testCreate_Success() {
+        GuestEntity guest = new GuestEntity();
+        guest.setId(1L);
+
+        // Kein Fehler erwartet -> normaler Durchlauf
+        guestDAO.create(guest);
+
+        // Überprüfen, dass die Transaktion gestartet, persist aufgerufen und committet wurde
+        verify(mockTransaction).begin();
+        verify(mockEntityManager).persist(guest);
+        verify(mockTransaction).commit();
+        verify(mockEntityManager).close();
+    }
+
+    @Test
+    void testCreate_Exception() {
+        GuestEntity guest = new GuestEntity();
+        // Wir simulieren, dass persist(...) eine Exception wirft
+        doThrow(new RuntimeException("Simulated persist error"))
+                .when(mockEntityManager).persist(any(GuestEntity.class));
+
+        // Die DAO sollte daraufhin eine DataAccessException werfen
+        assertThrows(DataAccessException.class, () -> guestDAO.create(guest));
+
+        // Da ein Fehler aufgetreten ist, wird rollback() erwartet
+        verify(mockTransaction).begin();
+        verify(mockTransaction).rollback();
+        verify(mockEntityManager).close();
+    }
+
+    @Test
+    void testRead_Success() {
+        GuestEntity dummy = new GuestEntity();
+        dummy.setId(10L);
+
+        // Wir simulieren, dass find(...) unser Dummy-GuestEntity zurückgibt
+        when(mockEntityManager.find(GuestEntity.class, 10L)).thenReturn(dummy);
+
+        GuestEntity result = guestDAO.read(10L);
+
+        assertNotNull(result);
+        assertEquals(10L, result.getId());
+        // find(...) muss aufgerufen werden
+        verify(mockEntityManager).find(GuestEntity.class, 10L);
+        // close() wird am Ende aufgerufen
+        verify(mockEntityManager).close();
+    }
+
+    @Test
+    void testRead_Exception() {
+        // Wenn find(...) eine Exception wirft, sollte unsere DAO eine DataAccessException werfen
+        when(mockEntityManager.find(any(Class.class), anyLong()))
+                .thenThrow(new RuntimeException("Simulated find error"));
+
+        assertThrows(DataAccessException.class, () -> guestDAO.read(999L));
+        verify(mockEntityManager).close();
+    }
+
+    @Test
+    void testUpdate_Success() {
+        GuestEntity guest = new GuestEntity();
+        guest.setId(5L);
+
+        // Normaler Durchlauf
+        guestDAO.update(guest);
+
+        verify(mockTransaction).begin();
+        verify(mockEntityManager).merge(guest);
+        verify(mockTransaction).commit();
+        verify(mockEntityManager).close();
+    }
+
+    @Test
+    void testUpdate_Exception() {
+        doThrow(new RuntimeException("Simulated merge error"))
+                .when(mockEntityManager).merge(any(GuestEntity.class));
+
+        GuestEntity guest = new GuestEntity();
+        guest.setId(5L);
+
+        assertThrows(DataAccessException.class, () -> guestDAO.update(guest));
+
+        verify(mockTransaction).begin();
+        verify(mockTransaction).rollback();
+        verify(mockEntityManager).close();
+    }
+
+    @Test
+    void testDelete_Success() {
+        GuestEntity guest = new GuestEntity();
+        guest.setId(99L);
+
+        // Normaler Durchlauf
+        guestDAO.delete(guest);
+
+        verify(mockTransaction).begin();
+        verify(mockEntityManager).remove(guest);
+        verify(mockTransaction).commit();
+        verify(mockEntityManager).close();
+    }
+
+    @Test
+    void testDelete_Exception() {
+        doThrow(new RuntimeException("Simulated remove error"))
+                .when(mockEntityManager).remove(any(GuestEntity.class));
+
+        GuestEntity guest = new GuestEntity();
+        guest.setId(99L);
+
+        assertThrows(DataAccessException.class, () -> guestDAO.delete(guest));
+
+        verify(mockTransaction).begin();
+        verify(mockTransaction).rollback();
+        verify(mockEntityManager).close();
+    }
+
+    @Test
+    void testFindBookingsByGuestId_Success() {
+        BookingEntity booking1 = new BookingEntity();
+        BookingEntity booking2 = new BookingEntity();
+        List<BookingEntity> dummyList = List.of(booking1, booking2);
+
+        when(mockEntityManager.createQuery(anyString(), eq(BookingEntity.class)))
+                .thenReturn(mockTypedQuery);
+        when(mockTypedQuery.setParameter(eq("guestId"), anyLong()))
+                .thenReturn(mockTypedQuery);
+        when(mockTypedQuery.getResultList()).thenReturn(dummyList);
+
+        List<BookingEntity> result = guestDAO.findBookingsByGuestId(123L);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        verify(mockEntityManager).close();
+    }
+
+    @Test
+    void testFindBookingsByGuestId_Exception() {
+        when(mockEntityManager.createQuery(anyString(), eq(BookingEntity.class)))
+                .thenThrow(new RuntimeException("Simulated query error"));
+
+        assertThrows(DataAccessException.class, () -> guestDAO.findBookingsByGuestId(123L));
+        verify(mockEntityManager).close();
+    }
+}

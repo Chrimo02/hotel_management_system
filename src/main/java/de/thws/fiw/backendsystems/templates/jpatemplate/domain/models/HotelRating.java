@@ -6,12 +6,14 @@ public class HotelRating {
     private String commentRating;
     private int rating;
     private Booking booking;
+    private Guest guest;
 
     private HotelRating(Builder builder) {
         this.rating = builder.rating;
         this.commentRating = builder.commentRating;
         this.id = builder.id;
         this.booking = builder.booking;
+        this.guest = builder.guest;
     }
 
     // Getter für die Sternebewertung
@@ -26,6 +28,9 @@ public class HotelRating {
 
     public Booking getBooking(){
         return booking;
+    }
+    public Guest getGuest(){
+        return guest;
     }
 
     //Getter for the comment
@@ -56,6 +61,7 @@ public class HotelRating {
         private String commentRating = ""; // Optional, Standardwert
         private Long id;
         private Booking booking;
+        private Guest guest;
         // Pflichtfeld-Methode
 
         public Builder withId(Long id) {
@@ -76,6 +82,10 @@ public class HotelRating {
 
         public Builder withBooking(Booking booking) {
             this.booking = booking;
+            return this;
+        }
+        public Builder withGuest(Guest guest){
+            this.guest = guest;
             return this;
         }
 

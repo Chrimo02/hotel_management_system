@@ -6,10 +6,7 @@ import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.RoomIdenti
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE) // oder andere Strategien je nach Bedarf
@@ -30,6 +27,9 @@ public abstract class RoomEntity {
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<BookingEntity> bookings = new HashSet<>();
+
+
+
 
     public RoomEntity() {
 

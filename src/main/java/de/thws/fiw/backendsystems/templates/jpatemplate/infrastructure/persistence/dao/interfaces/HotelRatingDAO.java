@@ -12,5 +12,5 @@ public interface HotelRatingDAO {
     Optional<Map<Long, HotelRatingEntity>> findAll(); // Find ratings by star rating
     void deleteById(Long id);
     void updateRating(HotelRatingEntity rating);
-    Optional<Map<Long, HotelRatingEntity>> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment);// Delete a rating
+    Optional<List<HotelRatingEntity>> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment);// Delete a rating
 }

@@ -1,20 +1,18 @@
 package de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities;
 
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Booking;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Hotel;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.HotelRating;
 import jakarta.persistence.*;
-import java.util.UUID;
 
 @Entity
-@Table(name = "hotel_ratings")
+@Table(
+        name = "hotel_ratings",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"hotel_id", "guest_id"}) // Enforce one rating per guest per hotel
+)
 public class HotelRatingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING) // Maps the enum as a string in the database
     @Column(name = "star_rating", nullable = false)
     private int starRating;
 
@@ -22,13 +20,16 @@ public class HotelRatingEntity {
     private String commentRating;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hotel_id", nullable = false) // Ensure this maps to the correct column
+    @JoinColumn(name = "hotel_id", nullable = false)
     private HotelEntity hotel;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "guest_id", nullable = false)
+    private GuestEntity guest;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booking_id", nullable = false)
     private BookingEntity booking;
-
 
     // Default constructor for JPA
     protected HotelRatingEntity() {}
@@ -37,8 +38,9 @@ public class HotelRatingEntity {
         this.starRating = builder.rating;
         this.commentRating = builder.commentRating;
         this.id = builder.id;
-        this.booking = builder.booking;
         this.hotel = builder.hotel;
+        this.guest = builder.guest;
+        this.booking = builder.booking;
     }
 
     // Getters
@@ -62,50 +64,58 @@ public class HotelRatingEntity {
         this.hotel = hotel;
     }
 
-    public BookingEntity getBooking(){
-        return this.getBooking();
+    public GuestEntity getGuest() {
+        return guest;
+    }
+
+    public void setGuest(GuestEntity guest) {
+        this.guest = guest;
+    }
+
+    public BookingEntity getBooking() {
+        return booking;
     }
 
     // Builder Class
     public static class Builder {
-        private int rating; // Pflichtfeld
-        private String commentRating = ""; // Optional, Standardwert
+        private int rating; // Required field
+        private String commentRating = ""; // Optional, default value
         private Long id;
-        private BookingEntity booking;
         private HotelEntity hotel;
-        // Pflichtfeld-Methode
+        private GuestEntity guest;
+        private BookingEntity booking;
 
-        public HotelRatingEntity.Builder withId(Long id) {
+        public Builder withId(Long id) {
             this.id = id;
             return this;
         }
 
-        public HotelRatingEntity.Builder withRating(int rating) {
+        public Builder withRating(int rating) {
             this.rating = rating;
             return this;
         }
 
-        // Optionales Feld
-        public HotelRatingEntity.Builder withComment(String commentRating) {
+        public Builder withComment(String commentRating) {
             this.commentRating = commentRating;
             return this;
         }
 
-        public HotelRatingEntity.Builder withBooking(BookingEntity booking) {
-            this.booking = booking;
-            return this;
-        }
-
-
-        public HotelRatingEntity.Builder withHotel(HotelEntity hotel) {
+        public Builder withHotel(HotelEntity hotel) {
             this.hotel = hotel;
             return this;
         }
 
+        public Builder withGuest(GuestEntity guest) {
+            this.guest = guest;
+            return this;
+        }
 
-        // Build-Methode zum Erstellen eines HotelRating-Objekts
+        public Builder withBooking(BookingEntity booking) {
+            this.booking = booking;
+            return this;
+        }
+
         public HotelRatingEntity build() {
-
             return new HotelRatingEntity(this);
         }
     }
