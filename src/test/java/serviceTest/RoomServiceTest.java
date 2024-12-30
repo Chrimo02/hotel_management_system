@@ -1,6 +1,6 @@
 //nur zum test grpc auskommentiert
 
-/*package serviceTest;
+package serviceTest;
 import hotelmanagementsystem.domain.exceptions.BookingNotFoundException;
 import hotelmanagementsystem.domain.exceptions.RoomNotFoundException;
 import hotelmanagementsystem.domain.models.*;
