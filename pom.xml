@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.thws.fiw.backendsystems.templates</groupId>
-    <artifactId>plain-java</artifactId>
+    <groupId>de.thws.fiw.backendsystems</groupId>
+    <artifactId>hotelmanagement</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <name>Template for plain Java projects</name>
-    <url>https://git.fiw.thws.de/backend-systems/templates/plain-java-template</url>
+    <name>Hotel-Management-System</name>
+    <!-- <url>https://git.fiw.thws.de/backend-systems/templates/plain-java-template</url> -->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
