@@ -22,6 +22,8 @@
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
         <quarkus.platform.version>3.12.3</quarkus.platform.version>
+        <grpc.version>1.53.0</grpc.version> <!-- gRPC Version -->
+        <protobuf.version>3.21.12</protobuf.version> <!-- Protobuf Version -->
     </properties>
 
     <dependencyManagement>
@@ -92,6 +94,21 @@
     </dependencies>-->
 
     <dependencies>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty-shaded</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
         <!-- BOM imports the Quarkus platform with pinned versions -->
         <dependency>
             <groupId>${quarkus.platform.group-id}</groupId>
@@ -167,6 +184,39 @@
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-maven-plugin</artifactId>
+                    <version>0.8.2</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>compile</goal>
+                                <goal>test-compile</goal>
+                            </goals>
+                            <configuration>
+                                <protoSourceRoot>src/main/proto</protoSourceRoot> <!-- Dein .proto-Ordner -->
+                                <outputDirectory>target/generated-sources/protobuf/java</outputDirectory> <!-- Zielordner für die generierten Java-Dateien -->
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.0</version>
+                    <configuration>
+                        <source>22</source>
+                        <target>22</target>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>com.google.protobuf</groupId>
+                                <artifactId>protoc-gen-grpc-java</artifactId>
+                                <version>${grpc.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.0</version>

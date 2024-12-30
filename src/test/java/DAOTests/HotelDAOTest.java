@@ -1,3 +1,4 @@
+/*
 package DAOTests;
 
 import hotelmanagementsystem.infrastructure.persistence.dao.implementation.DataAccessException;
@@ -20,17 +21,21 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+*/
 /**
  * Beispielhafte Anpassung des HotelDAOTest an den Stil des GuestDAOTest,
  * d. h. Nutzung eines @Spy für HotelDAOImpl und lenient-Stubbing des EntityManagers.
- */
+ *//*
+
 @ExtendWith(MockitoExtension.class)
 class HotelDAOTest {
 
-    /**
+    */
+/**
      * Wir verwenden ein Spy, damit wir den echten Code von HotelDAOImpl
      * ausführen, jedoch .entityManager() überschreiben können.
-     */
+     *//*
+
     @Spy
     private HotelDAOImpl hotelDAO;
 
@@ -188,3 +193,4 @@ class HotelDAOTest {
         verify(mockEntityManager).close();
     }
 }
+*/

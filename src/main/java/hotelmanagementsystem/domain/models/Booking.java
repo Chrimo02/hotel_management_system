@@ -1,9 +1,8 @@
-package de.thws.fiw.backendsystems.templates.jpatemplate.domain.models;
+package hotelmanagementsystem.domain.models;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.List;
 
 public class Booking implements Comparable<Booking> {
@@ -40,6 +39,9 @@ public class Booking implements Comparable<Booking> {
     }
 
     public static long calculateNights(LocalDate checkInDate, LocalDate checkOutDate) {
+        if (checkInDate == null || checkOutDate == null) {
+            throw new IllegalArgumentException("Check-in and check-out dates must not be null");
+        }
         return ChronoUnit.DAYS.between(checkInDate, checkOutDate);
     }
     private double calculateTotalPrice(){
