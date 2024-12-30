@@ -1,9 +1,9 @@
 package DAOTests;
 
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.implementation.DataAccessException;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.implementation.HotelDAOImpl;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelEntity;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelLocationEntity;
+import hotelmanagementsystem.infrastructure.persistence.dao.implementation.DataAccessException;
+import hotelmanagementsystem.infrastructure.persistence.dao.implementation.HotelDAOImpl;
+import hotelmanagementsystem.infrastructure.persistence.entities.HotelEntity;
+import hotelmanagementsystem.infrastructure.persistence.entities.HotelLocationEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
@@ -14,7 +14,6 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

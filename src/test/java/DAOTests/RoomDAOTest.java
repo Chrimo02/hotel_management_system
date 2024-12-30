@@ -1,8 +1,7 @@
 package DAOTests;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.RoomEntity;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.SingleRoomEntity;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.DoubleRoomEntity;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.implementation.RoomDAOImpl;
+import hotelmanagementsystem.infrastructure.persistence.entities.RoomEntity;
+import hotelmanagementsystem.infrastructure.persistence.entities.SingleRoomEntity;
+import hotelmanagementsystem.infrastructure.persistence.dao.implementation.RoomDAOImpl;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;

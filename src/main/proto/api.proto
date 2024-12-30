@@ -1,0 +1,248 @@
+syntax = "proto3";
+
+package hotelmanagement;
+
+option java_package = "hotelmanagementsystem.infrastructure.api.grpc.generated";
+option java_multiple_files = true;
+option java_outer_classname = "hotelmanagement";
+
+// Hotel Service
+service HotelService {
+  rpc CreateHotel (CreateHotelRequest) returns (HotelResponse);
+  rpc GetHotelById (GetHotelByIdRequest) returns (HotelResponse);
+  rpc ListHotels (ListHotelsRequest) returns (ListHotelsResponse);
+  rpc UpdateHotel (UpdateHotelRequest) returns (HotelResponse);
+  rpc DeleteHotel (DeleteHotelRequest) returns (Empty);
+  rpc RateHotel (RateHotelRequest) returns (Empty);
+  rpc FindAvailableRooms (FindAvailableRoomsRequest) returns (ListRoomsResponse);
+}
+
+// Guest Service
+service GuestService {
+  rpc CreateGuest (CreateGuestRequest) returns (GuestResponse);
+  rpc GetGuestById (GetGuestByIdRequest) returns (GuestResponse);
+  rpc UpdateGuestEmail (UpdateGuestEmailRequest) returns (GuestResponse);
+  rpc UpdateGuestPhone (UpdateGuestPhoneRequest) returns (GuestResponse);
+  rpc UpdateGuestLastName (UpdateGuestLastNameRequest) returns (GuestResponse);
+  rpc UpdateGuestTitle (UpdateGuestTitleRequest) returns (GuestResponse);
+  rpc DeleteGuest (DeleteGuestRequest) returns (Empty);
+  rpc GetBookingsByGuestId (GetBookingsByGuestIdRequest) returns (ListBookingsResponse);
+}
+
+// Booking Service
+service BookingService {
+  rpc CreateBooking (CreateBookingRequest) returns (BookingResponse);
+  rpc GetBookingById (GetBookingByIdRequest) returns (BookingResponse);
+  rpc CancelBooking (CancelBookingRequest) returns (Empty);
+  rpc CheckInGuest (CheckInGuestRequest) returns (Empty);
+  rpc CheckOutGuest (CheckOutGuestRequest) returns (Empty);
+}
+
+// Room Service
+service RoomService {
+  rpc CreateRoom (CreateRoomRequest) returns (RoomResponse);
+  rpc GetRoomById (GetRoomByIdRequest) returns (RoomResponse);
+  rpc ListAvailableRooms (ListAvailableRoomsRequest) returns (ListRoomsResponse);
+  rpc UpdateRoomPrice (UpdateRoomPriceRequest) returns (RoomResponse);
+  rpc RemoveRoom (RemoveRoomRequest) returns (Empty);
+}
+
+// Messages
+
+// Hotel
+message Hotel {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  HotelLocation location = 4;
+  double averageRating = 5;
+}
+
+message HotelLocation {
+  string address = 1;
+  string city = 2;
+  string country = 3;
+}
+
+message CreateHotelRequest {
+  string name = 1;
+  string description = 2;
+  HotelLocation location = 3;
+}
+
+message GetHotelByIdRequest {
+  int64 id = 1;
+}
+
+message UpdateHotelRequest {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  HotelLocation location = 4;
+}
+
+message DeleteHotelRequest {
+  int64 id = 1;
+}
+
+message ListHotelsRequest {}
+
+message ListHotelsResponse {
+  repeated Hotel hotels = 1;
+}
+
+message HotelResponse {
+  Hotel hotel = 1;
+}
+
+message RateHotelRequest {
+  int64 hotelId = 1;
+  int64 guestId = 2;
+  int32 rating = 3;
+  string comment = 4;
+}
+
+message FindAvailableRoomsRequest {
+  int64 hotelId = 1;
+  string roomType = 2; // Optional: Filter nach Typ
+  string checkInDate = 3;
+  string checkOutDate = 4;
+}
+
+// Guest
+message Guest {
+  int64 id = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string email = 4;
+  string phoneNumber = 5;
+}
+
+message CreateGuestRequest {
+  string firstName = 1;
+  string lastName = 2;
+  string email = 3;
+  string phoneNumber = 4;
+}
+
+message GetGuestByIdRequest {
+  int64 id = 1;
+}
+
+message UpdateGuestEmailRequest {
+  int64 guestId = 1;
+  string newEmail = 2;
+}
+
+message UpdateGuestPhoneRequest {
+  int64 guestId = 1;
+  string newPhone = 2;
+}
+
+message UpdateGuestLastNameRequest {
+  int64 guestId = 1;
+  string newLastName = 2;
+}
+
+message UpdateGuestTitleRequest {
+  int64 guestId = 1;
+  string newTitle = 2;
+}
+
+message DeleteGuestRequest {
+  int64 id = 1;
+}
+
+message GetBookingsByGuestIdRequest {
+  int64 guestId = 1;
+}
+
+message GuestResponse {
+  Guest guest = 1;
+}
+
+// Booking
+message Booking {
+  int64 id = 1;
+  int64 hotelId = 2;
+  int64 guestId = 3;
+  repeated int64 roomIds = 4;
+  string checkInDate = 5;
+  string checkOutDate = 6;
+}
+
+message CreateBookingRequest {
+  int64 hotelId = 1;
+  int64 guestId = 2;
+  repeated int64 roomIds = 3;
+  string checkInDate = 4;
+  string checkOutDate = 5;
+}
+
+message GetBookingByIdRequest {
+  int64 id = 1;
+}
+
+message CancelBookingRequest {
+  int64 id = 1;
+}
+
+message CheckInGuestRequest {
+  int64 bookingId = 1;
+}
+
+message CheckOutGuestRequest {
+  int64 bookingId = 1;
+}
+
+message BookingResponse {
+  Booking booking = 1;
+}
+
+message ListBookingsResponse {
+  repeated Booking bookings = 1;
+}
+
+// Room
+message Room {
+  int64 id = 1;
+  double pricePerNight = 2;
+  string type = 3;
+  int64 hotelId = 4;
+}
+
+message CreateRoomRequest {
+  double pricePerNight = 1;
+  string type = 2;
+  int64 hotelId = 3;
+}
+
+message GetRoomByIdRequest {
+  int64 id = 1;
+}
+
+message ListAvailableRoomsRequest {
+  int64 hotelId = 1;
+  string checkInDate = 2;
+  string checkOutDate = 3;
+}
+
+message UpdateRoomPriceRequest {
+  int64 roomId = 1;
+  double newPricePerNight = 2;
+}
+
+message RemoveRoomRequest {
+  int64 roomId = 1;
+}
+
+message RoomResponse {
+  Room room = 1;
+}
+
+message ListRoomsResponse {
+  repeated Room rooms = 1;
+}
+
+// Gemeinsame Nachrichten
+message Empty {}

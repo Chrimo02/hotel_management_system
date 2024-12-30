@@ -31,15 +31,15 @@
 
     <persistence-unit name="hotelmanagementPU">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.GuestEntity</class>
-        <class>de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelEntity</class>
-        <class>de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelLocationEntity</class>
-        <class>de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.HotelRatingEntity</class>
-        <class>de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.BookingEntity</class>
-        <class>de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.RoomEntity</class>
-        <class>de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.RoomIdentifierEntity</class>
-        <class>de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.SingleRoomEntity</class>
-        <class>de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.DoubleRoomEntity</class>
+        <class>hotelmanagementsystem.infrastructure.persistence.entities.GuestEntity</class>
+        <class>hotelmanagementsystem.infrastructure.persistence.entities.HotelEntity</class>
+        <class>hotelmanagementsystem.infrastructure.persistence.entities.HotelLocationEntity</class>
+        <class>hotelmanagementsystem.infrastructure.persistence.entities.HotelRatingEntity</class>
+        <class>hotelmanagementsystem.infrastructure.persistence.entities.BookingEntity</class>
+        <class>hotelmanagementsystem.infrastructure.persistence.entities.RoomEntity</class>
+        <class>hotelmanagementsystem.infrastructure.persistence.entities.RoomIdentifierEntity</class>
+        <class>hotelmanagementsystem.infrastructure.persistence.entities.SingleRoomEntity</class>
+        <class>hotelmanagementsystem.infrastructure.persistence.entities.DoubleRoomEntity</class>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>

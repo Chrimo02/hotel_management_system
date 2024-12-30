@@ -1,10 +1,9 @@
 package domainModelsTest;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.*;
+import hotelmanagementsystem.domain.models.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 

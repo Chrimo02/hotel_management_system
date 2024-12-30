@@ -1,8 +1,8 @@
 package DAOTests;
 
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.implementation.BookingDAOImpl;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.implementation.DataAccessException;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.BookingEntity;
+import hotelmanagementsystem.infrastructure.persistence.dao.implementation.BookingDAOImpl;
+import hotelmanagementsystem.infrastructure.persistence.dao.implementation.DataAccessException;
+import hotelmanagementsystem.infrastructure.persistence.entities.BookingEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import org.junit.jupiter.api.BeforeEach;

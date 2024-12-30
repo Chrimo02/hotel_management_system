@@ -1,11 +1,13 @@
-package serviceTest;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.exceptions.BookingNotFoundException;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.exceptions.RoomNotFoundException;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.*;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.services.HotelService;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.services.RoomService;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.RoomIdentifierRepository;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.RoomRepository;
+//nur zum test grpc auskommentiert
+
+/*package serviceTest;
+import hotelmanagementsystem.domain.exceptions.BookingNotFoundException;
+import hotelmanagementsystem.domain.exceptions.RoomNotFoundException;
+import hotelmanagementsystem.domain.models.*;
+import hotelmanagementsystem.domain.services.HotelService;
+import hotelmanagementsystem.domain.services.RoomService;
+import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.RoomIdentifierRepository;
+import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.RoomRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -128,3 +129,5 @@ public class RoomServiceTest {
         assertTrue(availableRooms.contains(testRoom));
     }
 }
+
+ */

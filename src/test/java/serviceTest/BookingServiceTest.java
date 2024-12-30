@@ -1,16 +1,15 @@
 package serviceTest;
 
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.exceptions.BookingNotFoundException;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.exceptions.RoomNotFoundException;
+import hotelmanagementsystem.domain.exceptions.BookingNotFoundException;
+import hotelmanagementsystem.domain.exceptions.RoomNotFoundException;
 
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.*;
+import hotelmanagementsystem.domain.models.*;
+import hotelmanagementsystem.domain.services.BookingService;
+import hotelmanagementsystem.domain.services.GuestService;
+import hotelmanagementsystem.domain.services.HotelService;
+import hotelmanagementsystem.domain.services.RoomService;
 
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.services.BookingService;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.services.GuestService;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.services.HotelService;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.services.RoomService;
-
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.BookingRepository;
+import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.BookingRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

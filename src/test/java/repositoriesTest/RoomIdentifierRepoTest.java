@@ -1,9 +1,9 @@
 package repositoriesTest;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.RoomIdentifier;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.interfaces.RoomIdentifierDAO;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.RoomIdentifierEntity;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.mapper.RoomIdentifierMapper;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.adapters.RoomIdentifierDatabaseAdapter;
+import hotelmanagementsystem.domain.models.RoomIdentifier;
+import hotelmanagementsystem.infrastructure.persistence.dao.interfaces.RoomIdentifierDAO;
+import hotelmanagementsystem.infrastructure.persistence.entities.RoomIdentifierEntity;
+import hotelmanagementsystem.infrastructure.persistence.mapper.RoomIdentifierMapper;
+import hotelmanagementsystem.infrastructure.persistence.repositories.adapters.RoomIdentifierDatabaseAdapter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

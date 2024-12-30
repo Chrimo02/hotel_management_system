@@ -1,7 +1,7 @@
 package domainModelsTest;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.RoomIdentifier;
+import hotelmanagementsystem.domain.models.RoomIdentifier;
 public class RoomIdentifierTest {
     @Test
     void testRoomIdentifierConstructorAndGetters() {

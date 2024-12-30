@@ -3,7 +3,10 @@ package domainModelsTest;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.*;
+import hotelmanagementsystem.domain.models.Booking;
+import hotelmanagementsystem.domain.models.Guest;
+import hotelmanagementsystem.domain.models.Hotel;
+import hotelmanagementsystem.domain.models.Room;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;

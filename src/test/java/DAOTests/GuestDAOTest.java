@@ -1,9 +1,9 @@
 package DAOTests;
 
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.implementation.DataAccessException;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.dao.implementation.GuestDAOImpl;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.BookingEntity;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.entities.GuestEntity;
+import hotelmanagementsystem.infrastructure.persistence.dao.implementation.DataAccessException;
+import hotelmanagementsystem.infrastructure.persistence.dao.implementation.GuestDAOImpl;
+import hotelmanagementsystem.infrastructure.persistence.entities.BookingEntity;
+import hotelmanagementsystem.infrastructure.persistence.entities.GuestEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;

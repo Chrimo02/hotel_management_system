@@ -1,19 +1,16 @@
 package domainModelsTest;
 
 
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Booking;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Guest;
+import hotelmanagementsystem.domain.models.Booking;
+import hotelmanagementsystem.domain.models.Guest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 public class GuestTest {
 

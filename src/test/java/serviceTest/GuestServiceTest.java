@@ -1,17 +1,16 @@
 package serviceTest;
 
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.exceptions.GuestNotFoundException;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Booking;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.models.Guest;
-import de.thws.fiw.backendsystems.templates.jpatemplate.domain.services.GuestService;
-import de.thws.fiw.backendsystems.templates.jpatemplate.infrastructure.persistence.repositories.interfaces.GuestRepository;
+import hotelmanagementsystem.domain.exceptions.GuestNotFoundException;
+import hotelmanagementsystem.domain.models.Booking;
+import hotelmanagementsystem.domain.models.Guest;
+import hotelmanagementsystem.domain.services.GuestService;
+import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.GuestRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,16 +42,34 @@ public class GuestServiceTest {
     }
 
     @Test
-    public void testGetAllBookingsFromGuest_Success() throws GuestNotFoundException {
+    public void testDeleteGuest_Success() throws GuestNotFoundException {
+        when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
 
+        guestService.deleteGuest(1L);
+
+        verify(guestRepository, times(1)).deleteGuest(mockGuest);
     }
 
     @Test
-    public void testGetAllBookingsFromGuest_GuestNotFound() {
+    public void testDeleteGuest_GuestNotFound() {
         when(guestRepository.getGuestById(1L)).thenReturn(null);
 
-        assertThrows(GuestNotFoundException.class, () -> guestService.getAllBookingsFromGuest(1L));
+        assertThrows(GuestNotFoundException.class, () -> guestService.deleteGuest(1L));
         verify(guestRepository, times(1)).getGuestById(1L);
+        verify(guestRepository, never()).deleteGuest(any(Guest.class));
+    }
+
+    @Test
+    public void testGetAllBookingsFromGuest_Success() {
+        List<Booking> mockBookings = List.of(mockBooking);
+        when(guestRepository.getBookingsByGuestId(1L)).thenReturn(mockBookings);
+
+        List<Booking> result = guestService.getAllBookingsFromGuest(1L);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(mockBookings, result);
+        verify(guestRepository, times(1)).getBookingsByGuestId(1L);
     }
 
     @Test
@@ -96,23 +113,6 @@ public class GuestServiceTest {
     }
 
     @Test
-    public void testDeleteGuest_Success() throws GuestNotFoundException {
-        when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
-
-        guestService.deleteGuest(1L);
-
-        verify(guestRepository, times(1)).deleteGuest(1L);
-    }
-
-    @Test
-    public void testDeleteGuest_GuestNotFound() {
-        when(guestRepository.getGuestById(1L)).thenReturn(null);
-
-        assertThrows(GuestNotFoundException.class, () -> guestService.deleteGuest(1L));
-        verify(guestRepository, times(1)).getGuestById(1L);
-    }
-
-    @Test
     public void testGetGuestById_Success() throws GuestNotFoundException {
         when(guestRepository.getGuestById(1L)).thenReturn(mockGuest);
 
@@ -127,6 +127,7 @@ public class GuestServiceTest {
         when(guestRepository.getGuestById(1L)).thenReturn(null);
 
         assertThrows(GuestNotFoundException.class, () -> guestService.getGuestById(1L));
+        verify(guestRepository, times(1)).getGuestById(1L);
     }
 
     @Test
