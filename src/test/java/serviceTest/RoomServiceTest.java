@@ -39,17 +39,20 @@ public class RoomServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-
+        // Hotel initialisieren und ID manuell setzen
         testHotel = new Hotel.HotelBuilder()
+                .withId(1L) // ID explizit setzen
                 .withName("Test Hotel")
                 .build();
 
-        testRoom = new SingleRoom.Builder(150.0, new RoomIdentifier("BuildingA", 1, "101A"), testHotel)
-                .withId(1L)
+        // Room initialisieren und ID manuell setzen
+        testRoom = new SingleRoom.Builder(100.0, new RoomIdentifier("Building A", 1, "101"), testHotel)
+                .withId(1L) // ID explizit setzen
                 .build();
 
-        testHotel.setRoom(List.of(testRoom));
+        // Mock Verhalten für RoomRepository
+        when(roomRepository.findRoomById(1L)).thenReturn(testRoom);
+        when(hotelService.getHotelByHotelId(1L)).thenReturn(testHotel);
     }
 
     @Test
@@ -57,7 +60,6 @@ public class RoomServiceTest {
         when(roomRepository.findRoomById(1L)).thenReturn(testRoom);
 
         Room result = roomService.findAvailableRooms(testHotel.getId(), List.of(SingleRoom.class), LocalDate.now(), LocalDate.now().plusDays(1)).get(0);
-        //create method should return the id
         assertNotNull(result);
         assertEquals(testRoom, result);
     }

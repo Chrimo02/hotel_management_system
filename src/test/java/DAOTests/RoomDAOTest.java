@@ -55,27 +55,32 @@ public class RoomDAOTest {
         SingleRoomEntity roomEntity = new SingleRoomEntity();
         roomEntity.setId(roomId);
 
-        // Verwende ArgumentMatchers für flexiblere Matching-Logik
-        when(em.find(eq(SingleRoomEntity.class), eq(roomId))).thenReturn(roomEntity);
+        // Simuliere das Verhalten von Hibernate bei der Verwendung von em.find
+        when(em.find(RoomEntity.class, roomId)).thenReturn(roomEntity);
 
+        // Rufe die Methode auf
         RoomEntity result = roomDAO.read(roomId);
 
-        assertNotNull(result); // Sicherstellen, dass ein Objekt zurückgegeben wird
-        assertEquals(roomId, result.getId()); // Überprüfen, dass die ID übereinstimmt
-        verify(em).find(SingleRoomEntity.class, roomId);
-        verify(em).close();
+        // Überprüfungen
+        assertNotNull(result); // Stelle sicher, dass ein Objekt zurückgegeben wird
+        assertEquals(roomId, result.getId()); // Überprüfe, ob die ID korrekt ist
+        assertTrue(result instanceof SingleRoomEntity); // Überprüfe, ob es ein SingleRoomEntity ist
+        verify(em).find(RoomEntity.class, roomId); // Sicherstellen, dass em.find korrekt aufgerufen wurde
+        verify(em).close(); // Sicherstellen, dass der EntityManager geschlossen wurde
     }
 
     @Test
     void testUpdate() {
         SingleRoomEntity roomEntity = new SingleRoomEntity();
 
-        doNothing().when(em).merge(roomEntity);
+        // Mock the merge method to return the same roomEntity
+        when(em.merge(roomEntity)).thenReturn(roomEntity);
 
         roomDAO.update(roomEntity);
 
-        verify(em).merge(roomEntity);
+        // Verify the interactions
         verify(transaction).begin();
+        verify(em).merge(roomEntity);
         verify(transaction).commit();
         verify(em).close();
     }
