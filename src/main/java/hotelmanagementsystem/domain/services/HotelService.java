@@ -29,7 +29,7 @@ public class HotelService {
         this.roomService = roomService;
     }
 
-    public Hotel createHotel(String name, String description, HotelLocation hotelLocation) throws Exception {
+    public Hotel createHotel(String name, String description, HotelLocation hotelLocation) throws RuntimeException {
         validateInputs(name, description, hotelLocation);
         Hotel hotel = new Hotel.HotelBuilder()
                 .withName(name)
@@ -143,7 +143,7 @@ public class HotelService {
                 .collect(Collectors.toList());
     }
 
-    private void validateInputs(String name, String description, HotelLocation hotelLocation) throws Exception {
+    private void validateInputs(String name, String description, HotelLocation hotelLocation) throws RuntimeException {
 
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Hotel name must not be empty");

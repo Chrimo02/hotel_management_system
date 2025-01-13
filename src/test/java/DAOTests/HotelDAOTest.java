@@ -1,4 +1,3 @@
-/*
 package DAOTests;
 
 import hotelmanagementsystem.infrastructure.persistence.dao.implementation.DataAccessException;
@@ -7,6 +6,7 @@ import hotelmanagementsystem.infrastructure.persistence.entities.HotelEntity;
 import hotelmanagementsystem.infrastructure.persistence.entities.HotelLocationEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.PersistenceException;
 import jakarta.persistence.TypedQuery;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,20 +21,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-*/
-/**
- * Beispielhafte Anpassung des HotelDAOTest an den Stil des GuestDAOTest,
- * d. h. Nutzung eines @Spy für HotelDAOImpl und lenient-Stubbing des EntityManagers.
- *//*
 
 @ExtendWith(MockitoExtension.class)
 class HotelDAOTest {
 
-    */
-/**
-     * Wir verwenden ein Spy, damit wir den echten Code von HotelDAOImpl
-     * ausführen, jedoch .entityManager() überschreiben können.
-     *//*
 
     @Spy
     private HotelDAOImpl hotelDAO;
@@ -97,7 +87,7 @@ class HotelDAOTest {
         DataAccessException exception =
                 assertThrows(DataAccessException.class, () -> hotelDAO.createHotel(mockHotelEntity));
 
-        assertTrue(exception.getMessage().contains("Error saving Hotel"));
+        assertTrue(exception.getMessage().contains("Error while creating hotel entity"));
         // Rollback wird erwartet
         verify(mockTransaction).begin();
         verify(mockTransaction).rollback();
@@ -121,10 +111,8 @@ class HotelDAOTest {
     @Test
     void testFindById_NotFound() {
         when(mockEntityManager.find(HotelEntity.class, 2L)).thenReturn(null);
-
         Optional<HotelEntity> result = hotelDAO.findById(2L);
         assertTrue(result.isEmpty());
-
         verify(mockEntityManager).find(HotelEntity.class, 2L);
         verify(mockEntityManager).close();
     }
@@ -132,7 +120,6 @@ class HotelDAOTest {
     @Test
     void testUpdateHotel_Success() {
         assertDoesNotThrow(() -> hotelDAO.updateHotel(mockHotelEntity));
-
         verify(mockTransaction).begin();
         verify(mockEntityManager).merge(mockHotelEntity);
         verify(mockTransaction).commit();
@@ -156,9 +143,7 @@ class HotelDAOTest {
     @Test
     void testDeleteById_Success() {
         when(mockEntityManager.find(HotelEntity.class, 1L)).thenReturn(mockHotelEntity);
-
         assertDoesNotThrow(() -> hotelDAO.deleteById(1L));
-
         verify(mockTransaction).begin();
         verify(mockEntityManager).find(HotelEntity.class, 1L);
         verify(mockEntityManager).remove(mockHotelEntity);
@@ -169,10 +154,7 @@ class HotelDAOTest {
     @Test
     void testDeleteById_NotFound() {
         when(mockEntityManager.find(HotelEntity.class, 2L)).thenReturn(null);
-
-        // Sollte klaglos durchlaufen, da nichts entfernt wird
         assertDoesNotThrow(() -> hotelDAO.deleteById(2L));
-
         verify(mockTransaction).begin();
         verify(mockEntityManager).find(HotelEntity.class, 2L);
         verify(mockTransaction).commit();
@@ -193,4 +175,4 @@ class HotelDAOTest {
         verify(mockEntityManager).close();
     }
 }
-*/
+
