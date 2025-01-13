@@ -6,9 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="plain-java" />
         <module name="hotel-management-system" />
+        <module name="hotelmanagement" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="plain-java" target="21" />
+    </bytecodeTargetLevel>
   </component>
 </project>
