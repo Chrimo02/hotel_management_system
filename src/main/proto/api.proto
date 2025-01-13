@@ -4,7 +4,7 @@ package hotelmanagement;
 
 option java_package = "hotelmanagementsystem.infrastructure.api.grpc.generated";
 option java_multiple_files = true;
-option java_outer_classname = "hotelmanagement";
+option java_outer_classname = "HotelManagement";
 
 // Hotel Service
 service HotelService {
