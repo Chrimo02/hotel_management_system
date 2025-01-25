@@ -36,12 +36,13 @@ public class BookingService {
         return booking;
     }
 
-    public void makeBooking(long hotelId, LocalDate checkInDate, LocalDate checkOutDate, List<Class<? extends Room>> roomTypes, List<Long> guestIds){
+    public Booking makeBooking(long hotelId, LocalDate checkInDate, LocalDate checkOutDate, List<Class<? extends Room>> roomTypes, List<Long> guestIds){
         List<Room> rooms = roomService.findAvailableRooms(hotelId, roomTypes, checkInDate, checkOutDate);
         List<Guest> guests = guestService.loadGuests(guestIds);
         Hotel hotel = hotelService.getHotelByHotelId(hotelId);
         Booking booking = bookingRepository.createBooking(hotel, checkInDate, checkOutDate, rooms, guests);
         roomService.bookRooms(booking);
+        return booking;
     }
 
     public void cancelBooking(long bookingID) throws BookingNotFoundException, RoomNotFoundException {
@@ -66,8 +67,8 @@ public class BookingService {
         bookingRepository.updateBooking(booking);
     }
 
-    private Booking getBookingById(long bookingID){
-        return bookingRepository.getBookingById(bookingID);
+    public Booking getBookingById(long bookingID) throws BookingNotFoundException {
+        return getNotNullBooking(bookingID);
     }
 
 

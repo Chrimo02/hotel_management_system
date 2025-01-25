@@ -1,3 +1,4 @@
+/*
 package hotelmanagementsystem.infrastructure.security;
 
 import de.thws.adapter.exceptions.AuthenticationException;
@@ -13,13 +14,15 @@ import static de.thws.adapter.authentification.AuthSettings.AUTH_SERVER_URL;
 import static de.thws.adapter.authentification.AuthSettings.TOKEN_HEADER_NAME;
 
 public class THWSAuthorizationUtils {
-    /**
+    */
+/**
      * Validates the provided token and retrieves the associated card number.
      *
      * @param token the token to validate
      * @return the card number associated with the token
      * @throws AuthenticationException if the token validation fails
-     */
+     *//*
+
     public static String validateTokenAndGetCardNumber(String token) throws AuthenticationException {
 
         try (final HttpClient httpClient = HttpClient.newHttpClient()) {
@@ -45,7 +48,8 @@ public class THWSAuthorizationUtils {
         }
     }
 
-    /**
+    */
+/**
      * Authenticates a user with the given username and password.
      * Sends a request to the authentication server and returns a token if the credentials are valid.
      *
@@ -53,7 +57,8 @@ public class THWSAuthorizationUtils {
      * @param password the password of the user
      * @return the authentication token if the credentials are valid
      * @throws AuthenticationException if the authentication fails
-     */
+     *//*
+
     public static String authenticate(String username, String password) throws AuthenticationException {
         try (final HttpClient httpClient = HttpClient.newHttpClient()) {
             if (username.equals(AuthSettings.TESTUSERNAME) && password.equals(AuthSettings.TESTPASSWORD) && AuthSettings.BYPASS_AUTH_WITH_TESTUSER) {
@@ -81,3 +86,4 @@ public class THWSAuthorizationUtils {
         }
     }
 }
+*/

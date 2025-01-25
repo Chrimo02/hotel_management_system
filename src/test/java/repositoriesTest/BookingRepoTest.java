@@ -1,4 +1,3 @@
-/*
 package repositoriesTest;
 
 import hotelmanagementsystem.domain.models.Booking;
@@ -97,20 +96,74 @@ class BookingRepoTest {
     @Test
     void testGetBookingById_Success() {
         long bookingId = 10L;
+
+        // Mock BookingEntity and its dependencies
         BookingEntity bookingEntity = mock(BookingEntity.class);
-        Booking expectedBooking = mock(Booking.class);
+        HotelEntity mockHotelEntity = mock(HotelEntity.class);
+        RoomEntity mockRoomEntity = mock(RoomEntity.class);
+        GuestEntity mockGuestEntity = mock(GuestEntity.class);
 
-        when(bookingEntity.getCheckInDate()).thenReturn(LocalDate.of(2024, 1, 1));
-        when(bookingEntity.getCheckOutDate()).thenReturn(LocalDate.of(2024, 1, 5));
+        // Create lists for rooms and guests
+        List<RoomEntity> roomEntities = List.of(mockRoomEntity);
+        List<GuestEntity> guestEntities = List.of(mockGuestEntity);
+
+        // Define behaviors for BookingEntity getters to return valid, non-null data
         when(mockBookingDAO.read(bookingId)).thenReturn(bookingEntity);
-        when(mockBookingMapper.bookingEntityToBooking(bookingEntity)).thenReturn(expectedBooking);
+        when(bookingEntity.getId()).thenReturn(bookingId);
+        when(bookingEntity.getCheckInDate()).thenReturn(LocalDate.of(2025, 3, 1));    // Valid check-in date
+        when(bookingEntity.getCheckOutDate()).thenReturn(LocalDate.of(2025, 3, 5));   // Valid check-out date
+        when(bookingEntity.getHotel()).thenReturn(mockHotelEntity);
+        when(bookingEntity.getRooms()).thenReturn(roomEntities);
+        when(bookingEntity.getGuests()).thenReturn(guestEntities);
+        when(bookingEntity.isStatus()).thenReturn(true);
+        when(bookingEntity.getCheckInTime()).thenReturn(null);
+        when(bookingEntity.getCheckOutTime()).thenReturn(null);
 
+        // Mock mappers to return valid domain objects
+        Hotel mockHotel = mock(Hotel.class);
+        List<Room> rooms = List.of(mock(Room.class));
+        List<Guest> guests = List.of(mock(Guest.class));
+
+        when(mockHotelMapper.mapHotelEntityToDomainHotel(mockHotelEntity)).thenReturn(mockHotel);
+        when(mockRoomMapper.toDomainList(roomEntities)).thenReturn(rooms);
+        when(mockGuestMapper.guestEntitiesToGuests(guestEntities)).thenReturn(guests);
+
+        // Run the method under test
         Booking result = bookingAdapter.getBookingById(bookingId);
 
-        assertNotNull(result);
-        assertEquals(expectedBooking, result);
+        // Create the expected Booking object with the same data
+        Booking expectedBooking = new Booking(
+                bookingId,
+                mockHotel,
+                LocalDate.of(2025, 3, 1),
+                LocalDate.of(2025, 3, 5),
+                rooms,
+                guests,
+                true,
+                null,
+                null
+        );
+
+        // Assertions to verify that the result matches the expected Booking
+        assertNotNull(result, "The returned Booking should not be null");
+        assertEquals(expectedBooking.getId(), result.getId(), "Booking IDs should match");
+        assertEquals(expectedBooking.getCheckInDate(), result.getCheckInDate(), "Check-in dates should match");
+        assertEquals(expectedBooking.getCheckOutDate(), result.getCheckOutDate(), "Check-out dates should match");
+        assertEquals(expectedBooking.getHotel(), result.getHotel(), "Hotels should match");
+        assertEquals(expectedBooking.getRooms(), result.getRooms(), "Rooms should match");
+        assertEquals(expectedBooking.getGuests(), result.getGuests(), "Guests should match");
+        assertEquals(expectedBooking.getStatus(), result.getStatus(), "Statuses should match");
+        assertEquals(expectedBooking.getCheckInTime(), result.getCheckInTime(), "Check-in times should match");
+        assertEquals(expectedBooking.getCheckOutTime(), result.getCheckOutTime(), "Check-out times should match");
+
+        // Verify that the mocked methods were called as expected
         verify(mockBookingDAO).read(bookingId);
+        verify(mockRoomMapper).toDomainList(roomEntities);
+        verify(mockGuestMapper).guestEntitiesToGuests(guestEntities);
+        verify(mockHotelMapper).mapHotelEntityToDomainHotel(mockHotelEntity);
     }
+
+
 
 
     @Test
@@ -139,4 +192,3 @@ class BookingRepoTest {
         verify(mockBookingDAO).read(booking.getId());
     }
 }
-*/
