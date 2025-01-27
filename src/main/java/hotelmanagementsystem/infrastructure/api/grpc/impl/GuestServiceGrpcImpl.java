@@ -1,13 +1,33 @@
 package hotelmanagementsystem.infrastructure.api.grpc.impl;
+import hotelmanagementsystem.domain.services.GuestService;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.*;
 import io.grpc.stub.StreamObserver;
+import jakarta.inject.Inject;
+
+import java.time.LocalDate;
 
 public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
 {
+    private final GuestService guestService;
+
+    @Inject
+    public GuestServiceGrpcImpl(GuestService guestService){
+        this.guestService = guestService;
+    }
     @Override
     public void createGuest(CreateGuestRequest request, StreamObserver<GuestResponse> responseObserver) {
-        super.createGuest(request, responseObserver);
+
+        try{
+
+
+        }
+
+
+
+
     }
+
+
 
     @Override
     public void getGuestById(GetGuestByIdRequest request, StreamObserver<GuestResponse> responseObserver) {

@@ -22,10 +22,33 @@ public interface BookingOrBuilder extends
   long getHotelId();
 
   /**
-   * <code>int64 guestId = 3;</code>
-   * @return The guestId.
+   * <pre>
+   * Change to "repeated" to support multiple guests
+   * </pre>
+   *
+   * <code>repeated int64 guestIds = 3;</code>
+   * @return A list containing the guestIds.
    */
-  long getGuestId();
+  java.util.List<java.lang.Long> getGuestIdsList();
+  /**
+   * <pre>
+   * Change to "repeated" to support multiple guests
+   * </pre>
+   *
+   * <code>repeated int64 guestIds = 3;</code>
+   * @return The count of guestIds.
+   */
+  int getGuestIdsCount();
+  /**
+   * <pre>
+   * Change to "repeated" to support multiple guests
+   * </pre>
+   *
+   * <code>repeated int64 guestIds = 3;</code>
+   * @param index The index of the element to return.
+   * @return The guestIds at the given index.
+   */
+  long getGuestIds(int index);
 
   /**
    * <code>repeated int64 roomIds = 4;</code>

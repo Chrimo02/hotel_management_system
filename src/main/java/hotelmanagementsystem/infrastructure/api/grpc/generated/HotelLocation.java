@@ -45,11 +45,22 @@ private static final long serialVersionUID = 0L;
             hotelmanagementsystem.infrastructure.api.grpc.generated.HotelLocation.class, hotelmanagementsystem.infrastructure.api.grpc.generated.HotelLocation.Builder.class);
   }
 
-  public static final int ADDRESS_FIELD_NUMBER = 1;
+  public static final int ID_FIELD_NUMBER = 1;
+  private long id_ = 0L;
+  /**
+   * <code>int64 id = 1;</code>
+   * @return The id.
+   */
+  @java.lang.Override
+  public long getId() {
+    return id_;
+  }
+
+  public static final int ADDRESS_FIELD_NUMBER = 2;
   @SuppressWarnings("serial")
   private volatile java.lang.Object address_ = "";
   /**
-   * <code>string address = 1;</code>
+   * <code>string address = 2;</code>
    * @return The address.
    */
   @java.lang.Override
@@ -66,7 +77,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string address = 1;</code>
+   * <code>string address = 2;</code>
    * @return The bytes for address.
    */
   @java.lang.Override
@@ -84,11 +95,11 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int CITY_FIELD_NUMBER = 2;
+  public static final int CITY_FIELD_NUMBER = 3;
   @SuppressWarnings("serial")
   private volatile java.lang.Object city_ = "";
   /**
-   * <code>string city = 2;</code>
+   * <code>string city = 3;</code>
    * @return The city.
    */
   @java.lang.Override
@@ -105,7 +116,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string city = 2;</code>
+   * <code>string city = 3;</code>
    * @return The bytes for city.
    */
   @java.lang.Override
@@ -123,11 +134,11 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int COUNTRY_FIELD_NUMBER = 3;
+  public static final int COUNTRY_FIELD_NUMBER = 4;
   @SuppressWarnings("serial")
   private volatile java.lang.Object country_ = "";
   /**
-   * <code>string country = 3;</code>
+   * <code>string country = 4;</code>
    * @return The country.
    */
   @java.lang.Override
@@ -144,7 +155,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string country = 3;</code>
+   * <code>string country = 4;</code>
    * @return The bytes for country.
    */
   @java.lang.Override
@@ -176,14 +187,17 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    if (id_ != 0L) {
+      output.writeInt64(1, id_);
+    }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(address_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 1, address_);
+      com.google.protobuf.GeneratedMessage.writeString(output, 2, address_);
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(city_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 2, city_);
+      com.google.protobuf.GeneratedMessage.writeString(output, 3, city_);
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(country_)) {
-      com.google.protobuf.GeneratedMessage.writeString(output, 3, country_);
+      com.google.protobuf.GeneratedMessage.writeString(output, 4, country_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -194,14 +208,18 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
+    if (id_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(1, id_);
+    }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(address_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(1, address_);
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(2, address_);
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(city_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(2, city_);
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(3, city_);
     }
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(country_)) {
-      size += com.google.protobuf.GeneratedMessage.computeStringSize(3, country_);
+      size += com.google.protobuf.GeneratedMessage.computeStringSize(4, country_);
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -218,6 +236,8 @@ private static final long serialVersionUID = 0L;
     }
     hotelmanagementsystem.infrastructure.api.grpc.generated.HotelLocation other = (hotelmanagementsystem.infrastructure.api.grpc.generated.HotelLocation) obj;
 
+    if (getId()
+        != other.getId()) return false;
     if (!getAddress()
         .equals(other.getAddress())) return false;
     if (!getCity()
@@ -235,6 +255,9 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + ID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getId());
     hash = (37 * hash) + ADDRESS_FIELD_NUMBER;
     hash = (53 * hash) + getAddress().hashCode();
     hash = (37 * hash) + CITY_FIELD_NUMBER;
@@ -372,6 +395,7 @@ private static final long serialVersionUID = 0L;
     public Builder clear() {
       super.clear();
       bitField0_ = 0;
+      id_ = 0L;
       address_ = "";
       city_ = "";
       country_ = "";
@@ -409,12 +433,15 @@ private static final long serialVersionUID = 0L;
     private void buildPartial0(hotelmanagementsystem.infrastructure.api.grpc.generated.HotelLocation result) {
       int from_bitField0_ = bitField0_;
       if (((from_bitField0_ & 0x00000001) != 0)) {
-        result.address_ = address_;
+        result.id_ = id_;
       }
       if (((from_bitField0_ & 0x00000002) != 0)) {
-        result.city_ = city_;
+        result.address_ = address_;
       }
       if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.city_ = city_;
+      }
+      if (((from_bitField0_ & 0x00000008) != 0)) {
         result.country_ = country_;
       }
     }
@@ -431,19 +458,22 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(hotelmanagementsystem.infrastructure.api.grpc.generated.HotelLocation other) {
       if (other == hotelmanagementsystem.infrastructure.api.grpc.generated.HotelLocation.getDefaultInstance()) return this;
+      if (other.getId() != 0L) {
+        setId(other.getId());
+      }
       if (!other.getAddress().isEmpty()) {
         address_ = other.address_;
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000002;
         onChanged();
       }
       if (!other.getCity().isEmpty()) {
         city_ = other.city_;
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000004;
         onChanged();
       }
       if (!other.getCountry().isEmpty()) {
         country_ = other.country_;
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000008;
         onChanged();
       }
       this.mergeUnknownFields(other.getUnknownFields());
@@ -472,21 +502,26 @@ private static final long serialVersionUID = 0L;
             case 0:
               done = true;
               break;
-            case 10: {
-              address_ = input.readStringRequireUtf8();
+            case 8: {
+              id_ = input.readInt64();
               bitField0_ |= 0x00000001;
               break;
-            } // case 10
+            } // case 8
             case 18: {
-              city_ = input.readStringRequireUtf8();
+              address_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000002;
               break;
             } // case 18
             case 26: {
-              country_ = input.readStringRequireUtf8();
+              city_ = input.readStringRequireUtf8();
               bitField0_ |= 0x00000004;
               break;
             } // case 26
+            case 34: {
+              country_ = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000008;
+              break;
+            } // case 34
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -504,9 +539,41 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
+    private long id_ ;
+    /**
+     * <code>int64 id = 1;</code>
+     * @return The id.
+     */
+    @java.lang.Override
+    public long getId() {
+      return id_;
+    }
+    /**
+     * <code>int64 id = 1;</code>
+     * @param value The id to set.
+     * @return This builder for chaining.
+     */
+    public Builder setId(long value) {
+
+      id_ = value;
+      bitField0_ |= 0x00000001;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int64 id = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearId() {
+      bitField0_ = (bitField0_ & ~0x00000001);
+      id_ = 0L;
+      onChanged();
+      return this;
+    }
+
     private java.lang.Object address_ = "";
     /**
-     * <code>string address = 1;</code>
+     * <code>string address = 2;</code>
      * @return The address.
      */
     public java.lang.String getAddress() {
@@ -522,7 +589,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string address = 1;</code>
+     * <code>string address = 2;</code>
      * @return The bytes for address.
      */
     public com.google.protobuf.ByteString
@@ -539,7 +606,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string address = 1;</code>
+     * <code>string address = 2;</code>
      * @param value The address to set.
      * @return This builder for chaining.
      */
@@ -547,22 +614,22 @@ private static final long serialVersionUID = 0L;
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
       address_ = value;
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
     /**
-     * <code>string address = 1;</code>
+     * <code>string address = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearAddress() {
       address_ = getDefaultInstance().getAddress();
-      bitField0_ = (bitField0_ & ~0x00000001);
+      bitField0_ = (bitField0_ & ~0x00000002);
       onChanged();
       return this;
     }
     /**
-     * <code>string address = 1;</code>
+     * <code>string address = 2;</code>
      * @param value The bytes for address to set.
      * @return This builder for chaining.
      */
@@ -571,14 +638,14 @@ private static final long serialVersionUID = 0L;
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
       address_ = value;
-      bitField0_ |= 0x00000001;
+      bitField0_ |= 0x00000002;
       onChanged();
       return this;
     }
 
     private java.lang.Object city_ = "";
     /**
-     * <code>string city = 2;</code>
+     * <code>string city = 3;</code>
      * @return The city.
      */
     public java.lang.String getCity() {
@@ -594,7 +661,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string city = 2;</code>
+     * <code>string city = 3;</code>
      * @return The bytes for city.
      */
     public com.google.protobuf.ByteString
@@ -611,7 +678,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string city = 2;</code>
+     * <code>string city = 3;</code>
      * @param value The city to set.
      * @return This builder for chaining.
      */
@@ -619,22 +686,22 @@ private static final long serialVersionUID = 0L;
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
       city_ = value;
-      bitField0_ |= 0x00000002;
+      bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
     /**
-     * <code>string city = 2;</code>
+     * <code>string city = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearCity() {
       city_ = getDefaultInstance().getCity();
-      bitField0_ = (bitField0_ & ~0x00000002);
+      bitField0_ = (bitField0_ & ~0x00000004);
       onChanged();
       return this;
     }
     /**
-     * <code>string city = 2;</code>
+     * <code>string city = 3;</code>
      * @param value The bytes for city to set.
      * @return This builder for chaining.
      */
@@ -643,14 +710,14 @@ private static final long serialVersionUID = 0L;
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
       city_ = value;
-      bitField0_ |= 0x00000002;
+      bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
 
     private java.lang.Object country_ = "";
     /**
-     * <code>string country = 3;</code>
+     * <code>string country = 4;</code>
      * @return The country.
      */
     public java.lang.String getCountry() {
@@ -666,7 +733,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string country = 3;</code>
+     * <code>string country = 4;</code>
      * @return The bytes for country.
      */
     public com.google.protobuf.ByteString
@@ -683,7 +750,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string country = 3;</code>
+     * <code>string country = 4;</code>
      * @param value The country to set.
      * @return This builder for chaining.
      */
@@ -691,22 +758,22 @@ private static final long serialVersionUID = 0L;
         java.lang.String value) {
       if (value == null) { throw new NullPointerException(); }
       country_ = value;
-      bitField0_ |= 0x00000004;
+      bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }
     /**
-     * <code>string country = 3;</code>
+     * <code>string country = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearCountry() {
       country_ = getDefaultInstance().getCountry();
-      bitField0_ = (bitField0_ & ~0x00000004);
+      bitField0_ = (bitField0_ & ~0x00000008);
       onChanged();
       return this;
     }
     /**
-     * <code>string country = 3;</code>
+     * <code>string country = 4;</code>
      * @param value The bytes for country to set.
      * @return This builder for chaining.
      */
@@ -715,7 +782,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) { throw new NullPointerException(); }
       checkByteStringIsUtf8(value);
       country_ = value;
-      bitField0_ |= 0x00000004;
+      bitField0_ |= 0x00000008;
       onChanged();
       return this;
     }

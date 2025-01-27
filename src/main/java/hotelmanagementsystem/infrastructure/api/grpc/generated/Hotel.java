@@ -33,6 +33,9 @@ private static final long serialVersionUID = 0L;
   private Hotel() {
     name_ = "";
     description_ = "";
+    roomIds_ = emptyLongList();
+    bookingIds_ = emptyLongList();
+    hotelRatingIds_ = emptyLongList();
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
@@ -175,6 +178,96 @@ private static final long serialVersionUID = 0L;
     return averageRating_;
   }
 
+  public static final int ROOMIDS_FIELD_NUMBER = 6;
+  @SuppressWarnings("serial")
+  private com.google.protobuf.Internal.LongList roomIds_ =
+      emptyLongList();
+  /**
+   * <code>repeated int64 roomIds = 6;</code>
+   * @return A list containing the roomIds.
+   */
+  @java.lang.Override
+  public java.util.List<java.lang.Long>
+      getRoomIdsList() {
+    return roomIds_;
+  }
+  /**
+   * <code>repeated int64 roomIds = 6;</code>
+   * @return The count of roomIds.
+   */
+  public int getRoomIdsCount() {
+    return roomIds_.size();
+  }
+  /**
+   * <code>repeated int64 roomIds = 6;</code>
+   * @param index The index of the element to return.
+   * @return The roomIds at the given index.
+   */
+  public long getRoomIds(int index) {
+    return roomIds_.getLong(index);
+  }
+  private int roomIdsMemoizedSerializedSize = -1;
+
+  public static final int BOOKINGIDS_FIELD_NUMBER = 7;
+  @SuppressWarnings("serial")
+  private com.google.protobuf.Internal.LongList bookingIds_ =
+      emptyLongList();
+  /**
+   * <code>repeated int64 bookingIds = 7;</code>
+   * @return A list containing the bookingIds.
+   */
+  @java.lang.Override
+  public java.util.List<java.lang.Long>
+      getBookingIdsList() {
+    return bookingIds_;
+  }
+  /**
+   * <code>repeated int64 bookingIds = 7;</code>
+   * @return The count of bookingIds.
+   */
+  public int getBookingIdsCount() {
+    return bookingIds_.size();
+  }
+  /**
+   * <code>repeated int64 bookingIds = 7;</code>
+   * @param index The index of the element to return.
+   * @return The bookingIds at the given index.
+   */
+  public long getBookingIds(int index) {
+    return bookingIds_.getLong(index);
+  }
+  private int bookingIdsMemoizedSerializedSize = -1;
+
+  public static final int HOTELRATINGIDS_FIELD_NUMBER = 8;
+  @SuppressWarnings("serial")
+  private com.google.protobuf.Internal.LongList hotelRatingIds_ =
+      emptyLongList();
+  /**
+   * <code>repeated int64 hotelRatingIds = 8;</code>
+   * @return A list containing the hotelRatingIds.
+   */
+  @java.lang.Override
+  public java.util.List<java.lang.Long>
+      getHotelRatingIdsList() {
+    return hotelRatingIds_;
+  }
+  /**
+   * <code>repeated int64 hotelRatingIds = 8;</code>
+   * @return The count of hotelRatingIds.
+   */
+  public int getHotelRatingIdsCount() {
+    return hotelRatingIds_.size();
+  }
+  /**
+   * <code>repeated int64 hotelRatingIds = 8;</code>
+   * @param index The index of the element to return.
+   * @return The hotelRatingIds at the given index.
+   */
+  public long getHotelRatingIds(int index) {
+    return hotelRatingIds_.getLong(index);
+  }
+  private int hotelRatingIdsMemoizedSerializedSize = -1;
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -189,6 +282,7 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    getSerializedSize();
     if (id_ != 0L) {
       output.writeInt64(1, id_);
     }
@@ -203,6 +297,27 @@ private static final long serialVersionUID = 0L;
     }
     if (java.lang.Double.doubleToRawLongBits(averageRating_) != 0) {
       output.writeDouble(5, averageRating_);
+    }
+    if (getRoomIdsList().size() > 0) {
+      output.writeUInt32NoTag(50);
+      output.writeUInt32NoTag(roomIdsMemoizedSerializedSize);
+    }
+    for (int i = 0; i < roomIds_.size(); i++) {
+      output.writeInt64NoTag(roomIds_.getLong(i));
+    }
+    if (getBookingIdsList().size() > 0) {
+      output.writeUInt32NoTag(58);
+      output.writeUInt32NoTag(bookingIdsMemoizedSerializedSize);
+    }
+    for (int i = 0; i < bookingIds_.size(); i++) {
+      output.writeInt64NoTag(bookingIds_.getLong(i));
+    }
+    if (getHotelRatingIdsList().size() > 0) {
+      output.writeUInt32NoTag(66);
+      output.writeUInt32NoTag(hotelRatingIdsMemoizedSerializedSize);
+    }
+    for (int i = 0; i < hotelRatingIds_.size(); i++) {
+      output.writeInt64NoTag(hotelRatingIds_.getLong(i));
     }
     getUnknownFields().writeTo(output);
   }
@@ -230,6 +345,48 @@ private static final long serialVersionUID = 0L;
     if (java.lang.Double.doubleToRawLongBits(averageRating_) != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeDoubleSize(5, averageRating_);
+    }
+    {
+      int dataSize = 0;
+      for (int i = 0; i < roomIds_.size(); i++) {
+        dataSize += com.google.protobuf.CodedOutputStream
+          .computeInt64SizeNoTag(roomIds_.getLong(i));
+      }
+      size += dataSize;
+      if (!getRoomIdsList().isEmpty()) {
+        size += 1;
+        size += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(dataSize);
+      }
+      roomIdsMemoizedSerializedSize = dataSize;
+    }
+    {
+      int dataSize = 0;
+      for (int i = 0; i < bookingIds_.size(); i++) {
+        dataSize += com.google.protobuf.CodedOutputStream
+          .computeInt64SizeNoTag(bookingIds_.getLong(i));
+      }
+      size += dataSize;
+      if (!getBookingIdsList().isEmpty()) {
+        size += 1;
+        size += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(dataSize);
+      }
+      bookingIdsMemoizedSerializedSize = dataSize;
+    }
+    {
+      int dataSize = 0;
+      for (int i = 0; i < hotelRatingIds_.size(); i++) {
+        dataSize += com.google.protobuf.CodedOutputStream
+          .computeInt64SizeNoTag(hotelRatingIds_.getLong(i));
+      }
+      size += dataSize;
+      if (!getHotelRatingIdsList().isEmpty()) {
+        size += 1;
+        size += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(dataSize);
+      }
+      hotelRatingIdsMemoizedSerializedSize = dataSize;
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -260,6 +417,12 @@ private static final long serialVersionUID = 0L;
     if (java.lang.Double.doubleToLongBits(getAverageRating())
         != java.lang.Double.doubleToLongBits(
             other.getAverageRating())) return false;
+    if (!getRoomIdsList()
+        .equals(other.getRoomIdsList())) return false;
+    if (!getBookingIdsList()
+        .equals(other.getBookingIdsList())) return false;
+    if (!getHotelRatingIdsList()
+        .equals(other.getHotelRatingIdsList())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -285,6 +448,18 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + AVERAGERATING_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         java.lang.Double.doubleToLongBits(getAverageRating()));
+    if (getRoomIdsCount() > 0) {
+      hash = (37 * hash) + ROOMIDS_FIELD_NUMBER;
+      hash = (53 * hash) + getRoomIdsList().hashCode();
+    }
+    if (getBookingIdsCount() > 0) {
+      hash = (37 * hash) + BOOKINGIDS_FIELD_NUMBER;
+      hash = (53 * hash) + getBookingIdsList().hashCode();
+    }
+    if (getHotelRatingIdsCount() > 0) {
+      hash = (37 * hash) + HOTELRATINGIDS_FIELD_NUMBER;
+      hash = (53 * hash) + getHotelRatingIdsList().hashCode();
+    }
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -435,6 +610,9 @@ private static final long serialVersionUID = 0L;
         locationBuilder_ = null;
       }
       averageRating_ = 0D;
+      roomIds_ = emptyLongList();
+      bookingIds_ = emptyLongList();
+      hotelRatingIds_ = emptyLongList();
       return this;
     }
 
@@ -487,6 +665,18 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000010) != 0)) {
         result.averageRating_ = averageRating_;
       }
+      if (((from_bitField0_ & 0x00000020) != 0)) {
+        roomIds_.makeImmutable();
+        result.roomIds_ = roomIds_;
+      }
+      if (((from_bitField0_ & 0x00000040) != 0)) {
+        bookingIds_.makeImmutable();
+        result.bookingIds_ = bookingIds_;
+      }
+      if (((from_bitField0_ & 0x00000080) != 0)) {
+        hotelRatingIds_.makeImmutable();
+        result.hotelRatingIds_ = hotelRatingIds_;
+      }
       result.bitField0_ |= to_bitField0_;
     }
 
@@ -520,6 +710,39 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getAverageRating() != 0D) {
         setAverageRating(other.getAverageRating());
+      }
+      if (!other.roomIds_.isEmpty()) {
+        if (roomIds_.isEmpty()) {
+          roomIds_ = other.roomIds_;
+          roomIds_.makeImmutable();
+          bitField0_ |= 0x00000020;
+        } else {
+          ensureRoomIdsIsMutable();
+          roomIds_.addAll(other.roomIds_);
+        }
+        onChanged();
+      }
+      if (!other.bookingIds_.isEmpty()) {
+        if (bookingIds_.isEmpty()) {
+          bookingIds_ = other.bookingIds_;
+          bookingIds_.makeImmutable();
+          bitField0_ |= 0x00000040;
+        } else {
+          ensureBookingIdsIsMutable();
+          bookingIds_.addAll(other.bookingIds_);
+        }
+        onChanged();
+      }
+      if (!other.hotelRatingIds_.isEmpty()) {
+        if (hotelRatingIds_.isEmpty()) {
+          hotelRatingIds_ = other.hotelRatingIds_;
+          hotelRatingIds_.makeImmutable();
+          bitField0_ |= 0x00000080;
+        } else {
+          ensureHotelRatingIdsIsMutable();
+          hotelRatingIds_.addAll(other.hotelRatingIds_);
+        }
+        onChanged();
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -574,6 +797,54 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000010;
               break;
             } // case 41
+            case 48: {
+              long v = input.readInt64();
+              ensureRoomIdsIsMutable();
+              roomIds_.addLong(v);
+              break;
+            } // case 48
+            case 50: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              ensureRoomIdsIsMutable();
+              while (input.getBytesUntilLimit() > 0) {
+                roomIds_.addLong(input.readInt64());
+              }
+              input.popLimit(limit);
+              break;
+            } // case 50
+            case 56: {
+              long v = input.readInt64();
+              ensureBookingIdsIsMutable();
+              bookingIds_.addLong(v);
+              break;
+            } // case 56
+            case 58: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              ensureBookingIdsIsMutable();
+              while (input.getBytesUntilLimit() > 0) {
+                bookingIds_.addLong(input.readInt64());
+              }
+              input.popLimit(limit);
+              break;
+            } // case 58
+            case 64: {
+              long v = input.readInt64();
+              ensureHotelRatingIdsIsMutable();
+              hotelRatingIds_.addLong(v);
+              break;
+            } // case 64
+            case 66: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              ensureHotelRatingIdsIsMutable();
+              while (input.getBytesUntilLimit() > 0) {
+                hotelRatingIds_.addLong(input.readInt64());
+              }
+              input.popLimit(limit);
+              break;
+            } // case 66
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -916,6 +1187,258 @@ private static final long serialVersionUID = 0L;
     public Builder clearAverageRating() {
       bitField0_ = (bitField0_ & ~0x00000010);
       averageRating_ = 0D;
+      onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.Internal.LongList roomIds_ = emptyLongList();
+    private void ensureRoomIdsIsMutable() {
+      if (!roomIds_.isModifiable()) {
+        roomIds_ = makeMutableCopy(roomIds_);
+      }
+      bitField0_ |= 0x00000020;
+    }
+    /**
+     * <code>repeated int64 roomIds = 6;</code>
+     * @return A list containing the roomIds.
+     */
+    public java.util.List<java.lang.Long>
+        getRoomIdsList() {
+      roomIds_.makeImmutable();
+      return roomIds_;
+    }
+    /**
+     * <code>repeated int64 roomIds = 6;</code>
+     * @return The count of roomIds.
+     */
+    public int getRoomIdsCount() {
+      return roomIds_.size();
+    }
+    /**
+     * <code>repeated int64 roomIds = 6;</code>
+     * @param index The index of the element to return.
+     * @return The roomIds at the given index.
+     */
+    public long getRoomIds(int index) {
+      return roomIds_.getLong(index);
+    }
+    /**
+     * <code>repeated int64 roomIds = 6;</code>
+     * @param index The index to set the value at.
+     * @param value The roomIds to set.
+     * @return This builder for chaining.
+     */
+    public Builder setRoomIds(
+        int index, long value) {
+
+      ensureRoomIdsIsMutable();
+      roomIds_.setLong(index, value);
+      bitField0_ |= 0x00000020;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated int64 roomIds = 6;</code>
+     * @param value The roomIds to add.
+     * @return This builder for chaining.
+     */
+    public Builder addRoomIds(long value) {
+
+      ensureRoomIdsIsMutable();
+      roomIds_.addLong(value);
+      bitField0_ |= 0x00000020;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated int64 roomIds = 6;</code>
+     * @param values The roomIds to add.
+     * @return This builder for chaining.
+     */
+    public Builder addAllRoomIds(
+        java.lang.Iterable<? extends java.lang.Long> values) {
+      ensureRoomIdsIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, roomIds_);
+      bitField0_ |= 0x00000020;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated int64 roomIds = 6;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearRoomIds() {
+      roomIds_ = emptyLongList();
+      bitField0_ = (bitField0_ & ~0x00000020);
+      onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.Internal.LongList bookingIds_ = emptyLongList();
+    private void ensureBookingIdsIsMutable() {
+      if (!bookingIds_.isModifiable()) {
+        bookingIds_ = makeMutableCopy(bookingIds_);
+      }
+      bitField0_ |= 0x00000040;
+    }
+    /**
+     * <code>repeated int64 bookingIds = 7;</code>
+     * @return A list containing the bookingIds.
+     */
+    public java.util.List<java.lang.Long>
+        getBookingIdsList() {
+      bookingIds_.makeImmutable();
+      return bookingIds_;
+    }
+    /**
+     * <code>repeated int64 bookingIds = 7;</code>
+     * @return The count of bookingIds.
+     */
+    public int getBookingIdsCount() {
+      return bookingIds_.size();
+    }
+    /**
+     * <code>repeated int64 bookingIds = 7;</code>
+     * @param index The index of the element to return.
+     * @return The bookingIds at the given index.
+     */
+    public long getBookingIds(int index) {
+      return bookingIds_.getLong(index);
+    }
+    /**
+     * <code>repeated int64 bookingIds = 7;</code>
+     * @param index The index to set the value at.
+     * @param value The bookingIds to set.
+     * @return This builder for chaining.
+     */
+    public Builder setBookingIds(
+        int index, long value) {
+
+      ensureBookingIdsIsMutable();
+      bookingIds_.setLong(index, value);
+      bitField0_ |= 0x00000040;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated int64 bookingIds = 7;</code>
+     * @param value The bookingIds to add.
+     * @return This builder for chaining.
+     */
+    public Builder addBookingIds(long value) {
+
+      ensureBookingIdsIsMutable();
+      bookingIds_.addLong(value);
+      bitField0_ |= 0x00000040;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated int64 bookingIds = 7;</code>
+     * @param values The bookingIds to add.
+     * @return This builder for chaining.
+     */
+    public Builder addAllBookingIds(
+        java.lang.Iterable<? extends java.lang.Long> values) {
+      ensureBookingIdsIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, bookingIds_);
+      bitField0_ |= 0x00000040;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated int64 bookingIds = 7;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearBookingIds() {
+      bookingIds_ = emptyLongList();
+      bitField0_ = (bitField0_ & ~0x00000040);
+      onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.Internal.LongList hotelRatingIds_ = emptyLongList();
+    private void ensureHotelRatingIdsIsMutable() {
+      if (!hotelRatingIds_.isModifiable()) {
+        hotelRatingIds_ = makeMutableCopy(hotelRatingIds_);
+      }
+      bitField0_ |= 0x00000080;
+    }
+    /**
+     * <code>repeated int64 hotelRatingIds = 8;</code>
+     * @return A list containing the hotelRatingIds.
+     */
+    public java.util.List<java.lang.Long>
+        getHotelRatingIdsList() {
+      hotelRatingIds_.makeImmutable();
+      return hotelRatingIds_;
+    }
+    /**
+     * <code>repeated int64 hotelRatingIds = 8;</code>
+     * @return The count of hotelRatingIds.
+     */
+    public int getHotelRatingIdsCount() {
+      return hotelRatingIds_.size();
+    }
+    /**
+     * <code>repeated int64 hotelRatingIds = 8;</code>
+     * @param index The index of the element to return.
+     * @return The hotelRatingIds at the given index.
+     */
+    public long getHotelRatingIds(int index) {
+      return hotelRatingIds_.getLong(index);
+    }
+    /**
+     * <code>repeated int64 hotelRatingIds = 8;</code>
+     * @param index The index to set the value at.
+     * @param value The hotelRatingIds to set.
+     * @return This builder for chaining.
+     */
+    public Builder setHotelRatingIds(
+        int index, long value) {
+
+      ensureHotelRatingIdsIsMutable();
+      hotelRatingIds_.setLong(index, value);
+      bitField0_ |= 0x00000080;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated int64 hotelRatingIds = 8;</code>
+     * @param value The hotelRatingIds to add.
+     * @return This builder for chaining.
+     */
+    public Builder addHotelRatingIds(long value) {
+
+      ensureHotelRatingIdsIsMutable();
+      hotelRatingIds_.addLong(value);
+      bitField0_ |= 0x00000080;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated int64 hotelRatingIds = 8;</code>
+     * @param values The hotelRatingIds to add.
+     * @return This builder for chaining.
+     */
+    public Builder addAllHotelRatingIds(
+        java.lang.Iterable<? extends java.lang.Long> values) {
+      ensureHotelRatingIdsIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, hotelRatingIds_);
+      bitField0_ |= 0x00000080;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated int64 hotelRatingIds = 8;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearHotelRatingIds() {
+      hotelRatingIds_ = emptyLongList();
+      bitField0_ = (bitField0_ & ~0x00000080);
       onChanged();
       return this;
     }

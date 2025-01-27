@@ -32,6 +32,7 @@ private static final long serialVersionUID = 0L;
   }
   private Room() {
     type_ = "";
+    bookings_ = java.util.Collections.emptyList();
   }
 
   public static final com.google.protobuf.Descriptors.Descriptor
@@ -119,6 +120,47 @@ private static final long serialVersionUID = 0L;
     return hotelId_;
   }
 
+  public static final int BOOKINGS_FIELD_NUMBER = 5;
+  @SuppressWarnings("serial")
+  private java.util.List<hotelmanagementsystem.infrastructure.api.grpc.generated.Booking> bookings_;
+  /**
+   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   */
+  @java.lang.Override
+  public java.util.List<hotelmanagementsystem.infrastructure.api.grpc.generated.Booking> getBookingsList() {
+    return bookings_;
+  }
+  /**
+   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   */
+  @java.lang.Override
+  public java.util.List<? extends hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder> 
+      getBookingsOrBuilderList() {
+    return bookings_;
+  }
+  /**
+   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   */
+  @java.lang.Override
+  public int getBookingsCount() {
+    return bookings_.size();
+  }
+  /**
+   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   */
+  @java.lang.Override
+  public hotelmanagementsystem.infrastructure.api.grpc.generated.Booking getBookings(int index) {
+    return bookings_.get(index);
+  }
+  /**
+   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   */
+  @java.lang.Override
+  public hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder getBookingsOrBuilder(
+      int index) {
+    return bookings_.get(index);
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -145,6 +187,9 @@ private static final long serialVersionUID = 0L;
     if (hotelId_ != 0L) {
       output.writeInt64(4, hotelId_);
     }
+    for (int i = 0; i < bookings_.size(); i++) {
+      output.writeMessage(5, bookings_.get(i));
+    }
     getUnknownFields().writeTo(output);
   }
 
@@ -168,6 +213,10 @@ private static final long serialVersionUID = 0L;
     if (hotelId_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(4, hotelId_);
+    }
+    for (int i = 0; i < bookings_.size(); i++) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(5, bookings_.get(i));
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -193,6 +242,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getType())) return false;
     if (getHotelId()
         != other.getHotelId()) return false;
+    if (!getBookingsList()
+        .equals(other.getBookingsList())) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -215,6 +266,10 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + HOTELID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getHotelId());
+    if (getBookingsCount() > 0) {
+      hash = (37 * hash) + BOOKINGS_FIELD_NUMBER;
+      hash = (53 * hash) + getBookingsList().hashCode();
+    }
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -354,6 +409,13 @@ private static final long serialVersionUID = 0L;
       pricePerNight_ = 0D;
       type_ = "";
       hotelId_ = 0L;
+      if (bookingsBuilder_ == null) {
+        bookings_ = java.util.Collections.emptyList();
+      } else {
+        bookings_ = null;
+        bookingsBuilder_.clear();
+      }
+      bitField0_ = (bitField0_ & ~0x00000010);
       return this;
     }
 
@@ -380,9 +442,22 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public hotelmanagementsystem.infrastructure.api.grpc.generated.Room buildPartial() {
       hotelmanagementsystem.infrastructure.api.grpc.generated.Room result = new hotelmanagementsystem.infrastructure.api.grpc.generated.Room(this);
+      buildPartialRepeatedFields(result);
       if (bitField0_ != 0) { buildPartial0(result); }
       onBuilt();
       return result;
+    }
+
+    private void buildPartialRepeatedFields(hotelmanagementsystem.infrastructure.api.grpc.generated.Room result) {
+      if (bookingsBuilder_ == null) {
+        if (((bitField0_ & 0x00000010) != 0)) {
+          bookings_ = java.util.Collections.unmodifiableList(bookings_);
+          bitField0_ = (bitField0_ & ~0x00000010);
+        }
+        result.bookings_ = bookings_;
+      } else {
+        result.bookings_ = bookingsBuilder_.build();
+      }
     }
 
     private void buildPartial0(hotelmanagementsystem.infrastructure.api.grpc.generated.Room result) {
@@ -426,6 +501,32 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getHotelId() != 0L) {
         setHotelId(other.getHotelId());
+      }
+      if (bookingsBuilder_ == null) {
+        if (!other.bookings_.isEmpty()) {
+          if (bookings_.isEmpty()) {
+            bookings_ = other.bookings_;
+            bitField0_ = (bitField0_ & ~0x00000010);
+          } else {
+            ensureBookingsIsMutable();
+            bookings_.addAll(other.bookings_);
+          }
+          onChanged();
+        }
+      } else {
+        if (!other.bookings_.isEmpty()) {
+          if (bookingsBuilder_.isEmpty()) {
+            bookingsBuilder_.dispose();
+            bookingsBuilder_ = null;
+            bookings_ = other.bookings_;
+            bitField0_ = (bitField0_ & ~0x00000010);
+            bookingsBuilder_ = 
+              com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                 getBookingsFieldBuilder() : null;
+          } else {
+            bookingsBuilder_.addAllMessages(other.bookings_);
+          }
+        }
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -473,6 +574,19 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000008;
               break;
             } // case 32
+            case 42: {
+              hotelmanagementsystem.infrastructure.api.grpc.generated.Booking m =
+                  input.readMessage(
+                      hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.parser(),
+                      extensionRegistry);
+              if (bookingsBuilder_ == null) {
+                ensureBookingsIsMutable();
+                bookings_.add(m);
+              } else {
+                bookingsBuilder_.addMessage(m);
+              }
+              break;
+            } // case 42
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -656,6 +770,246 @@ private static final long serialVersionUID = 0L;
       hotelId_ = 0L;
       onChanged();
       return this;
+    }
+
+    private java.util.List<hotelmanagementsystem.infrastructure.api.grpc.generated.Booking> bookings_ =
+      java.util.Collections.emptyList();
+    private void ensureBookingsIsMutable() {
+      if (!((bitField0_ & 0x00000010) != 0)) {
+        bookings_ = new java.util.ArrayList<hotelmanagementsystem.infrastructure.api.grpc.generated.Booking>(bookings_);
+        bitField0_ |= 0x00000010;
+       }
+    }
+
+    private com.google.protobuf.RepeatedFieldBuilder<
+        hotelmanagementsystem.infrastructure.api.grpc.generated.Booking, hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder, hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder> bookingsBuilder_;
+
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public java.util.List<hotelmanagementsystem.infrastructure.api.grpc.generated.Booking> getBookingsList() {
+      if (bookingsBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(bookings_);
+      } else {
+        return bookingsBuilder_.getMessageList();
+      }
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public int getBookingsCount() {
+      if (bookingsBuilder_ == null) {
+        return bookings_.size();
+      } else {
+        return bookingsBuilder_.getCount();
+      }
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public hotelmanagementsystem.infrastructure.api.grpc.generated.Booking getBookings(int index) {
+      if (bookingsBuilder_ == null) {
+        return bookings_.get(index);
+      } else {
+        return bookingsBuilder_.getMessage(index);
+      }
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public Builder setBookings(
+        int index, hotelmanagementsystem.infrastructure.api.grpc.generated.Booking value) {
+      if (bookingsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureBookingsIsMutable();
+        bookings_.set(index, value);
+        onChanged();
+      } else {
+        bookingsBuilder_.setMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public Builder setBookings(
+        int index, hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder builderForValue) {
+      if (bookingsBuilder_ == null) {
+        ensureBookingsIsMutable();
+        bookings_.set(index, builderForValue.build());
+        onChanged();
+      } else {
+        bookingsBuilder_.setMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public Builder addBookings(hotelmanagementsystem.infrastructure.api.grpc.generated.Booking value) {
+      if (bookingsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureBookingsIsMutable();
+        bookings_.add(value);
+        onChanged();
+      } else {
+        bookingsBuilder_.addMessage(value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public Builder addBookings(
+        int index, hotelmanagementsystem.infrastructure.api.grpc.generated.Booking value) {
+      if (bookingsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureBookingsIsMutable();
+        bookings_.add(index, value);
+        onChanged();
+      } else {
+        bookingsBuilder_.addMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public Builder addBookings(
+        hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder builderForValue) {
+      if (bookingsBuilder_ == null) {
+        ensureBookingsIsMutable();
+        bookings_.add(builderForValue.build());
+        onChanged();
+      } else {
+        bookingsBuilder_.addMessage(builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public Builder addBookings(
+        int index, hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder builderForValue) {
+      if (bookingsBuilder_ == null) {
+        ensureBookingsIsMutable();
+        bookings_.add(index, builderForValue.build());
+        onChanged();
+      } else {
+        bookingsBuilder_.addMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public Builder addAllBookings(
+        java.lang.Iterable<? extends hotelmanagementsystem.infrastructure.api.grpc.generated.Booking> values) {
+      if (bookingsBuilder_ == null) {
+        ensureBookingsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, bookings_);
+        onChanged();
+      } else {
+        bookingsBuilder_.addAllMessages(values);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public Builder clearBookings() {
+      if (bookingsBuilder_ == null) {
+        bookings_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000010);
+        onChanged();
+      } else {
+        bookingsBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public Builder removeBookings(int index) {
+      if (bookingsBuilder_ == null) {
+        ensureBookingsIsMutable();
+        bookings_.remove(index);
+        onChanged();
+      } else {
+        bookingsBuilder_.remove(index);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder getBookingsBuilder(
+        int index) {
+      return getBookingsFieldBuilder().getBuilder(index);
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder getBookingsOrBuilder(
+        int index) {
+      if (bookingsBuilder_ == null) {
+        return bookings_.get(index);  } else {
+        return bookingsBuilder_.getMessageOrBuilder(index);
+      }
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public java.util.List<? extends hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder> 
+         getBookingsOrBuilderList() {
+      if (bookingsBuilder_ != null) {
+        return bookingsBuilder_.getMessageOrBuilderList();
+      } else {
+        return java.util.Collections.unmodifiableList(bookings_);
+      }
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder addBookingsBuilder() {
+      return getBookingsFieldBuilder().addBuilder(
+          hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder addBookingsBuilder(
+        int index) {
+      return getBookingsFieldBuilder().addBuilder(
+          index, hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     */
+    public java.util.List<hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder> 
+         getBookingsBuilderList() {
+      return getBookingsFieldBuilder().getBuilderList();
+    }
+    private com.google.protobuf.RepeatedFieldBuilder<
+        hotelmanagementsystem.infrastructure.api.grpc.generated.Booking, hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder, hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder> 
+        getBookingsFieldBuilder() {
+      if (bookingsBuilder_ == null) {
+        bookingsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+            hotelmanagementsystem.infrastructure.api.grpc.generated.Booking, hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder, hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder>(
+                bookings_,
+                ((bitField0_ & 0x00000010) != 0),
+                getParentForChildren(),
+                isClean());
+        bookings_ = null;
+      }
+      return bookingsBuilder_;
     }
 
     // @@protoc_insertion_point(builder_scope:hotelmanagement.Room)

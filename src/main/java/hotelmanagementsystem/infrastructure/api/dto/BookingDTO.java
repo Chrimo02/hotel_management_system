@@ -1,6 +1,7 @@
 package hotelmanagementsystem.infrastructure.api.dto;
 
 import hotelmanagementsystem.infrastructure.api.grpc.generated.Booking;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class BookingDTO {
         return Booking.newBuilder()
                 .setId(this.id)
                 .setHotelId(this.hotelId)
-                .setGuestId(this.guestId)
+                .setId(this.guestId)
                 .addAllRoomIds(this.roomIds)
                 .setCheckInDate(this.checkInDate.toString())
                 .setCheckOutDate(this.checkOutDate.toString())

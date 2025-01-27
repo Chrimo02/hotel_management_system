@@ -31,6 +31,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private Booking() {
+    guestIds_ = emptyLongList();
     roomIds_ = emptyLongList();
     checkInDate_ = "";
     checkOutDate_ = "";
@@ -71,16 +72,47 @@ private static final long serialVersionUID = 0L;
     return hotelId_;
   }
 
-  public static final int GUESTID_FIELD_NUMBER = 3;
-  private long guestId_ = 0L;
+  public static final int GUESTIDS_FIELD_NUMBER = 3;
+  @SuppressWarnings("serial")
+  private com.google.protobuf.Internal.LongList guestIds_ =
+      emptyLongList();
   /**
-   * <code>int64 guestId = 3;</code>
-   * @return The guestId.
+   * <pre>
+   * Change to "repeated" to support multiple guests
+   * </pre>
+   *
+   * <code>repeated int64 guestIds = 3;</code>
+   * @return A list containing the guestIds.
    */
   @java.lang.Override
-  public long getGuestId() {
-    return guestId_;
+  public java.util.List<java.lang.Long>
+      getGuestIdsList() {
+    return guestIds_;
   }
+  /**
+   * <pre>
+   * Change to "repeated" to support multiple guests
+   * </pre>
+   *
+   * <code>repeated int64 guestIds = 3;</code>
+   * @return The count of guestIds.
+   */
+  public int getGuestIdsCount() {
+    return guestIds_.size();
+  }
+  /**
+   * <pre>
+   * Change to "repeated" to support multiple guests
+   * </pre>
+   *
+   * <code>repeated int64 guestIds = 3;</code>
+   * @param index The index of the element to return.
+   * @return The guestIds at the given index.
+   */
+  public long getGuestIds(int index) {
+    return guestIds_.getLong(index);
+  }
+  private int guestIdsMemoizedSerializedSize = -1;
 
   public static final int ROOMIDS_FIELD_NUMBER = 4;
   @SuppressWarnings("serial")
@@ -211,8 +243,12 @@ private static final long serialVersionUID = 0L;
     if (hotelId_ != 0L) {
       output.writeInt64(2, hotelId_);
     }
-    if (guestId_ != 0L) {
-      output.writeInt64(3, guestId_);
+    if (getGuestIdsList().size() > 0) {
+      output.writeUInt32NoTag(26);
+      output.writeUInt32NoTag(guestIdsMemoizedSerializedSize);
+    }
+    for (int i = 0; i < guestIds_.size(); i++) {
+      output.writeInt64NoTag(guestIds_.getLong(i));
     }
     if (getRoomIdsList().size() > 0) {
       output.writeUInt32NoTag(34);
@@ -244,9 +280,19 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(2, hotelId_);
     }
-    if (guestId_ != 0L) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(3, guestId_);
+    {
+      int dataSize = 0;
+      for (int i = 0; i < guestIds_.size(); i++) {
+        dataSize += com.google.protobuf.CodedOutputStream
+          .computeInt64SizeNoTag(guestIds_.getLong(i));
+      }
+      size += dataSize;
+      if (!getGuestIdsList().isEmpty()) {
+        size += 1;
+        size += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(dataSize);
+      }
+      guestIdsMemoizedSerializedSize = dataSize;
     }
     {
       int dataSize = 0;
@@ -287,8 +333,8 @@ private static final long serialVersionUID = 0L;
         != other.getId()) return false;
     if (getHotelId()
         != other.getHotelId()) return false;
-    if (getGuestId()
-        != other.getGuestId()) return false;
+    if (!getGuestIdsList()
+        .equals(other.getGuestIdsList())) return false;
     if (!getRoomIdsList()
         .equals(other.getRoomIdsList())) return false;
     if (!getCheckInDate()
@@ -312,9 +358,10 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + HOTELID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getHotelId());
-    hash = (37 * hash) + GUESTID_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getGuestId());
+    if (getGuestIdsCount() > 0) {
+      hash = (37 * hash) + GUESTIDS_FIELD_NUMBER;
+      hash = (53 * hash) + getGuestIdsList().hashCode();
+    }
     if (getRoomIdsCount() > 0) {
       hash = (37 * hash) + ROOMIDS_FIELD_NUMBER;
       hash = (53 * hash) + getRoomIdsList().hashCode();
@@ -460,7 +507,7 @@ private static final long serialVersionUID = 0L;
       bitField0_ = 0;
       id_ = 0L;
       hotelId_ = 0L;
-      guestId_ = 0L;
+      guestIds_ = emptyLongList();
       roomIds_ = emptyLongList();
       checkInDate_ = "";
       checkOutDate_ = "";
@@ -504,7 +551,8 @@ private static final long serialVersionUID = 0L;
         result.hotelId_ = hotelId_;
       }
       if (((from_bitField0_ & 0x00000004) != 0)) {
-        result.guestId_ = guestId_;
+        guestIds_.makeImmutable();
+        result.guestIds_ = guestIds_;
       }
       if (((from_bitField0_ & 0x00000008) != 0)) {
         roomIds_.makeImmutable();
@@ -536,8 +584,16 @@ private static final long serialVersionUID = 0L;
       if (other.getHotelId() != 0L) {
         setHotelId(other.getHotelId());
       }
-      if (other.getGuestId() != 0L) {
-        setGuestId(other.getGuestId());
+      if (!other.guestIds_.isEmpty()) {
+        if (guestIds_.isEmpty()) {
+          guestIds_ = other.guestIds_;
+          guestIds_.makeImmutable();
+          bitField0_ |= 0x00000004;
+        } else {
+          ensureGuestIdsIsMutable();
+          guestIds_.addAll(other.guestIds_);
+        }
+        onChanged();
       }
       if (!other.roomIds_.isEmpty()) {
         if (roomIds_.isEmpty()) {
@@ -597,10 +653,21 @@ private static final long serialVersionUID = 0L;
               break;
             } // case 16
             case 24: {
-              guestId_ = input.readInt64();
-              bitField0_ |= 0x00000004;
+              long v = input.readInt64();
+              ensureGuestIdsIsMutable();
+              guestIds_.addLong(v);
               break;
             } // case 24
+            case 26: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              ensureGuestIdsIsMutable();
+              while (input.getBytesUntilLimit() > 0) {
+                guestIds_.addLong(input.readInt64());
+              }
+              input.popLimit(limit);
+              break;
+            } // case 26
             case 32: {
               long v = input.readInt64();
               ensureRoomIdsIsMutable();
@@ -708,34 +775,114 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private long guestId_ ;
-    /**
-     * <code>int64 guestId = 3;</code>
-     * @return The guestId.
-     */
-    @java.lang.Override
-    public long getGuestId() {
-      return guestId_;
+    private com.google.protobuf.Internal.LongList guestIds_ = emptyLongList();
+    private void ensureGuestIdsIsMutable() {
+      if (!guestIds_.isModifiable()) {
+        guestIds_ = makeMutableCopy(guestIds_);
+      }
+      bitField0_ |= 0x00000004;
     }
     /**
-     * <code>int64 guestId = 3;</code>
-     * @param value The guestId to set.
+     * <pre>
+     * Change to "repeated" to support multiple guests
+     * </pre>
+     *
+     * <code>repeated int64 guestIds = 3;</code>
+     * @return A list containing the guestIds.
+     */
+    public java.util.List<java.lang.Long>
+        getGuestIdsList() {
+      guestIds_.makeImmutable();
+      return guestIds_;
+    }
+    /**
+     * <pre>
+     * Change to "repeated" to support multiple guests
+     * </pre>
+     *
+     * <code>repeated int64 guestIds = 3;</code>
+     * @return The count of guestIds.
+     */
+    public int getGuestIdsCount() {
+      return guestIds_.size();
+    }
+    /**
+     * <pre>
+     * Change to "repeated" to support multiple guests
+     * </pre>
+     *
+     * <code>repeated int64 guestIds = 3;</code>
+     * @param index The index of the element to return.
+     * @return The guestIds at the given index.
+     */
+    public long getGuestIds(int index) {
+      return guestIds_.getLong(index);
+    }
+    /**
+     * <pre>
+     * Change to "repeated" to support multiple guests
+     * </pre>
+     *
+     * <code>repeated int64 guestIds = 3;</code>
+     * @param index The index to set the value at.
+     * @param value The guestIds to set.
      * @return This builder for chaining.
      */
-    public Builder setGuestId(long value) {
+    public Builder setGuestIds(
+        int index, long value) {
 
-      guestId_ = value;
+      ensureGuestIdsIsMutable();
+      guestIds_.setLong(index, value);
       bitField0_ |= 0x00000004;
       onChanged();
       return this;
     }
     /**
-     * <code>int64 guestId = 3;</code>
+     * <pre>
+     * Change to "repeated" to support multiple guests
+     * </pre>
+     *
+     * <code>repeated int64 guestIds = 3;</code>
+     * @param value The guestIds to add.
      * @return This builder for chaining.
      */
-    public Builder clearGuestId() {
+    public Builder addGuestIds(long value) {
+
+      ensureGuestIdsIsMutable();
+      guestIds_.addLong(value);
+      bitField0_ |= 0x00000004;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Change to "repeated" to support multiple guests
+     * </pre>
+     *
+     * <code>repeated int64 guestIds = 3;</code>
+     * @param values The guestIds to add.
+     * @return This builder for chaining.
+     */
+    public Builder addAllGuestIds(
+        java.lang.Iterable<? extends java.lang.Long> values) {
+      ensureGuestIdsIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, guestIds_);
+      bitField0_ |= 0x00000004;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Change to "repeated" to support multiple guests
+     * </pre>
+     *
+     * <code>repeated int64 guestIds = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearGuestIds() {
+      guestIds_ = emptyLongList();
       bitField0_ = (bitField0_ & ~0x00000004);
-      guestId_ = 0L;
       onChanged();
       return this;
     }

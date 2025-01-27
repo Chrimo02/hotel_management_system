@@ -59,4 +59,55 @@ public interface HotelOrBuilder extends
    * @return The averageRating.
    */
   double getAverageRating();
+
+  /**
+   * <code>repeated int64 roomIds = 6;</code>
+   * @return A list containing the roomIds.
+   */
+  java.util.List<java.lang.Long> getRoomIdsList();
+  /**
+   * <code>repeated int64 roomIds = 6;</code>
+   * @return The count of roomIds.
+   */
+  int getRoomIdsCount();
+  /**
+   * <code>repeated int64 roomIds = 6;</code>
+   * @param index The index of the element to return.
+   * @return The roomIds at the given index.
+   */
+  long getRoomIds(int index);
+
+  /**
+   * <code>repeated int64 bookingIds = 7;</code>
+   * @return A list containing the bookingIds.
+   */
+  java.util.List<java.lang.Long> getBookingIdsList();
+  /**
+   * <code>repeated int64 bookingIds = 7;</code>
+   * @return The count of bookingIds.
+   */
+  int getBookingIdsCount();
+  /**
+   * <code>repeated int64 bookingIds = 7;</code>
+   * @param index The index of the element to return.
+   * @return The bookingIds at the given index.
+   */
+  long getBookingIds(int index);
+
+  /**
+   * <code>repeated int64 hotelRatingIds = 8;</code>
+   * @return A list containing the hotelRatingIds.
+   */
+  java.util.List<java.lang.Long> getHotelRatingIdsList();
+  /**
+   * <code>repeated int64 hotelRatingIds = 8;</code>
+   * @return The count of hotelRatingIds.
+   */
+  int getHotelRatingIdsCount();
+  /**
+   * <code>repeated int64 hotelRatingIds = 8;</code>
+   * @param index The index of the element to return.
+   * @return The hotelRatingIds at the given index.
+   */
+  long getHotelRatingIds(int index);
 }

@@ -10,36 +10,42 @@ public interface HotelLocationOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string address = 1;</code>
+   * <code>int64 id = 1;</code>
+   * @return The id.
+   */
+  long getId();
+
+  /**
+   * <code>string address = 2;</code>
    * @return The address.
    */
   java.lang.String getAddress();
   /**
-   * <code>string address = 1;</code>
+   * <code>string address = 2;</code>
    * @return The bytes for address.
    */
   com.google.protobuf.ByteString
       getAddressBytes();
 
   /**
-   * <code>string city = 2;</code>
+   * <code>string city = 3;</code>
    * @return The city.
    */
   java.lang.String getCity();
   /**
-   * <code>string city = 2;</code>
+   * <code>string city = 3;</code>
    * @return The bytes for city.
    */
   com.google.protobuf.ByteString
       getCityBytes();
 
   /**
-   * <code>string country = 3;</code>
+   * <code>string country = 4;</code>
    * @return The country.
    */
   java.lang.String getCountry();
   /**
-   * <code>string country = 3;</code>
+   * <code>string country = 4;</code>
    * @return The bytes for country.
    */
   com.google.protobuf.ByteString

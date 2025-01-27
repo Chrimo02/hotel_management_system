@@ -56,12 +56,16 @@ message Hotel {
   string description = 3;
   HotelLocation location = 4;
   double averageRating = 5;
+  repeated int64 roomIds = 6;
+  repeated int64 bookingIds = 7;
+  repeated int64 hotelRatingIds = 8;
 }
 
 message HotelLocation {
-  string address = 1;
-  string city = 2;
-  string country = 3;
+  int64 id = 1;
+  string address = 2;
+  string city = 3;
+  string country = 4;
 }
 
 message CreateHotelRequest {
@@ -114,15 +118,19 @@ message Guest {
   int64 id = 1;
   string firstName = 2;
   string lastName = 3;
-  string email = 4;
-  string phoneNumber = 5;
+  optional string title = 4;
+  string birthday = 5;
+  string email = 6;
+  string phoneNumber = 7;
 }
 
 message CreateGuestRequest {
   string firstName = 1;
   string lastName = 2;
-  string email = 3;
-  string phoneNumber = 4;
+  optional string title = 3;
+  string birthday = 4;
+  string email = 5;
+  string phoneNumber = 6;
 }
 
 message GetGuestByIdRequest {
@@ -165,7 +173,7 @@ message GuestResponse {
 message Booking {
   int64 id = 1;
   int64 hotelId = 2;
-  int64 guestId = 3;
+  repeated int64 guestIds = 3; // Change to "repeated" to support multiple guests
   repeated int64 roomIds = 4;
   string checkInDate = 5;
   string checkOutDate = 6;
@@ -173,7 +181,7 @@ message Booking {
 
 message CreateBookingRequest {
   int64 hotelId = 1;
-  int64 guestId = 2;
+  repeated int64 guestIds = 2; // Change to "repeated" to allow multiple guests
   repeated int64 roomIds = 3;
   string checkInDate = 4;
   string checkOutDate = 5;
@@ -209,6 +217,7 @@ message Room {
   double pricePerNight = 2;
   string type = 3;
   int64 hotelId = 4;
+  repeated Booking  bookings = 5;
 }
 
 message CreateRoomRequest {

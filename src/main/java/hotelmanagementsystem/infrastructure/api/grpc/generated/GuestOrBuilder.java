@@ -40,24 +40,53 @@ public interface GuestOrBuilder extends
       getLastNameBytes();
 
   /**
-   * <code>string email = 4;</code>
+   * <code>optional string title = 4;</code>
+   * @return Whether the title field is set.
+   */
+  boolean hasTitle();
+  /**
+   * <code>optional string title = 4;</code>
+   * @return The title.
+   */
+  java.lang.String getTitle();
+  /**
+   * <code>optional string title = 4;</code>
+   * @return The bytes for title.
+   */
+  com.google.protobuf.ByteString
+      getTitleBytes();
+
+  /**
+   * <code>string birthday = 5;</code>
+   * @return The birthday.
+   */
+  java.lang.String getBirthday();
+  /**
+   * <code>string birthday = 5;</code>
+   * @return The bytes for birthday.
+   */
+  com.google.protobuf.ByteString
+      getBirthdayBytes();
+
+  /**
+   * <code>string email = 6;</code>
    * @return The email.
    */
   java.lang.String getEmail();
   /**
-   * <code>string email = 4;</code>
+   * <code>string email = 6;</code>
    * @return The bytes for email.
    */
   com.google.protobuf.ByteString
       getEmailBytes();
 
   /**
-   * <code>string phoneNumber = 5;</code>
+   * <code>string phoneNumber = 7;</code>
    * @return The phoneNumber.
    */
   java.lang.String getPhoneNumber();
   /**
-   * <code>string phoneNumber = 5;</code>
+   * <code>string phoneNumber = 7;</code>
    * @return The bytes for phoneNumber.
    */
   com.google.protobuf.ByteString

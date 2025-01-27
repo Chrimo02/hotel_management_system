@@ -73,7 +73,7 @@ class BookingAPITest {
         return hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.newBuilder()
                 .setId(1L)
                 .setHotelId(100L)
-                .setGuestId(200L)
+                .setId(200L)
                 .addAllRoomIds(Arrays.asList(300L, 301L))
                 .setCheckInDate("2025-03-01")
                 .setCheckOutDate("2025-03-05")
@@ -338,3 +338,4 @@ class BookingAPITest {
         }
     }
 }
+

@@ -38,4 +38,28 @@ public interface RoomOrBuilder extends
    * @return The hotelId.
    */
   long getHotelId();
+
+  /**
+   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   */
+  java.util.List<hotelmanagementsystem.infrastructure.api.grpc.generated.Booking> 
+      getBookingsList();
+  /**
+   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   */
+  hotelmanagementsystem.infrastructure.api.grpc.generated.Booking getBookings(int index);
+  /**
+   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   */
+  int getBookingsCount();
+  /**
+   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   */
+  java.util.List<? extends hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder> 
+      getBookingsOrBuilderList();
+  /**
+   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   */
+  hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder getBookingsOrBuilder(
+      int index);
 }
