@@ -19,7 +19,7 @@ public class GuestService {
         this.guestRepository = guestRepository;
         this.hotelService = hotelService;
     }
-    public void createGuest(String firstName, String lastName, String title, int year,int month, int day, String eMail, String phoneNumber){
+    public Guest createGuest(String firstName, String lastName, String title, int year,int month, int day, String eMail, String phoneNumber){
         Guest guest = new Guest.GuestBuilder()
                 .withFirstName(firstName)
                 .withLastName(lastName)
@@ -29,6 +29,7 @@ public class GuestService {
                 .withPhoneNumber(phoneNumber)
                 .build();
         guestRepository.createGuest(guest);
+        return guest;
     }
 
     private Guest getNotNullGuest(long guestId) throws GuestNotFoundException {
@@ -40,26 +41,29 @@ public class GuestService {
         return guestRepository.getBookingsByGuestId(guestId);
     }
 
-    public void updateEMail(long guestId, String newMail) throws GuestNotFoundException {
+    public Guest updateEMail(long guestId, String newMail) throws GuestNotFoundException {
         Guest guest = getNotNullGuest(guestId);
         guest.seteMail(newMail); //führt Änderung in der Business-logic aus
         guestRepository.updateEmail(guest); //callt den GuestDatabaseAdapter, damit die Änderung auch in der Datenbank gespeichert wird
+        return guest;
     }
-    public void updatePhone(long guestId, String newPhone) throws GuestNotFoundException {
+    public Guest updatePhone(long guestId, String newPhone) throws GuestNotFoundException {
         Guest guest = getNotNullGuest(guestId);
         guest.setPhoneNumber(newPhone);
         guestRepository.updatePhone(guest);
+        return guest;
     }
-    public void updateLastName(long guestId, String newLastName) throws GuestNotFoundException {
+    public Guest updateLastName(long guestId, String newLastName) throws GuestNotFoundException {
         Guest guest = getNotNullGuest(guestId);
         guest.setLastName(newLastName);
         guestRepository.updateLastName(guest);
+        return guest;
     }
-    public void updateTitle(long guestId, String newTitle) throws GuestNotFoundException {
+    public Guest updateTitle(long guestId, String newTitle) throws GuestNotFoundException {
         Guest guest = getNotNullGuest(guestId);
         guest.setTitle(newTitle);
         guestRepository.updateTitle(guest);
-
+        return guest;
     }
     public void deleteGuest(long guestId) throws GuestNotFoundException {
         Guest guest = getNotNullGuest(guestId);
