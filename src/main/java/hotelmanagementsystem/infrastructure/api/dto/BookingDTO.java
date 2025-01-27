@@ -1,23 +1,21 @@
 package hotelmanagementsystem.infrastructure.api.dto;
 
 import hotelmanagementsystem.infrastructure.api.grpc.generated.Booking;
-
 import java.time.LocalDate;
 import java.util.List;
 
 public class BookingDTO {
     private long id;
     private long hotelId;
-    private long guestId;
-    private List<Long> roomIds;
+    private List<Long> guestIds;    // All guest IDs in the booking
+    private List<Long> roomIds;     // The final assigned room IDs
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
 
-    // Getters and setters
+    // --- Getters and Setters ---
     public long getId() {
         return id;
     }
-
     public void setId(long id) {
         this.id = id;
     }
@@ -25,23 +23,20 @@ public class BookingDTO {
     public long getHotelId() {
         return hotelId;
     }
-
     public void setHotelId(long hotelId) {
         this.hotelId = hotelId;
     }
 
-    public long getGuestId() {
-        return guestId;
+    public List<Long> getGuestIds() {
+        return guestIds;
     }
-
-    public void setGuestId(long guestId) {
-        this.guestId = guestId;
+    public void setGuestIds(List<Long> guestIds) {
+        this.guestIds = guestIds;
     }
 
     public List<Long> getRoomIds() {
         return roomIds;
     }
-
     public void setRoomIds(List<Long> roomIds) {
         this.roomIds = roomIds;
     }
@@ -49,7 +44,6 @@ public class BookingDTO {
     public LocalDate getCheckInDate() {
         return checkInDate;
     }
-
     public void setCheckInDate(LocalDate checkInDate) {
         this.checkInDate = checkInDate;
     }
@@ -57,18 +51,17 @@ public class BookingDTO {
     public LocalDate getCheckOutDate() {
         return checkOutDate;
     }
-
     public void setCheckOutDate(LocalDate checkOutDate) {
         this.checkOutDate = checkOutDate;
     }
 
-    // Convert DTO to gRPC Booking object
+    // --- Convert DTO to gRPC Booking (proto) ---
     public Booking toProtobuf() {
         return Booking.newBuilder()
                 .setId(this.id)
                 .setHotelId(this.hotelId)
-                .setId(this.guestId)
-                .addAllRoomIds(this.roomIds)
+                .addAllGuestIds(this.guestIds)   // multiple guests
+                .addAllRoomIds(this.roomIds)     // final assigned rooms
                 .setCheckInDate(this.checkInDate.toString())
                 .setCheckOutDate(this.checkOutDate.toString())
                 .build();

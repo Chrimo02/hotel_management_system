@@ -181,8 +181,8 @@ message Booking {
 
 message CreateBookingRequest {
   int64 hotelId = 1;
-  repeated int64 guestIds = 2; // Change to "repeated" to allow multiple guests
-  repeated int64 roomIds = 3;
+  repeated string roomTypes = 2;  // "SINGLE", "DOUBLE"
+  repeated int64 guestIds = 3;    // All guest IDs
   string checkInDate = 4;
   string checkOutDate = 5;
 }

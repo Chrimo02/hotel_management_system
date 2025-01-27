@@ -17,49 +17,73 @@ public interface CreateBookingRequestOrBuilder extends
 
   /**
    * <pre>
-   * Change to "repeated" to allow multiple guests
+   * "SINGLE", "DOUBLE"
    * </pre>
    *
-   * <code>repeated int64 guestIds = 2;</code>
+   * <code>repeated string roomTypes = 2;</code>
+   * @return A list containing the roomTypes.
+   */
+  java.util.List<java.lang.String>
+      getRoomTypesList();
+  /**
+   * <pre>
+   * "SINGLE", "DOUBLE"
+   * </pre>
+   *
+   * <code>repeated string roomTypes = 2;</code>
+   * @return The count of roomTypes.
+   */
+  int getRoomTypesCount();
+  /**
+   * <pre>
+   * "SINGLE", "DOUBLE"
+   * </pre>
+   *
+   * <code>repeated string roomTypes = 2;</code>
+   * @param index The index of the element to return.
+   * @return The roomTypes at the given index.
+   */
+  java.lang.String getRoomTypes(int index);
+  /**
+   * <pre>
+   * "SINGLE", "DOUBLE"
+   * </pre>
+   *
+   * <code>repeated string roomTypes = 2;</code>
+   * @param index The index of the value to return.
+   * @return The bytes of the roomTypes at the given index.
+   */
+  com.google.protobuf.ByteString
+      getRoomTypesBytes(int index);
+
+  /**
+   * <pre>
+   * All guest IDs
+   * </pre>
+   *
+   * <code>repeated int64 guestIds = 3;</code>
    * @return A list containing the guestIds.
    */
   java.util.List<java.lang.Long> getGuestIdsList();
   /**
    * <pre>
-   * Change to "repeated" to allow multiple guests
+   * All guest IDs
    * </pre>
    *
-   * <code>repeated int64 guestIds = 2;</code>
+   * <code>repeated int64 guestIds = 3;</code>
    * @return The count of guestIds.
    */
   int getGuestIdsCount();
   /**
    * <pre>
-   * Change to "repeated" to allow multiple guests
+   * All guest IDs
    * </pre>
    *
-   * <code>repeated int64 guestIds = 2;</code>
+   * <code>repeated int64 guestIds = 3;</code>
    * @param index The index of the element to return.
    * @return The guestIds at the given index.
    */
   long getGuestIds(int index);
-
-  /**
-   * <code>repeated int64 roomIds = 3;</code>
-   * @return A list containing the roomIds.
-   */
-  java.util.List<java.lang.Long> getRoomIdsList();
-  /**
-   * <code>repeated int64 roomIds = 3;</code>
-   * @return The count of roomIds.
-   */
-  int getRoomIdsCount();
-  /**
-   * <code>repeated int64 roomIds = 3;</code>
-   * @param index The index of the element to return.
-   * @return The roomIds at the given index.
-   */
-  long getRoomIds(int index);
 
   /**
    * <code>string checkInDate = 4;</code>

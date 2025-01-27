@@ -267,89 +267,90 @@ public final class HotelManagement {
       "%\n\005guest\030\001 \001(\0132\026.hotelmanagement.Guest\"t" +
       "\n\007Booking\022\n\n\002id\030\001 \001(\003\022\017\n\007hotelId\030\002 \001(\003\022\020" +
       "\n\010guestIds\030\003 \003(\003\022\017\n\007roomIds\030\004 \003(\003\022\023\n\013che" +
-      "ckInDate\030\005 \001(\t\022\024\n\014checkOutDate\030\006 \001(\t\"u\n\024" +
-      "CreateBookingRequest\022\017\n\007hotelId\030\001 \001(\003\022\020\n" +
-      "\010guestIds\030\002 \003(\003\022\017\n\007roomIds\030\003 \003(\003\022\023\n\013chec" +
-      "kInDate\030\004 \001(\t\022\024\n\014checkOutDate\030\005 \001(\t\"#\n\025G" +
-      "etBookingByIdRequest\022\n\n\002id\030\001 \001(\003\"\"\n\024Canc" +
-      "elBookingRequest\022\n\n\002id\030\001 \001(\003\"(\n\023CheckInG" +
-      "uestRequest\022\021\n\tbookingId\030\001 \001(\003\")\n\024CheckO" +
-      "utGuestRequest\022\021\n\tbookingId\030\001 \001(\003\"<\n\017Boo" +
-      "kingResponse\022)\n\007booking\030\001 \001(\0132\030.hotelman" +
-      "agement.Booking\"B\n\024ListBookingsResponse\022" +
-      "*\n\010bookings\030\001 \003(\0132\030.hotelmanagement.Book" +
-      "ing\"t\n\004Room\022\n\n\002id\030\001 \001(\003\022\025\n\rpricePerNight" +
-      "\030\002 \001(\001\022\014\n\004type\030\003 \001(\t\022\017\n\007hotelId\030\004 \001(\003\022*\n" +
-      "\010bookings\030\005 \003(\0132\030.hotelmanagement.Bookin" +
-      "g\"I\n\021CreateRoomRequest\022\025\n\rpricePerNight\030" +
-      "\001 \001(\001\022\014\n\004type\030\002 \001(\t\022\017\n\007hotelId\030\003 \001(\003\" \n\022" +
-      "GetRoomByIdRequest\022\n\n\002id\030\001 \001(\003\"W\n\031ListAv" +
-      "ailableRoomsRequest\022\017\n\007hotelId\030\001 \001(\003\022\023\n\013" +
-      "checkInDate\030\002 \001(\t\022\024\n\014checkOutDate\030\003 \001(\t\"" +
-      "B\n\026UpdateRoomPriceRequest\022\016\n\006roomId\030\001 \001(" +
-      "\003\022\030\n\020newPricePerNight\030\002 \001(\001\"#\n\021RemoveRoo" +
-      "mRequest\022\016\n\006roomId\030\001 \001(\003\"3\n\014RoomResponse" +
-      "\022#\n\004room\030\001 \001(\0132\025.hotelmanagement.Room\"9\n" +
-      "\021ListRoomsResponse\022$\n\005rooms\030\001 \003(\0132\025.hote" +
-      "lmanagement.Room\"\007\n\005Empty2\335\004\n\014HotelServi" +
-      "ce\022R\n\013CreateHotel\022#.hotelmanagement.Crea" +
-      "teHotelRequest\032\036.hotelmanagement.HotelRe" +
-      "sponse\022T\n\014GetHotelById\022$.hotelmanagement" +
-      ".GetHotelByIdRequest\032\036.hotelmanagement.H" +
-      "otelResponse\022U\n\nListHotels\022\".hotelmanage" +
-      "ment.ListHotelsRequest\032#.hotelmanagement" +
-      ".ListHotelsResponse\022R\n\013UpdateHotel\022#.hot" +
-      "elmanagement.UpdateHotelRequest\032\036.hotelm" +
-      "anagement.HotelResponse\022J\n\013DeleteHotel\022#" +
-      ".hotelmanagement.DeleteHotelRequest\032\026.ho" +
-      "telmanagement.Empty\022F\n\tRateHotel\022!.hotel" +
-      "management.RateHotelRequest\032\026.hotelmanag" +
-      "ement.Empty\022d\n\022FindAvailableRooms\022*.hote" +
-      "lmanagement.FindAvailableRoomsRequest\032\"." +
-      "hotelmanagement.ListRoomsResponse2\357\005\n\014Gu" +
-      "estService\022R\n\013CreateGuest\022#.hotelmanagem" +
-      "ent.CreateGuestRequest\032\036.hotelmanagement" +
-      ".GuestResponse\022T\n\014GetGuestById\022$.hotelma" +
-      "nagement.GetGuestByIdRequest\032\036.hotelmana" +
-      "gement.GuestResponse\022\\\n\020UpdateGuestEmail" +
-      "\022(.hotelmanagement.UpdateGuestEmailReque" +
-      "st\032\036.hotelmanagement.GuestResponse\022\\\n\020Up" +
-      "dateGuestPhone\022(.hotelmanagement.UpdateG" +
-      "uestPhoneRequest\032\036.hotelmanagement.Guest" +
-      "Response\022b\n\023UpdateGuestLastName\022+.hotelm" +
-      "anagement.UpdateGuestLastNameRequest\032\036.h" +
-      "otelmanagement.GuestResponse\022\\\n\020UpdateGu" +
-      "estTitle\022(.hotelmanagement.UpdateGuestTi" +
-      "tleRequest\032\036.hotelmanagement.GuestRespon" +
-      "se\022J\n\013DeleteGuest\022#.hotelmanagement.Dele" +
-      "teGuestRequest\032\026.hotelmanagement.Empty\022k" +
-      "\n\024GetBookingsByGuestId\022,.hotelmanagement" +
-      ".GetBookingsByGuestIdRequest\032%.hotelmana" +
-      "gement.ListBookingsResponse2\264\003\n\016BookingS" +
-      "ervice\022X\n\rCreateBooking\022%.hotelmanagemen" +
-      "t.CreateBookingRequest\032 .hotelmanagement" +
-      ".BookingResponse\022Z\n\016GetBookingById\022&.hot" +
-      "elmanagement.GetBookingByIdRequest\032 .hot" +
-      "elmanagement.BookingResponse\022N\n\rCancelBo" +
-      "oking\022%.hotelmanagement.CancelBookingReq" +
-      "uest\032\026.hotelmanagement.Empty\022L\n\014CheckInG" +
-      "uest\022$.hotelmanagement.CheckInGuestReque" +
-      "st\032\026.hotelmanagement.Empty\022N\n\rCheckOutGu" +
-      "est\022%.hotelmanagement.CheckOutGuestReque" +
-      "st\032\026.hotelmanagement.Empty2\274\003\n\013RoomServi" +
-      "ce\022O\n\nCreateRoom\022\".hotelmanagement.Creat" +
-      "eRoomRequest\032\035.hotelmanagement.RoomRespo" +
-      "nse\022Q\n\013GetRoomById\022#.hotelmanagement.Get" +
-      "RoomByIdRequest\032\035.hotelmanagement.RoomRe" +
-      "sponse\022d\n\022ListAvailableRooms\022*.hotelmana" +
-      "gement.ListAvailableRoomsRequest\032\".hotel" +
-      "management.ListRoomsResponse\022Y\n\017UpdateRo" +
-      "omPrice\022\'.hotelmanagement.UpdateRoomPric" +
-      "eRequest\032\035.hotelmanagement.RoomResponse\022" +
-      "H\n\nRemoveRoom\022\".hotelmanagement.RemoveRo" +
-      "omRequest\032\026.hotelmanagement.EmptyBL\n7hot" +
-      "elmanagementsystem.infrastructure.api.gr" +
-      "pc.generatedB\017HotelManagementP\001b\006proto3"
+      "ckInDate\030\005 \001(\t\022\024\n\014checkOutDate\030\006 \001(\t\"w\n\024" +
+      "CreateBookingRequest\022\017\n\007hotelId\030\001 \001(\003\022\021\n" +
+      "\troomTypes\030\002 \003(\t\022\020\n\010guestIds\030\003 \003(\003\022\023\n\013ch" +
+      "eckInDate\030\004 \001(\t\022\024\n\014checkOutDate\030\005 \001(\t\"#\n" +
+      "\025GetBookingByIdRequest\022\n\n\002id\030\001 \001(\003\"\"\n\024Ca" +
+      "ncelBookingRequest\022\n\n\002id\030\001 \001(\003\"(\n\023CheckI" +
+      "nGuestRequest\022\021\n\tbookingId\030\001 \001(\003\")\n\024Chec" +
+      "kOutGuestRequest\022\021\n\tbookingId\030\001 \001(\003\"<\n\017B" +
+      "ookingResponse\022)\n\007booking\030\001 \001(\0132\030.hotelm" +
+      "anagement.Booking\"B\n\024ListBookingsRespons" +
+      "e\022*\n\010bookings\030\001 \003(\0132\030.hotelmanagement.Bo" +
+      "oking\"t\n\004Room\022\n\n\002id\030\001 \001(\003\022\025\n\rpricePerNig" +
+      "ht\030\002 \001(\001\022\014\n\004type\030\003 \001(\t\022\017\n\007hotelId\030\004 \001(\003\022" +
+      "*\n\010bookings\030\005 \003(\0132\030.hotelmanagement.Book" +
+      "ing\"I\n\021CreateRoomRequest\022\025\n\rpricePerNigh" +
+      "t\030\001 \001(\001\022\014\n\004type\030\002 \001(\t\022\017\n\007hotelId\030\003 \001(\003\" " +
+      "\n\022GetRoomByIdRequest\022\n\n\002id\030\001 \001(\003\"W\n\031List" +
+      "AvailableRoomsRequest\022\017\n\007hotelId\030\001 \001(\003\022\023" +
+      "\n\013checkInDate\030\002 \001(\t\022\024\n\014checkOutDate\030\003 \001(" +
+      "\t\"B\n\026UpdateRoomPriceRequest\022\016\n\006roomId\030\001 " +
+      "\001(\003\022\030\n\020newPricePerNight\030\002 \001(\001\"#\n\021RemoveR" +
+      "oomRequest\022\016\n\006roomId\030\001 \001(\003\"3\n\014RoomRespon" +
+      "se\022#\n\004room\030\001 \001(\0132\025.hotelmanagement.Room\"" +
+      "9\n\021ListRoomsResponse\022$\n\005rooms\030\001 \003(\0132\025.ho" +
+      "telmanagement.Room\"\007\n\005Empty2\335\004\n\014HotelSer" +
+      "vice\022R\n\013CreateHotel\022#.hotelmanagement.Cr" +
+      "eateHotelRequest\032\036.hotelmanagement.Hotel" +
+      "Response\022T\n\014GetHotelById\022$.hotelmanageme" +
+      "nt.GetHotelByIdRequest\032\036.hotelmanagement" +
+      ".HotelResponse\022U\n\nListHotels\022\".hotelmana" +
+      "gement.ListHotelsRequest\032#.hotelmanageme" +
+      "nt.ListHotelsResponse\022R\n\013UpdateHotel\022#.h" +
+      "otelmanagement.UpdateHotelRequest\032\036.hote" +
+      "lmanagement.HotelResponse\022J\n\013DeleteHotel" +
+      "\022#.hotelmanagement.DeleteHotelRequest\032\026." +
+      "hotelmanagement.Empty\022F\n\tRateHotel\022!.hot" +
+      "elmanagement.RateHotelRequest\032\026.hotelman" +
+      "agement.Empty\022d\n\022FindAvailableRooms\022*.ho" +
+      "telmanagement.FindAvailableRoomsRequest\032" +
+      "\".hotelmanagement.ListRoomsResponse2\357\005\n\014" +
+      "GuestService\022R\n\013CreateGuest\022#.hotelmanag" +
+      "ement.CreateGuestRequest\032\036.hotelmanageme" +
+      "nt.GuestResponse\022T\n\014GetGuestById\022$.hotel" +
+      "management.GetGuestByIdRequest\032\036.hotelma" +
+      "nagement.GuestResponse\022\\\n\020UpdateGuestEma" +
+      "il\022(.hotelmanagement.UpdateGuestEmailReq" +
+      "uest\032\036.hotelmanagement.GuestResponse\022\\\n\020" +
+      "UpdateGuestPhone\022(.hotelmanagement.Updat" +
+      "eGuestPhoneRequest\032\036.hotelmanagement.Gue" +
+      "stResponse\022b\n\023UpdateGuestLastName\022+.hote" +
+      "lmanagement.UpdateGuestLastNameRequest\032\036" +
+      ".hotelmanagement.GuestResponse\022\\\n\020Update" +
+      "GuestTitle\022(.hotelmanagement.UpdateGuest" +
+      "TitleRequest\032\036.hotelmanagement.GuestResp" +
+      "onse\022J\n\013DeleteGuest\022#.hotelmanagement.De" +
+      "leteGuestRequest\032\026.hotelmanagement.Empty" +
+      "\022k\n\024GetBookingsByGuestId\022,.hotelmanageme" +
+      "nt.GetBookingsByGuestIdRequest\032%.hotelma" +
+      "nagement.ListBookingsResponse2\264\003\n\016Bookin" +
+      "gService\022X\n\rCreateBooking\022%.hotelmanagem" +
+      "ent.CreateBookingRequest\032 .hotelmanageme" +
+      "nt.BookingResponse\022Z\n\016GetBookingById\022&.h" +
+      "otelmanagement.GetBookingByIdRequest\032 .h" +
+      "otelmanagement.BookingResponse\022N\n\rCancel" +
+      "Booking\022%.hotelmanagement.CancelBookingR" +
+      "equest\032\026.hotelmanagement.Empty\022L\n\014CheckI" +
+      "nGuest\022$.hotelmanagement.CheckInGuestReq" +
+      "uest\032\026.hotelmanagement.Empty\022N\n\rCheckOut" +
+      "Guest\022%.hotelmanagement.CheckOutGuestReq" +
+      "uest\032\026.hotelmanagement.Empty2\274\003\n\013RoomSer" +
+      "vice\022O\n\nCreateRoom\022\".hotelmanagement.Cre" +
+      "ateRoomRequest\032\035.hotelmanagement.RoomRes" +
+      "ponse\022Q\n\013GetRoomById\022#.hotelmanagement.G" +
+      "etRoomByIdRequest\032\035.hotelmanagement.Room" +
+      "Response\022d\n\022ListAvailableRooms\022*.hotelma" +
+      "nagement.ListAvailableRoomsRequest\032\".hot" +
+      "elmanagement.ListRoomsResponse\022Y\n\017Update" +
+      "RoomPrice\022\'.hotelmanagement.UpdateRoomPr" +
+      "iceRequest\032\035.hotelmanagement.RoomRespons" +
+      "e\022H\n\nRemoveRoom\022\".hotelmanagement.Remove" +
+      "RoomRequest\032\026.hotelmanagement.EmptyBL\n7h" +
+      "otelmanagementsystem.infrastructure.api." +
+      "grpc.generatedB\017HotelManagementP\001b\006proto" +
+      "3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -492,7 +493,7 @@ public final class HotelManagement {
     internal_static_hotelmanagement_CreateBookingRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_hotelmanagement_CreateBookingRequest_descriptor,
-        new java.lang.String[] { "HotelId", "GuestIds", "RoomIds", "CheckInDate", "CheckOutDate", });
+        new java.lang.String[] { "HotelId", "RoomTypes", "GuestIds", "CheckInDate", "CheckOutDate", });
     internal_static_hotelmanagement_GetBookingByIdRequest_descriptor =
       getDescriptor().getMessageTypes().get(23);
     internal_static_hotelmanagement_GetBookingByIdRequest_fieldAccessorTable = new

@@ -8,10 +8,11 @@ import hotelmanagementsystem.infrastructure.api.grpc.generated.*;
 import hotelmanagementsystem.infrastructure.api.mapper.BookingMapper;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
-
 import jakarta.inject.Inject;
+
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImplBase {
 
@@ -25,16 +26,26 @@ public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImp
     @Override
     public void createBooking(CreateBookingRequest request, StreamObserver<BookingResponse> responseObserver) {
         try {
-            // Create booking in domain service
+            // 1) Convert request room types (strings) -> domain classes
+            List<Class<? extends hotelmanagementsystem.domain.models.Room>> domainRoomTypes =
+                    request.getRoomTypesList().stream()
+                            .map(this::parseRoomType)
+                            .collect(Collectors.toList());
+
+            // 2) Convert string date -> LocalDate
+            LocalDate checkIn = LocalDate.parse(request.getCheckInDate());
+            LocalDate checkOut = LocalDate.parse(request.getCheckOutDate());
+
+            // 3) Call domain makeBooking
             Booking booking = bookingService.makeBooking(
                     request.getHotelId(),
-                    LocalDate.parse(request.getCheckInDate()),
-                    LocalDate.parse(request.getCheckOutDate()),
-                    Collections.emptyList(), // Replace with room types if needed
-                    request.getRoomIdsList()
+                    checkIn,
+                    checkOut,
+                    domainRoomTypes,
+                    request.getGuestIdsList()  // multiple guests
             );
 
-            // Map domain booking to DTO and gRPC response
+            // 4) Convert domain booking -> DTO -> proto
             BookingDTO bookingDTO = BookingMapper.toDTO(booking);
             BookingResponse response = BookingResponse.newBuilder()
                     .setBooking(bookingDTO.toProtobuf())
@@ -42,18 +53,18 @@ public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImp
 
             responseObserver.onNext(response);
             responseObserver.onCompleted();
+
         } catch (Exception e) {
-            responseObserver.onError(Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException());
+            responseObserver.onError(Status.INTERNAL
+                    .withDescription(e.getMessage())
+                    .asRuntimeException());
         }
     }
 
     @Override
     public void getBookingById(GetBookingByIdRequest request, StreamObserver<BookingResponse> responseObserver) {
         try {
-            // Fetch booking by ID
             Booking booking = bookingService.getBookingById(request.getId());
-
-            // Map domain booking to DTO and gRPC response
             BookingDTO dto = BookingMapper.toDTO(booking);
             BookingResponse response = BookingResponse.newBuilder()
                     .setBooking(dto.toProtobuf())
@@ -71,10 +82,7 @@ public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImp
     @Override
     public void cancelBooking(CancelBookingRequest request, StreamObserver<Empty> responseObserver) {
         try {
-            // Cancel the booking
             bookingService.cancelBooking(request.getId());
-
-            // Return an empty response
             responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (BookingNotFoundException e) {
@@ -87,10 +95,7 @@ public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImp
     @Override
     public void checkInGuest(CheckInGuestRequest request, StreamObserver<Empty> responseObserver) {
         try {
-            // Check in the guest
             bookingService.guestCheckIn(request.getBookingId());
-
-            // Return an empty response
             responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (BookingNotFoundException e) {
@@ -103,10 +108,7 @@ public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImp
     @Override
     public void checkOutGuest(CheckOutGuestRequest request, StreamObserver<Empty> responseObserver) {
         try {
-            // Check out the guest
             bookingService.guestCheckOut(request.getBookingId());
-
-            // Return an empty response
             responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (BookingNotFoundException e) {
@@ -115,6 +117,17 @@ public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImp
             responseObserver.onError(Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException());
         }
     }
+
+    // Example helper method to parse string -> Class<? extends Room>
+    private Class<? extends hotelmanagementsystem.domain.models.Room> parseRoomType(String typeName) {
+        // Minimal example; extend for more types
+        switch (typeName.toUpperCase()) {
+            case "SINGLE":
+                return hotelmanagementsystem.domain.models.SingleRoom.class;
+            case "DOUBLE":
+                return hotelmanagementsystem.domain.models.DoubleRoom.class;
+            default:
+                throw new IllegalArgumentException("Unknown room type: " + typeName);
+        }
+    }
 }
-
-

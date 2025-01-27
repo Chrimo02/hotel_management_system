@@ -11,19 +11,33 @@ import java.util.stream.Collectors;
 
 public class BookingMapper {
 
-    // Map Domain Booking to DTO
+    // --- Map Domain Booking -> DTO ---
     public static BookingDTO toDTO(Booking booking) {
         BookingDTO dto = new BookingDTO();
         dto.setId(booking.getId());
         dto.setHotelId(booking.getHotel().getId());
-        dto.setGuestId(booking.getGuests().get(0).getId()); // Assuming one primary guest
-        dto.setRoomIds(booking.getRooms().stream().map(Room::getId).collect(Collectors.toList()));
+
+        // Extract all guest IDs
+        List<Long> guestIds = booking.getGuests().stream()
+                .map(Guest::getId)
+                .collect(Collectors.toList());
+        dto.setGuestIds(guestIds);
+
+        // Extract all room IDs
+        List<Long> roomIds = booking.getRooms().stream()
+                .map(Room::getId)
+                .collect(Collectors.toList());
+        dto.setRoomIds(roomIds);
+
         dto.setCheckInDate(booking.getCheckInDate());
         dto.setCheckOutDate(booking.getCheckOutDate());
+
         return dto;
     }
 
-    // Map DTO to Domain Booking
+    // --- Map DTO -> Domain Booking ---
+    // Typically used if you're reconstructing a domain Booking from a DTO, e.g. if you had an update scenario.
+    // For createBooking, you generally pass domain data to BookingService directly (like room classes, etc.)
     public static Booking toDomain(BookingDTO dto, Hotel hotel, List<Room> rooms, List<Guest> guests) {
         return new Booking(
                 dto.getId(),
@@ -32,9 +46,9 @@ public class BookingMapper {
                 dto.getCheckOutDate(),
                 rooms,
                 guests,
-                true, // Default status is active
-                null, // Check-in time not set initially
-                null  // Check-out time not set initially
+                true,   // default status
+                null,   // check-in time
+                null    // check-out time
         );
     }
 }
