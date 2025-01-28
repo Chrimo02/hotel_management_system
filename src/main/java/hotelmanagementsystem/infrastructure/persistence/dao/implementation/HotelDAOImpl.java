@@ -30,7 +30,7 @@ public class HotelDAOImpl implements HotelDAO {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
             }
-            throw new RuntimeException("Error saving Hotel", e);
+            throw new DataAccessException("Error while creating hotel entity, rolled back", e);
         }
         finally {
             entityManager.close();
@@ -39,9 +39,16 @@ public class HotelDAOImpl implements HotelDAO {
 
     @Override
     public Optional<HotelEntity> findById(Long id) {
-        EntityManager entityManager = entityManager();
-        HotelEntity entity = entityManager.find(HotelEntity.class, id);
-        return entity != null ? Optional.of(entity) : Optional.empty();
+        try {
+            EntityManager entityManager = entityManager();
+            HotelEntity entity = entityManager.find(HotelEntity.class, id);
+            return entity != null ? Optional.of(entity) : Optional.empty();
+        } catch (Exception e) {
+            throw new DataAccessException("Error while finding hotel by ID", e);
+        } finally {
+            entityManager().close();
+        }
+
     }
 
     @Override
@@ -62,7 +69,7 @@ public class HotelDAOImpl implements HotelDAO {
                 if (entityManager.getTransaction().isActive()) {
                     entityManager.getTransaction().rollback();
                 }
-                throw new RuntimeException("Error updating Hotel", e);
+                throw new DataAccessException("Error updating Hotel", e);
             }
             finally {
                 entityManager.close();
@@ -83,7 +90,7 @@ public class HotelDAOImpl implements HotelDAO {
             if (entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().rollback();
             }
-            throw new RuntimeException("Error deleting Hotel", e);
+            throw new DataAccessException("Error deleting Hotel", e);
 
     } finally {
         entityManager.close();

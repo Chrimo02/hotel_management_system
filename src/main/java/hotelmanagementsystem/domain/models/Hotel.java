@@ -15,7 +15,9 @@ public class Hotel {
     private final List<HotelRating> ratings;
 
     private Hotel(HotelBuilder hotelBuilder) {
+        this.id = hotelBuilder.id;
         this.name = hotelBuilder.name;
+        this.rooms = hotelBuilder.rooms;
         this.description = hotelBuilder.description;
         this.location = hotelBuilder.location;
         this.ratings = hotelBuilder.ratings;
