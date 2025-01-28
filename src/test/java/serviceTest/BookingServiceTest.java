@@ -1,4 +1,3 @@
-/*
 package serviceTest;
 
 import hotelmanagementsystem.domain.exceptions.BookingNotFoundException;
@@ -48,20 +47,26 @@ public class BookingServiceTest {
         List<Class<? extends Room>> roomTypes = Arrays.asList(SingleRoom.class, DoubleRoom.class);
         List<Long> guestIds = Arrays.asList(1L, 2L);
 
+        // Mock dependencies
         Hotel hotel = mock(Hotel.class);
         List<Room> rooms = Arrays.asList(mock(Room.class), mock(Room.class));
         List<Guest> guests = Arrays.asList(mock(Guest.class), mock(Guest.class));
 
+        // Configure service mocks
         when(hotelService.getHotelByHotelId(hotelId)).thenReturn(hotel);
         when(roomService.findAvailableRooms(hotelId, roomTypes, checkInDate, checkOutDate)).thenReturn(rooms);
         when(guestService.loadGuests(guestIds)).thenReturn(guests);
+
+        // Create and configure the mocked Booking object
+        Booking mockBooking = mock(Booking.class);
+        when(bookingRepository.createBooking(hotel, checkInDate, checkOutDate, rooms, guests)).thenReturn(mockBooking);
 
         // Act
         bookingService.makeBooking(hotelId, checkInDate, checkOutDate, roomTypes, guestIds);
 
         // Assert
         verify(bookingRepository).createBooking(hotel, checkInDate, checkOutDate, rooms, guests);
-        verify(roomService).bookRooms(any(Booking.class));
+        verify(roomService).bookRooms(mockBooking);
     }
 
     @Test
@@ -126,4 +131,3 @@ public class BookingServiceTest {
         verify(bookingRepository).updateBooking(booking);
     }
 }
-*/

@@ -1,5 +1,6 @@
 package hotelmanagementsystem.domain.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Hotel {
@@ -105,7 +106,7 @@ public class Hotel {
         }
 
         public HotelBuilder withRoomsList(List<Room> rooms){
-            this.rooms = rooms;
+            this.rooms = rooms != null ? rooms : new ArrayList<>();
             return this;
         }
 

@@ -15,9 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -39,27 +37,37 @@ public class RoomServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Hotel initialisieren und ID manuell setzen
+        // **Initialize Mockito Mocks**
+        MockitoAnnotations.openMocks(this);
+
+
+
+        // Initialize the test room
+        testRoom = new SingleRoom.Builder(100.0, new RoomIdentifier("Building A", 1, "101"), testHotel)
+                .withId(1L)
+                .build();
+        List<Room> rooms = new ArrayList<>();
+        rooms.add(testRoom);
+        // Initialize the test hotel and rooms list
         testHotel = new Hotel.HotelBuilder()
-                .withId(1L) // ID explizit setzen
+                .withId(1L)
+                .withRoomsList(rooms)
                 .withName("Test Hotel")
                 .build();
 
-        // Room initialisieren und ID manuell setzen
-        testRoom = new SingleRoom.Builder(100.0, new RoomIdentifier("Building A", 1, "101"), testHotel)
-                .withId(1L) // ID explizit setzen
-                .build();
-
-        // Mock Verhalten für RoomRepository
+        // **Mock behavior for RoomRepository and HotelService**
         when(roomRepository.findRoomById(1L)).thenReturn(testRoom);
         when(hotelService.getHotelByHotelId(1L)).thenReturn(testHotel);
     }
-
     @Test
     void testGetRoomById() throws RoomNotFoundException {
+        // Mock the repository response to return the test room when queried by ID
         when(roomRepository.findRoomById(1L)).thenReturn(testRoom);
 
-        Room result = roomService.findAvailableRooms(testHotel.getId(), List.of(SingleRoom.class), LocalDate.now(), LocalDate.now().plusDays(1)).get(0);
+        // Call the actual method to retrieve the room by ID
+        Room result = roomService.getRoomById(1L);
+
+        // Assertions
         assertNotNull(result);
         assertEquals(testRoom, result);
     }
@@ -117,19 +125,30 @@ public class RoomServiceTest {
         verify(roomRepository, times(1)).saveRoom(any(SingleRoom.class));
         verify(roomIdentifierRepository, times(1)).saveRoomIdentifier(roomIdentifier);
     }
-
     @Test
     void testFindAvailableRooms() {
-        Booking booking = new Booking(1L, testHotel, LocalDate.now(), LocalDate.now().plusDays(2), List.of(testRoom), List.of(), true, null, null);
-        testRoom.setBookings(Set.of(booking));
+        // Initialize room list in the test hotel to prevent NullPointerException
+        testHotel.setRoom(new ArrayList<>());
+        testHotel.getRooms().add(testRoom);
 
+        // Create a booking that covers a certain date range
+        Booking booking = new Booking(1L, testHotel, LocalDate.now(), LocalDate.now().plusDays(2), List.of(testRoom), List.of(), true, null, null);
+
+        // Set bookings on the test room
+        testRoom.setBookings(new HashSet<>(List.of(booking)));
+
+        // Mock HotelService response to return testHotel
         when(hotelService.getHotelByHotelId(1L)).thenReturn(testHotel);
 
+        // Call method under test for a date range that does not overlap with the existing booking
         List<Room> availableRooms = roomService.findAvailableRooms(1L, List.of(SingleRoom.class), LocalDate.now().plusDays(3), LocalDate.now().plusDays(4));
 
-        assertFalse(availableRooms.isEmpty());
-        assertTrue(availableRooms.contains(testRoom));
+        // Assertions
+        assertNotNull(availableRooms);
+        assertFalse(availableRooms.isEmpty()); // Expect at least one available room
+        assertTrue(availableRooms.contains(testRoom)); // Expect the testRoom to be included
     }
+
 }
 
 
