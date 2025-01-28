@@ -27,7 +27,7 @@ public class RoomService {
         this.roomIdentifierRepository = roomIdentifierRepository;
     }
 
-    private Room getRoomById(long roomId) throws RoomNotFoundException {
+    public Room getRoomById(long roomId) throws RoomNotFoundException {
         Room room = roomRepository.findRoomById(roomId);
         if (room == null) throw new RoomNotFoundException("There is no Booking with the specified ID!");
         return room;
