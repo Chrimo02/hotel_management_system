@@ -1,7 +1,6 @@
 package hotelmanagementsystem.infrastructure.api.dto;
 
 import hotelmanagementsystem.infrastructure.api.grpc.generated.Guest;
-
 import java.time.LocalDate;
 
 public class GuestDTO {

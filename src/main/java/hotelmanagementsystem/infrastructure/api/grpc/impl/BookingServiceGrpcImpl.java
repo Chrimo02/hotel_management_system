@@ -8,12 +8,13 @@ import hotelmanagementsystem.infrastructure.api.grpc.generated.*;
 import hotelmanagementsystem.infrastructure.api.mapper.BookingMapper;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@ApplicationScoped
 public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImplBase {
 
     private final BookingService bookingService;

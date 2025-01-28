@@ -48,6 +48,7 @@ private static final long serialVersionUID = 0L;
             hotelmanagementsystem.infrastructure.api.grpc.generated.Room.class, hotelmanagementsystem.infrastructure.api.grpc.generated.Room.Builder.class);
   }
 
+  private int bitField0_;
   public static final int ID_FIELD_NUMBER = 1;
   private long id_ = 0L;
   /**
@@ -109,10 +110,36 @@ private static final long serialVersionUID = 0L;
     }
   }
 
-  public static final int HOTELID_FIELD_NUMBER = 4;
+  public static final int ROOMIDENTIFIER_FIELD_NUMBER = 4;
+  private hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier roomIdentifier_;
+  /**
+   * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+   * @return Whether the roomIdentifier field is set.
+   */
+  @java.lang.Override
+  public boolean hasRoomIdentifier() {
+    return ((bitField0_ & 0x00000001) != 0);
+  }
+  /**
+   * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+   * @return The roomIdentifier.
+   */
+  @java.lang.Override
+  public hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier getRoomIdentifier() {
+    return roomIdentifier_ == null ? hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier.getDefaultInstance() : roomIdentifier_;
+  }
+  /**
+   * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+   */
+  @java.lang.Override
+  public hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifierOrBuilder getRoomIdentifierOrBuilder() {
+    return roomIdentifier_ == null ? hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier.getDefaultInstance() : roomIdentifier_;
+  }
+
+  public static final int HOTELID_FIELD_NUMBER = 5;
   private long hotelId_ = 0L;
   /**
-   * <code>int64 hotelId = 4;</code>
+   * <code>int64 hotelId = 5;</code>
    * @return The hotelId.
    */
   @java.lang.Override
@@ -120,18 +147,18 @@ private static final long serialVersionUID = 0L;
     return hotelId_;
   }
 
-  public static final int BOOKINGS_FIELD_NUMBER = 5;
+  public static final int BOOKINGS_FIELD_NUMBER = 6;
   @SuppressWarnings("serial")
   private java.util.List<hotelmanagementsystem.infrastructure.api.grpc.generated.Booking> bookings_;
   /**
-   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
    */
   @java.lang.Override
   public java.util.List<hotelmanagementsystem.infrastructure.api.grpc.generated.Booking> getBookingsList() {
     return bookings_;
   }
   /**
-   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
    */
   @java.lang.Override
   public java.util.List<? extends hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder> 
@@ -139,21 +166,21 @@ private static final long serialVersionUID = 0L;
     return bookings_;
   }
   /**
-   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
    */
   @java.lang.Override
   public int getBookingsCount() {
     return bookings_.size();
   }
   /**
-   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
    */
   @java.lang.Override
   public hotelmanagementsystem.infrastructure.api.grpc.generated.Booking getBookings(int index) {
     return bookings_.get(index);
   }
   /**
-   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
    */
   @java.lang.Override
   public hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder getBookingsOrBuilder(
@@ -184,11 +211,14 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(type_)) {
       com.google.protobuf.GeneratedMessage.writeString(output, 3, type_);
     }
+    if (((bitField0_ & 0x00000001) != 0)) {
+      output.writeMessage(4, getRoomIdentifier());
+    }
     if (hotelId_ != 0L) {
-      output.writeInt64(4, hotelId_);
+      output.writeInt64(5, hotelId_);
     }
     for (int i = 0; i < bookings_.size(); i++) {
-      output.writeMessage(5, bookings_.get(i));
+      output.writeMessage(6, bookings_.get(i));
     }
     getUnknownFields().writeTo(output);
   }
@@ -210,13 +240,17 @@ private static final long serialVersionUID = 0L;
     if (!com.google.protobuf.GeneratedMessage.isStringEmpty(type_)) {
       size += com.google.protobuf.GeneratedMessage.computeStringSize(3, type_);
     }
+    if (((bitField0_ & 0x00000001) != 0)) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(4, getRoomIdentifier());
+    }
     if (hotelId_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(4, hotelId_);
+        .computeInt64Size(5, hotelId_);
     }
     for (int i = 0; i < bookings_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(5, bookings_.get(i));
+        .computeMessageSize(6, bookings_.get(i));
     }
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
@@ -240,6 +274,11 @@ private static final long serialVersionUID = 0L;
             other.getPricePerNight())) return false;
     if (!getType()
         .equals(other.getType())) return false;
+    if (hasRoomIdentifier() != other.hasRoomIdentifier()) return false;
+    if (hasRoomIdentifier()) {
+      if (!getRoomIdentifier()
+          .equals(other.getRoomIdentifier())) return false;
+    }
     if (getHotelId()
         != other.getHotelId()) return false;
     if (!getBookingsList()
@@ -263,6 +302,10 @@ private static final long serialVersionUID = 0L;
         java.lang.Double.doubleToLongBits(getPricePerNight()));
     hash = (37 * hash) + TYPE_FIELD_NUMBER;
     hash = (53 * hash) + getType().hashCode();
+    if (hasRoomIdentifier()) {
+      hash = (37 * hash) + ROOMIDENTIFIER_FIELD_NUMBER;
+      hash = (53 * hash) + getRoomIdentifier().hashCode();
+    }
     hash = (37 * hash) + HOTELID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getHotelId());
@@ -393,13 +436,20 @@ private static final long serialVersionUID = 0L;
 
     // Construct using hotelmanagementsystem.infrastructure.api.grpc.generated.Room.newBuilder()
     private Builder() {
-
+      maybeForceBuilderInitialization();
     }
 
     private Builder(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       super(parent);
-
+      maybeForceBuilderInitialization();
+    }
+    private void maybeForceBuilderInitialization() {
+      if (com.google.protobuf.GeneratedMessage
+              .alwaysUseFieldBuilders) {
+        getRoomIdentifierFieldBuilder();
+        getBookingsFieldBuilder();
+      }
     }
     @java.lang.Override
     public Builder clear() {
@@ -408,6 +458,11 @@ private static final long serialVersionUID = 0L;
       id_ = 0L;
       pricePerNight_ = 0D;
       type_ = "";
+      roomIdentifier_ = null;
+      if (roomIdentifierBuilder_ != null) {
+        roomIdentifierBuilder_.dispose();
+        roomIdentifierBuilder_ = null;
+      }
       hotelId_ = 0L;
       if (bookingsBuilder_ == null) {
         bookings_ = java.util.Collections.emptyList();
@@ -415,7 +470,7 @@ private static final long serialVersionUID = 0L;
         bookings_ = null;
         bookingsBuilder_.clear();
       }
-      bitField0_ = (bitField0_ & ~0x00000010);
+      bitField0_ = (bitField0_ & ~0x00000020);
       return this;
     }
 
@@ -450,9 +505,9 @@ private static final long serialVersionUID = 0L;
 
     private void buildPartialRepeatedFields(hotelmanagementsystem.infrastructure.api.grpc.generated.Room result) {
       if (bookingsBuilder_ == null) {
-        if (((bitField0_ & 0x00000010) != 0)) {
+        if (((bitField0_ & 0x00000020) != 0)) {
           bookings_ = java.util.Collections.unmodifiableList(bookings_);
-          bitField0_ = (bitField0_ & ~0x00000010);
+          bitField0_ = (bitField0_ & ~0x00000020);
         }
         result.bookings_ = bookings_;
       } else {
@@ -471,9 +526,17 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000004) != 0)) {
         result.type_ = type_;
       }
+      int to_bitField0_ = 0;
       if (((from_bitField0_ & 0x00000008) != 0)) {
+        result.roomIdentifier_ = roomIdentifierBuilder_ == null
+            ? roomIdentifier_
+            : roomIdentifierBuilder_.build();
+        to_bitField0_ |= 0x00000001;
+      }
+      if (((from_bitField0_ & 0x00000010) != 0)) {
         result.hotelId_ = hotelId_;
       }
+      result.bitField0_ |= to_bitField0_;
     }
 
     @java.lang.Override
@@ -499,6 +562,9 @@ private static final long serialVersionUID = 0L;
         bitField0_ |= 0x00000004;
         onChanged();
       }
+      if (other.hasRoomIdentifier()) {
+        mergeRoomIdentifier(other.getRoomIdentifier());
+      }
       if (other.getHotelId() != 0L) {
         setHotelId(other.getHotelId());
       }
@@ -506,7 +572,7 @@ private static final long serialVersionUID = 0L;
         if (!other.bookings_.isEmpty()) {
           if (bookings_.isEmpty()) {
             bookings_ = other.bookings_;
-            bitField0_ = (bitField0_ & ~0x00000010);
+            bitField0_ = (bitField0_ & ~0x00000020);
           } else {
             ensureBookingsIsMutable();
             bookings_.addAll(other.bookings_);
@@ -519,7 +585,7 @@ private static final long serialVersionUID = 0L;
             bookingsBuilder_.dispose();
             bookingsBuilder_ = null;
             bookings_ = other.bookings_;
-            bitField0_ = (bitField0_ & ~0x00000010);
+            bitField0_ = (bitField0_ & ~0x00000020);
             bookingsBuilder_ = 
               com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                  getBookingsFieldBuilder() : null;
@@ -569,12 +635,19 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000004;
               break;
             } // case 26
-            case 32: {
-              hotelId_ = input.readInt64();
+            case 34: {
+              input.readMessage(
+                  getRoomIdentifierFieldBuilder().getBuilder(),
+                  extensionRegistry);
               bitField0_ |= 0x00000008;
               break;
-            } // case 32
-            case 42: {
+            } // case 34
+            case 40: {
+              hotelId_ = input.readInt64();
+              bitField0_ |= 0x00000010;
+              break;
+            } // case 40
+            case 50: {
               hotelmanagementsystem.infrastructure.api.grpc.generated.Booking m =
                   input.readMessage(
                       hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.parser(),
@@ -586,7 +659,7 @@ private static final long serialVersionUID = 0L;
                 bookingsBuilder_.addMessage(m);
               }
               break;
-            } // case 42
+            } // case 50
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -740,9 +813,130 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
+    private hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier roomIdentifier_;
+    private com.google.protobuf.SingleFieldBuilder<
+        hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier, hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier.Builder, hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifierOrBuilder> roomIdentifierBuilder_;
+    /**
+     * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+     * @return Whether the roomIdentifier field is set.
+     */
+    public boolean hasRoomIdentifier() {
+      return ((bitField0_ & 0x00000008) != 0);
+    }
+    /**
+     * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+     * @return The roomIdentifier.
+     */
+    public hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier getRoomIdentifier() {
+      if (roomIdentifierBuilder_ == null) {
+        return roomIdentifier_ == null ? hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier.getDefaultInstance() : roomIdentifier_;
+      } else {
+        return roomIdentifierBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+     */
+    public Builder setRoomIdentifier(hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier value) {
+      if (roomIdentifierBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        roomIdentifier_ = value;
+      } else {
+        roomIdentifierBuilder_.setMessage(value);
+      }
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+     */
+    public Builder setRoomIdentifier(
+        hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier.Builder builderForValue) {
+      if (roomIdentifierBuilder_ == null) {
+        roomIdentifier_ = builderForValue.build();
+      } else {
+        roomIdentifierBuilder_.setMessage(builderForValue.build());
+      }
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+     */
+    public Builder mergeRoomIdentifier(hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier value) {
+      if (roomIdentifierBuilder_ == null) {
+        if (((bitField0_ & 0x00000008) != 0) &&
+          roomIdentifier_ != null &&
+          roomIdentifier_ != hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier.getDefaultInstance()) {
+          getRoomIdentifierBuilder().mergeFrom(value);
+        } else {
+          roomIdentifier_ = value;
+        }
+      } else {
+        roomIdentifierBuilder_.mergeFrom(value);
+      }
+      if (roomIdentifier_ != null) {
+        bitField0_ |= 0x00000008;
+        onChanged();
+      }
+      return this;
+    }
+    /**
+     * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+     */
+    public Builder clearRoomIdentifier() {
+      bitField0_ = (bitField0_ & ~0x00000008);
+      roomIdentifier_ = null;
+      if (roomIdentifierBuilder_ != null) {
+        roomIdentifierBuilder_.dispose();
+        roomIdentifierBuilder_ = null;
+      }
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+     */
+    public hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier.Builder getRoomIdentifierBuilder() {
+      bitField0_ |= 0x00000008;
+      onChanged();
+      return getRoomIdentifierFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+     */
+    public hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifierOrBuilder getRoomIdentifierOrBuilder() {
+      if (roomIdentifierBuilder_ != null) {
+        return roomIdentifierBuilder_.getMessageOrBuilder();
+      } else {
+        return roomIdentifier_ == null ?
+            hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier.getDefaultInstance() : roomIdentifier_;
+      }
+    }
+    /**
+     * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilder<
+        hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier, hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier.Builder, hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifierOrBuilder> 
+        getRoomIdentifierFieldBuilder() {
+      if (roomIdentifierBuilder_ == null) {
+        roomIdentifierBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+            hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier, hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier.Builder, hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifierOrBuilder>(
+                getRoomIdentifier(),
+                getParentForChildren(),
+                isClean());
+        roomIdentifier_ = null;
+      }
+      return roomIdentifierBuilder_;
+    }
+
     private long hotelId_ ;
     /**
-     * <code>int64 hotelId = 4;</code>
+     * <code>int64 hotelId = 5;</code>
      * @return The hotelId.
      */
     @java.lang.Override
@@ -750,23 +944,23 @@ private static final long serialVersionUID = 0L;
       return hotelId_;
     }
     /**
-     * <code>int64 hotelId = 4;</code>
+     * <code>int64 hotelId = 5;</code>
      * @param value The hotelId to set.
      * @return This builder for chaining.
      */
     public Builder setHotelId(long value) {
 
       hotelId_ = value;
-      bitField0_ |= 0x00000008;
+      bitField0_ |= 0x00000010;
       onChanged();
       return this;
     }
     /**
-     * <code>int64 hotelId = 4;</code>
+     * <code>int64 hotelId = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearHotelId() {
-      bitField0_ = (bitField0_ & ~0x00000008);
+      bitField0_ = (bitField0_ & ~0x00000010);
       hotelId_ = 0L;
       onChanged();
       return this;
@@ -775,9 +969,9 @@ private static final long serialVersionUID = 0L;
     private java.util.List<hotelmanagementsystem.infrastructure.api.grpc.generated.Booking> bookings_ =
       java.util.Collections.emptyList();
     private void ensureBookingsIsMutable() {
-      if (!((bitField0_ & 0x00000010) != 0)) {
+      if (!((bitField0_ & 0x00000020) != 0)) {
         bookings_ = new java.util.ArrayList<hotelmanagementsystem.infrastructure.api.grpc.generated.Booking>(bookings_);
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000020;
        }
     }
 
@@ -785,7 +979,7 @@ private static final long serialVersionUID = 0L;
         hotelmanagementsystem.infrastructure.api.grpc.generated.Booking, hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder, hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder> bookingsBuilder_;
 
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public java.util.List<hotelmanagementsystem.infrastructure.api.grpc.generated.Booking> getBookingsList() {
       if (bookingsBuilder_ == null) {
@@ -795,7 +989,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public int getBookingsCount() {
       if (bookingsBuilder_ == null) {
@@ -805,7 +999,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public hotelmanagementsystem.infrastructure.api.grpc.generated.Booking getBookings(int index) {
       if (bookingsBuilder_ == null) {
@@ -815,7 +1009,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public Builder setBookings(
         int index, hotelmanagementsystem.infrastructure.api.grpc.generated.Booking value) {
@@ -832,7 +1026,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public Builder setBookings(
         int index, hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder builderForValue) {
@@ -846,7 +1040,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public Builder addBookings(hotelmanagementsystem.infrastructure.api.grpc.generated.Booking value) {
       if (bookingsBuilder_ == null) {
@@ -862,7 +1056,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public Builder addBookings(
         int index, hotelmanagementsystem.infrastructure.api.grpc.generated.Booking value) {
@@ -879,7 +1073,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public Builder addBookings(
         hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder builderForValue) {
@@ -893,7 +1087,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public Builder addBookings(
         int index, hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder builderForValue) {
@@ -907,7 +1101,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public Builder addAllBookings(
         java.lang.Iterable<? extends hotelmanagementsystem.infrastructure.api.grpc.generated.Booking> values) {
@@ -922,12 +1116,12 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public Builder clearBookings() {
       if (bookingsBuilder_ == null) {
         bookings_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000020);
         onChanged();
       } else {
         bookingsBuilder_.clear();
@@ -935,7 +1129,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public Builder removeBookings(int index) {
       if (bookingsBuilder_ == null) {
@@ -948,14 +1142,14 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder getBookingsBuilder(
         int index) {
       return getBookingsFieldBuilder().getBuilder(index);
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder getBookingsOrBuilder(
         int index) {
@@ -965,7 +1159,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public java.util.List<? extends hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder> 
          getBookingsOrBuilderList() {
@@ -976,14 +1170,14 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder addBookingsBuilder() {
       return getBookingsFieldBuilder().addBuilder(
           hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.getDefaultInstance());
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder addBookingsBuilder(
         int index) {
@@ -991,7 +1185,7 @@ private static final long serialVersionUID = 0L;
           index, hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.getDefaultInstance());
     }
     /**
-     * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+     * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
      */
     public java.util.List<hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder> 
          getBookingsBuilderList() {
@@ -1004,7 +1198,7 @@ private static final long serialVersionUID = 0L;
         bookingsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
             hotelmanagementsystem.infrastructure.api.grpc.generated.Booking, hotelmanagementsystem.infrastructure.api.grpc.generated.Booking.Builder, hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder>(
                 bookings_,
-                ((bitField0_ & 0x00000010) != 0),
+                ((bitField0_ & 0x00000020) != 0),
                 getParentForChildren(),
                 isClean());
         bookings_ = null;

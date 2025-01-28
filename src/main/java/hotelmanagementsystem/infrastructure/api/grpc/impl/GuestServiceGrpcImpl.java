@@ -11,13 +11,14 @@ import hotelmanagementsystem.infrastructure.api.mapper.BookingMapper;
 import hotelmanagementsystem.infrastructure.api.mapper.GuestMapper;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@ApplicationScoped
 public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
 {
     private final GuestService guestService;

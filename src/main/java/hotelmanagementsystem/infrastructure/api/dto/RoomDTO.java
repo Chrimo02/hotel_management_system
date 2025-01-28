@@ -1,68 +1,83 @@
-//package hotelmanagementsystem.infrastructure.api.dto;
-//
-//import hotelmanagementsystem.domain.models.Booking;
-//import hotelmanagementsystem.domain.models.Hotel;
-//import hotelmanagementsystem.domain.models.RoomIdentifier;
-//import hotelmanagementsystem.infrastructure.api.grpc.generated.Guest;
-//import hotelmanagementsystem.infrastructure.api.grpc.generated.Room;
-//
-//import java.util.Set;
-//import java.util.TreeSet;
-//
-//public class RoomDTO {
-//    private long id;
-//    private double pricePerNight;
-//    private RoomIdentifier roomIdentifier; //dto
-//    private Hotel hotel; //id
-//    private Set<Booking> bookings = new TreeSet<>(); // TreeSet für sortierte Buchungen
-//
-//    protected RoomDTO(long id, double pricePerNight, RoomIdentifier roomIdentifier, Hotel hotel) {
-//        this.id = id;
-//        this.pricePerNight = pricePerNight;
-//        this.roomIdentifier = roomIdentifier;
-//        this.hotel = hotel;
-//    }
-//
-//    public Set<Booking> getBookings() {
-//        return bookings;
-//    }
-//
-//    public void setBookings(Set<Booking> bookings) {
-//        this.bookings = bookings;
-//    }
-//
-//    public double getPricePerNight() {
-//        return pricePerNight;
-//    }
-//
-//    public long getId() {
-//        return id;
-//    }
-//    public RoomIdentifier getRoomIdentifier() {
-//        return roomIdentifier;
-//    }
-//    public void setRoomIdentifier(RoomIdentifier roomIdentifier) {
-//        this.roomIdentifier = roomIdentifier;
-//    }
-//    public void setPricePerNight(double pricePerNight) {
-//        this.pricePerNight = pricePerNight;
-//    }
-//
-//    public Hotel getHotel() {
-//        return hotel;
-//    }
-//
-//    public void setHotel(Hotel hotel) {
-//        this.hotel = hotel;
-//    }
-//
-//    public Room toProtobuf(){
-//        return Room.newBuilder()
-//                .setId(this.id)
-//                .setPricePerNight(this.pricePerNight)
-//                .setType(this.roomIdentifier.toString())
-//                .setHotelId(this.hotel.getId())
-//                .setBookings(this.bookings)
-//                .build();
-//    }
-//}
+package hotelmanagementsystem.infrastructure.api.dto;
+
+import hotelmanagementsystem.infrastructure.api.grpc.generated.Room;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class RoomDTO {
+    private long id;
+    private double pricePerNight;
+    private RoomIdentifierDTO roomIdentifier;
+    private long hotelId;
+    private List<BookingDTO> bookings;
+    private String type;
+
+    public RoomDTO(long id, double pricePerNight, RoomIdentifierDTO roomIdentifier, long hotelId, List<BookingDTO> bookings, String type) {
+        this.id = id;
+        this.pricePerNight = pricePerNight;
+        this.roomIdentifier = roomIdentifier;
+        this.hotelId = hotelId;
+        this.bookings = bookings;
+        this.type = type;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public double getPricePerNight() {
+        return pricePerNight;
+    }
+
+    public void setPricePerNight(double pricePerNight) {
+        this.pricePerNight = pricePerNight;
+    }
+
+    public RoomIdentifierDTO getRoomIdentifierDTO() {
+        return roomIdentifier;
+    }
+
+    public void setRoomIdentifierDTO(RoomIdentifierDTO roomIdentifier) {
+        this.roomIdentifier = roomIdentifier;
+    }
+
+    public long getHotelId() {
+        return hotelId;
+    }
+
+    public void setHotelId(long hotelId) {
+        this.hotelId = hotelId;
+    }
+
+    public List<BookingDTO> getBookingDTOs() {
+        return bookings;
+    }
+
+    public void setBookingDTOs(List<BookingDTO> bookings) {
+        this.bookings = bookings;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type){
+        this.type = type;
+    }
+
+    public Room toProtobuf() {
+        return Room.newBuilder()
+                .setId(this.getId())
+                .setPricePerNight(this.getPricePerNight())
+                .setType(this.getType())
+                .setRoomIdentifier(this.getRoomIdentifierDTO().toProtobuf())
+                .setHotelId(this.hotelId)
+                .addAllBookings(bookings.stream().map(BookingDTO::toProtobuf).collect(Collectors.toList()))
+                .build();
+    }
+}

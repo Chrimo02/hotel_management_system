@@ -9,13 +9,7 @@ import java.util.List;
 public interface GuestRepository {
     void createGuest(Guest guest);
 
-    void updateEmail(Guest guest);
-
-    void updatePhone(Guest guest);
-
-    void updateLastName(Guest guest);
-
-    void updateTitle(Guest guest);
+    void updateGuest(Guest guest);
 
     void deleteGuest(Guest guest);
 

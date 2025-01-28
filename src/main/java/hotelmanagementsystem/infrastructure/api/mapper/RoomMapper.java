@@ -1,60 +1,51 @@
-//package hotelmanagementsystem.infrastructure.api.mapper;
-//
-//import hotelmanagementsystem.domain.models.DoubleRoom;
-//import hotelmanagementsystem.domain.models.Room;
-//import hotelmanagementsystem.domain.models.SingleRoom;
-//import hotelmanagementsystem.infrastructure.api.dto.RoomDTO;
-//import hotelmanagementsystem.infrastructure.api.dto.SingleRoomDTO;
-//import hotelmanagementsystem.infrastructure.persistence.mapper.BookingMapper;
-//import hotelmanagementsystem.infrastructure.persistence.mapper.HotelMapper;
-//import hotelmanagementsystem.infrastructure.persistence.mapper.RoomIdentifierMapper;
-//import jakarta.enterprise.context.ApplicationScoped;
-//import jakarta.inject.Inject;
-//@ApplicationScoped
-//public class RoomMapper {
-//    HotelMapper hotelMapper;
-//    RoomIdentifierMapper roomIdentifierMapper;
-//    hotelmanagementsystem.infrastructure.persistence.mapper.BookingMapper bookingMapper;
-//
-//    @Inject
-//    public RoomMapper(HotelMapper hotelMapper, RoomIdentifierMapper roomIdentifierMapper, BookingMapper bookingMapper) {
-//        this.hotelMapper = hotelMapper;
-//        this.roomIdentifierMapper = roomIdentifierMapper;
-//        this.bookingMapper = bookingMapper;
-//    }
-//    public Room dtoToDomain(RoomDTO roomDTO) {
-//        Room room;
-//        if (roomDTO instanceof SingleRoomDTO) {
-//            room = new SingleRoom.Builder(roomEntity.getPricePerNight(),
-//                    roomIdentifierMapper.entityToDomain(roomEntity.getRoomIdentifier()),
-//                    hotelMapper.mapHotelEntityToDomainHotel(roomEntity.getHotel()))
-//                    .withId(roomEntity.getId())
-//                    .build();
-//            room.setBookings(bookingMapper.toDomainSet(roomEntity.getBookings()));
-//            return room;
-//        }
-//        if (roomEntity instanceof DoubleRoomEntity) {
-//            room = new DoubleRoom.Builder(roomEntity.getPricePerNight(),
-//                    roomIdentifierMapper.entityToDomain(roomEntity.getRoomIdentifier()),
-//                    hotelMapper.mapHotelEntityToDomainHotel(roomEntity.getHotel()))
-//                    .withId(roomEntity.getId())
-//                    .build();
-//            room.setBookings(bookingMapper.toDomainSet(roomEntity.getBookings()));
-//            return room;
-//        }
-//        return null;
-//    }
-//    public RoomEntity domainToDto(Room room) {
-//        if (room instanceof SingleRoom){
-//            RoomEntity roomEntity = new SingleRoomEntity(room.getId(),room.getPricePerNight(),roomIdentifierMapper.domainToEntity(room.getRoomIdentifier()),hotelMapper.mapDomainHotelToHotelEntity(room.getHotel()));
-//            roomEntity.setBookings(bookingMapper.toEntitySet(room.getBookings()));
-//            return roomEntity;
-//        }
-//        else if (room instanceof DoubleRoom){
-//            RoomEntity roomEntity = new DoubleRoomEntity(room.getId(), room.getPricePerNight(), roomIdentifierMapper.domainToEntity(room.getRoomIdentifier()), hotelMapper.mapDomainHotelToHotelEntity(room.getHotel()));
-//            roomEntity.setBookings(bookingMapper.toEntitySet(room.getBookings()));
-//            return roomEntity;
-//        }
-//        return null;
-//    }
-//}
+package hotelmanagementsystem.infrastructure.api.mapper;
+
+import hotelmanagementsystem.domain.models.*;
+import hotelmanagementsystem.infrastructure.api.dto.BookingDTO;
+import hotelmanagementsystem.infrastructure.api.dto.RoomDTO;
+import hotelmanagementsystem.infrastructure.api.dto.RoomIdentifierDTO;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public class RoomMapper {
+
+ // --- Map Domain Room -> DTO ---
+ public static RoomDTO toDTO(Room room) {
+  RoomIdentifierDTO roomIdentifierDTO = RoomIdentifierMapper.toDTO(room.getRoomIdentifier());
+  List<BookingDTO> bookingDTOs = room.getBookings().stream()
+          .map(BookingMapper::toDTO)
+          .collect(Collectors.toList());
+
+  return new RoomDTO(
+          room.getId(),
+          room.getPricePerNight(),
+          roomIdentifierDTO,
+          room.getHotel().getId(),
+          bookingDTOs,
+          room.getClass().getSimpleName() // Room-Typ als String
+  );
+ }
+
+ // --- Map DTO -> Domain Room ---
+ public static Room toDomain(RoomDTO dto, Hotel hotel, Set<Booking> bookings) {
+  RoomIdentifier roomIdentifier = RoomIdentifierMapper.toDomain(dto.getRoomIdentifierDTO());
+
+  Room room;
+  if (dto.getType().equalsIgnoreCase("SingleRoom")) {
+   room = new SingleRoom.Builder(dto.getPricePerNight(), roomIdentifier, hotel)
+           .withId(dto.getId())
+           .build();
+  } else if (dto.getType().equalsIgnoreCase("DoubleRoom")) {
+   room = new DoubleRoom.Builder(dto.getPricePerNight(), roomIdentifier, hotel)
+           .withId(dto.getId())
+           .build();
+  } else {
+   throw new IllegalArgumentException("Unsupported room type: " + dto.getType());
+  }
+
+  room.setBookings(bookings);
+  return room;
+ }
+}

@@ -39,11 +39,11 @@ public class RoomDatabaseAdapter implements RoomRepository {
         RoomEntity roomEntity = roomDAO.read(roomId);
         roomDAO.delete(roomEntity);
     }
-    public void updatePrice(long roomId, double pricePerNight) {
-        RoomEntity roomEntity = roomDAO.read(roomId);
-        roomEntity.setPricePerNight(pricePerNight);
-        roomDAO.update(roomEntity);
-    }
+//    public void updatePrice(long roomId, double pricePerNight) {
+//        RoomEntity roomEntity = roomDAO.read(roomId);
+//        roomEntity.setPricePerNight(pricePerNight);
+//        roomDAO.update(roomEntity);
+//    }
     @Override
     public void updateRoom(Room room) {
         RoomEntity roomEntity = roomDAO.read(room.getId());
@@ -51,8 +51,6 @@ public class RoomDatabaseAdapter implements RoomRepository {
             roomEntity.setPricePerNight(room.getPricePerNight());
 
             roomEntity.setRoomIdentifier(roomIdentifierMapper.domainToEntity(room.getRoomIdentifier()));
-
-            roomEntity.setBookings(bookingMapper.toEntitySet(room.getBookings()));
 
             roomDAO.update(roomEntity);
         }

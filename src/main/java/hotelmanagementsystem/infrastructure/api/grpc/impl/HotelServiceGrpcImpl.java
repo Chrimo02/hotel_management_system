@@ -1,7 +1,9 @@
 package hotelmanagementsystem.infrastructure.api.grpc.impl;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.*;
 import io.grpc.stub.StreamObserver;
+import jakarta.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 public class HotelServiceGrpcImpl  extends HotelServiceGrpc.HotelServiceImplBase
 {
     @Override

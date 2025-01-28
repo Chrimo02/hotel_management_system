@@ -1,5 +1,6 @@
 package hotelmanagementsystem.infrastructure.api.dto;
 
+import hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier;
 
 public class RoomIdentifierDTO {
     private long id;
@@ -43,6 +44,14 @@ public class RoomIdentifierDTO {
 
     public void setRoomNumber(String roomNumber) {
         this.roomNumber = roomNumber;
+    }
+
+    public RoomIdentifier toProtobuf() {
+        return RoomIdentifier.newBuilder()
+                .setBuilding(this.building)
+                .setFloor(this.floor)
+                .setRoomNumber(this.roomNumber)
+                .build();
     }
 
 }

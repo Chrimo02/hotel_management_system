@@ -34,31 +34,46 @@ public interface RoomOrBuilder extends
       getTypeBytes();
 
   /**
-   * <code>int64 hotelId = 4;</code>
+   * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+   * @return Whether the roomIdentifier field is set.
+   */
+  boolean hasRoomIdentifier();
+  /**
+   * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+   * @return The roomIdentifier.
+   */
+  hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier getRoomIdentifier();
+  /**
+   * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+   */
+  hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifierOrBuilder getRoomIdentifierOrBuilder();
+
+  /**
+   * <code>int64 hotelId = 5;</code>
    * @return The hotelId.
    */
   long getHotelId();
 
   /**
-   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
    */
   java.util.List<hotelmanagementsystem.infrastructure.api.grpc.generated.Booking> 
       getBookingsList();
   /**
-   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
    */
   hotelmanagementsystem.infrastructure.api.grpc.generated.Booking getBookings(int index);
   /**
-   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
    */
   int getBookingsCount();
   /**
-   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
    */
   java.util.List<? extends hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder> 
       getBookingsOrBuilderList();
   /**
-   * <code>repeated .hotelmanagement.Booking bookings = 5;</code>
+   * <code>repeated .hotelmanagement.Booking bookings = 6;</code>
    */
   hotelmanagementsystem.infrastructure.api.grpc.generated.BookingOrBuilder getBookingsOrBuilder(
       int index);

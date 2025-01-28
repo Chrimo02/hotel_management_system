@@ -32,4 +32,19 @@ public interface CreateRoomRequestOrBuilder extends
    * @return The hotelId.
    */
   long getHotelId();
+
+  /**
+   * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+   * @return Whether the roomIdentifier field is set.
+   */
+  boolean hasRoomIdentifier();
+  /**
+   * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+   * @return The roomIdentifier.
+   */
+  hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier getRoomIdentifier();
+  /**
+   * <code>.hotelmanagement.RoomIdentifier roomIdentifier = 4;</code>
+   */
+  hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifierOrBuilder getRoomIdentifierOrBuilder();
 }

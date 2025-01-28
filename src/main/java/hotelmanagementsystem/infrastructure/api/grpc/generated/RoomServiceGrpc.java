@@ -80,37 +80,6 @@ public final class RoomServiceGrpc {
     return getGetRoomByIdMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<hotelmanagementsystem.infrastructure.api.grpc.generated.ListAvailableRoomsRequest,
-      hotelmanagementsystem.infrastructure.api.grpc.generated.ListRoomsResponse> getListAvailableRoomsMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "ListAvailableRooms",
-      requestType = hotelmanagementsystem.infrastructure.api.grpc.generated.ListAvailableRoomsRequest.class,
-      responseType = hotelmanagementsystem.infrastructure.api.grpc.generated.ListRoomsResponse.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<hotelmanagementsystem.infrastructure.api.grpc.generated.ListAvailableRoomsRequest,
-      hotelmanagementsystem.infrastructure.api.grpc.generated.ListRoomsResponse> getListAvailableRoomsMethod() {
-    io.grpc.MethodDescriptor<hotelmanagementsystem.infrastructure.api.grpc.generated.ListAvailableRoomsRequest, hotelmanagementsystem.infrastructure.api.grpc.generated.ListRoomsResponse> getListAvailableRoomsMethod;
-    if ((getListAvailableRoomsMethod = RoomServiceGrpc.getListAvailableRoomsMethod) == null) {
-      synchronized (RoomServiceGrpc.class) {
-        if ((getListAvailableRoomsMethod = RoomServiceGrpc.getListAvailableRoomsMethod) == null) {
-          RoomServiceGrpc.getListAvailableRoomsMethod = getListAvailableRoomsMethod =
-              io.grpc.MethodDescriptor.<hotelmanagementsystem.infrastructure.api.grpc.generated.ListAvailableRoomsRequest, hotelmanagementsystem.infrastructure.api.grpc.generated.ListRoomsResponse>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "ListAvailableRooms"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  hotelmanagementsystem.infrastructure.api.grpc.generated.ListAvailableRoomsRequest.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  hotelmanagementsystem.infrastructure.api.grpc.generated.ListRoomsResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new RoomServiceMethodDescriptorSupplier("ListAvailableRooms"))
-              .build();
-        }
-      }
-    }
-    return getListAvailableRoomsMethod;
-  }
-
   private static volatile io.grpc.MethodDescriptor<hotelmanagementsystem.infrastructure.api.grpc.generated.UpdateRoomPriceRequest,
       hotelmanagementsystem.infrastructure.api.grpc.generated.RoomResponse> getUpdateRoomPriceMethod;
 
@@ -240,13 +209,6 @@ public final class RoomServiceGrpc {
 
     /**
      */
-    default void listAvailableRooms(hotelmanagementsystem.infrastructure.api.grpc.generated.ListAvailableRoomsRequest request,
-        io.grpc.stub.StreamObserver<hotelmanagementsystem.infrastructure.api.grpc.generated.ListRoomsResponse> responseObserver) {
-      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getListAvailableRoomsMethod(), responseObserver);
-    }
-
-    /**
-     */
     default void updateRoomPrice(hotelmanagementsystem.infrastructure.api.grpc.generated.UpdateRoomPriceRequest request,
         io.grpc.stub.StreamObserver<hotelmanagementsystem.infrastructure.api.grpc.generated.RoomResponse> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getUpdateRoomPriceMethod(), responseObserver);
@@ -311,14 +273,6 @@ public final class RoomServiceGrpc {
 
     /**
      */
-    public void listAvailableRooms(hotelmanagementsystem.infrastructure.api.grpc.generated.ListAvailableRoomsRequest request,
-        io.grpc.stub.StreamObserver<hotelmanagementsystem.infrastructure.api.grpc.generated.ListRoomsResponse> responseObserver) {
-      io.grpc.stub.ClientCalls.asyncUnaryCall(
-          getChannel().newCall(getListAvailableRoomsMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
     public void updateRoomPrice(hotelmanagementsystem.infrastructure.api.grpc.generated.UpdateRoomPriceRequest request,
         io.grpc.stub.StreamObserver<hotelmanagementsystem.infrastructure.api.grpc.generated.RoomResponse> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
@@ -365,13 +319,6 @@ public final class RoomServiceGrpc {
     public hotelmanagementsystem.infrastructure.api.grpc.generated.RoomResponse getRoomById(hotelmanagementsystem.infrastructure.api.grpc.generated.GetRoomByIdRequest request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getGetRoomByIdMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
-    public hotelmanagementsystem.infrastructure.api.grpc.generated.ListRoomsResponse listAvailableRooms(hotelmanagementsystem.infrastructure.api.grpc.generated.ListAvailableRoomsRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
-          getChannel(), getListAvailableRoomsMethod(), getCallOptions(), request);
     }
 
     /**
@@ -426,14 +373,6 @@ public final class RoomServiceGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<hotelmanagementsystem.infrastructure.api.grpc.generated.ListRoomsResponse> listAvailableRooms(
-        hotelmanagementsystem.infrastructure.api.grpc.generated.ListAvailableRoomsRequest request) {
-      return io.grpc.stub.ClientCalls.futureUnaryCall(
-          getChannel().newCall(getListAvailableRoomsMethod(), getCallOptions()), request);
-    }
-
-    /**
-     */
     public com.google.common.util.concurrent.ListenableFuture<hotelmanagementsystem.infrastructure.api.grpc.generated.RoomResponse> updateRoomPrice(
         hotelmanagementsystem.infrastructure.api.grpc.generated.UpdateRoomPriceRequest request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
@@ -451,9 +390,8 @@ public final class RoomServiceGrpc {
 
   private static final int METHODID_CREATE_ROOM = 0;
   private static final int METHODID_GET_ROOM_BY_ID = 1;
-  private static final int METHODID_LIST_AVAILABLE_ROOMS = 2;
-  private static final int METHODID_UPDATE_ROOM_PRICE = 3;
-  private static final int METHODID_REMOVE_ROOM = 4;
+  private static final int METHODID_UPDATE_ROOM_PRICE = 2;
+  private static final int METHODID_REMOVE_ROOM = 3;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -479,10 +417,6 @@ public final class RoomServiceGrpc {
         case METHODID_GET_ROOM_BY_ID:
           serviceImpl.getRoomById((hotelmanagementsystem.infrastructure.api.grpc.generated.GetRoomByIdRequest) request,
               (io.grpc.stub.StreamObserver<hotelmanagementsystem.infrastructure.api.grpc.generated.RoomResponse>) responseObserver);
-          break;
-        case METHODID_LIST_AVAILABLE_ROOMS:
-          serviceImpl.listAvailableRooms((hotelmanagementsystem.infrastructure.api.grpc.generated.ListAvailableRoomsRequest) request,
-              (io.grpc.stub.StreamObserver<hotelmanagementsystem.infrastructure.api.grpc.generated.ListRoomsResponse>) responseObserver);
           break;
         case METHODID_UPDATE_ROOM_PRICE:
           serviceImpl.updateRoomPrice((hotelmanagementsystem.infrastructure.api.grpc.generated.UpdateRoomPriceRequest) request,
@@ -524,13 +458,6 @@ public final class RoomServiceGrpc {
               hotelmanagementsystem.infrastructure.api.grpc.generated.GetRoomByIdRequest,
               hotelmanagementsystem.infrastructure.api.grpc.generated.RoomResponse>(
                 service, METHODID_GET_ROOM_BY_ID)))
-        .addMethod(
-          getListAvailableRoomsMethod(),
-          io.grpc.stub.ServerCalls.asyncUnaryCall(
-            new MethodHandlers<
-              hotelmanagementsystem.infrastructure.api.grpc.generated.ListAvailableRoomsRequest,
-              hotelmanagementsystem.infrastructure.api.grpc.generated.ListRoomsResponse>(
-                service, METHODID_LIST_AVAILABLE_ROOMS)))
         .addMethod(
           getUpdateRoomPriceMethod(),
           io.grpc.stub.ServerCalls.asyncUnaryCall(
@@ -595,7 +522,6 @@ public final class RoomServiceGrpc {
               .setSchemaDescriptor(new RoomServiceFileDescriptorSupplier())
               .addMethod(getCreateRoomMethod())
               .addMethod(getGetRoomByIdMethod())
-              .addMethod(getListAvailableRoomsMethod())
               .addMethod(getUpdateRoomPriceMethod())
               .addMethod(getRemoveRoomMethod())
               .build();

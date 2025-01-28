@@ -25,6 +25,7 @@ public class GuestDatabaseAdapter implements GuestRepository {
         this.guestMapper = guestMapper;
     }
 
+
     @Override
     public void createGuest(Guest guest) {
         GuestEntity guestEntity = guestMapper.guestToGuestEntity(guest);
@@ -32,30 +33,12 @@ public class GuestDatabaseAdapter implements GuestRepository {
     }
 
     @Override
-    public void updateEmail(Guest guest) {
+    public void updateGuest(Guest guest) {
         GuestEntity guestEntity = guestDAO.read(guest.getId());
         guestEntity.seteMail(guest.geteMail());
-        guestDAO.update(guestEntity);
-    }
-
-    @Override
-    public void updatePhone(Guest guest) {
-        GuestEntity guestEntity = guestDAO.read(guest.getId());
-        guestEntity.setPhoneNumber(guest.getPhoneNumber());
-        guestDAO.update(guestEntity);
-    }
-
-    @Override
-    public void updateLastName(Guest guest) {
-        GuestEntity guestEntity = guestDAO.read(guest.getId());
-        guestEntity.setLastName(guest.getLastName());
-        guestDAO.update(guestEntity);
-    }
-
-    @Override
-    public void updateTitle(Guest guest) {
-        GuestEntity guestEntity = guestDAO.read(guest.getId());
         guestEntity.setTitle(guest.getTitle());
+        guestEntity.setPhoneNumber(guest.getPhoneNumber());
+        guestEntity.setLastName(guest.getLastName());
         guestDAO.update(guestEntity);
     }
 

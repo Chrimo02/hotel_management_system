@@ -1,5 +1,4 @@
 package hotelmanagementsystem.infrastructure.api.dto;
-
 import hotelmanagementsystem.infrastructure.api.grpc.generated.Booking;
 import java.time.LocalDate;
 import java.util.List;

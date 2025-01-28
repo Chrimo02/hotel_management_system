@@ -79,7 +79,7 @@ public class RoomService {
         return null; // No matching booking found
     }
 
-    public long createRoom(double pricePerNight, RoomIdentifier roomIdentifier, long hotelId, Class<? extends Room> roomType) {
+    public Room createRoom(double pricePerNight, RoomIdentifier roomIdentifier, long hotelId, Class<? extends Room> roomType) {
         Hotel hotel = hotelService.getHotelByHotelId(hotelId);
         Room room;
         if (roomType.equals(SingleRoom.class)) {
@@ -91,7 +91,7 @@ public class RoomService {
         else throw new RuntimeException("Invalid room type!"); //wird nicht gebraucht, wenn wir sicher sind, dass nur 2 mögliche Room Arten bekommen werden
         long id = roomRepository.saveRoom(room);
         roomIdentifierRepository.saveRoomIdentifier(roomIdentifier);
-        return id;
+        return room;
     }
 
     public void removeRoom(long roomId) {
@@ -137,4 +137,39 @@ public class RoomService {
         return null;
     }
 
+    public Room updatePricePerNight(long roomId, Double newPricePerNight) throws RoomNotFoundException {
+        // Retrieve existing room
+        Room room = roomRepository.findRoomById(roomId);
+        if (room == null) {
+            throw new RoomNotFoundException("Room with ID " + roomId + " not found.");
+        }
+
+        // Update room price if provided
+        if (newPricePerNight != null) {
+            room.setPricePerNight(newPricePerNight);
+        }
+
+        // Save the updated room back to the repository
+        roomRepository.updateRoom(room);
+
+        return room;
+    }
+    public Room updateRoomIdentifier(long roomId, RoomIdentifier newRoomIdentifier) throws RoomNotFoundException {
+        // Retrieve existing room
+        Room room = roomRepository.findRoomById(roomId);
+        if (room == null) {
+            throw new RoomNotFoundException("Room with ID " + roomId + " not found.");
+        }
+
+        // Update room identifier if provided
+        if (newRoomIdentifier != null) {
+            room.setRoomIdentifier(newRoomIdentifier);
+            roomIdentifierRepository.saveRoomIdentifier(newRoomIdentifier);
+        }
+
+        // Save the updated room back to the repository
+        roomRepository.updateRoom(room);
+
+        return room;
+    }
 }
