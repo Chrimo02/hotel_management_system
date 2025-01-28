@@ -8,13 +8,15 @@ import hotelmanagementsystem.domain.services.RoomService;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.*;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
+import io.quarkus.grpc.GrpcService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.time.LocalDate;
 import java.util.List;
-
-@ApplicationScoped
+@GrpcService
+@Singleton
 public class RoomServiceGrpcImpl extends RoomServiceGrpc.RoomServiceImplBase {
 
     private final RoomService roomService;

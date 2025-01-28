@@ -1,4 +1,5 @@
 package hotelmanagementsystem.infrastructure.api.grpc.impl;
+
 import hotelmanagementsystem.domain.exceptions.BookingNotFoundException;
 import hotelmanagementsystem.domain.exceptions.GuestNotFoundException;
 import hotelmanagementsystem.domain.models.Booking;
@@ -11,14 +12,17 @@ import hotelmanagementsystem.infrastructure.api.mapper.BookingMapper;
 import hotelmanagementsystem.infrastructure.api.mapper.GuestMapper;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
+import io.quarkus.grpc.GrpcService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-@ApplicationScoped
+@GrpcService
+@Singleton
 public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
 {
     private final GuestService guestService;

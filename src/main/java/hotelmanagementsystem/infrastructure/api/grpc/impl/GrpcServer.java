@@ -2,6 +2,7 @@ package hotelmanagementsystem.infrastructure.api.grpc.impl;
 
 import io.grpc.Server;
 import io.grpc.netty.NettyServerBuilder;
+import io.quarkus.grpc.GrpcService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -10,20 +11,23 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.io.IOException;
 
-@ApplicationScoped
 public class GrpcServer {
 
 	// Injektion der gRPC-Service-Implementierungen ohne private Modifier
 	@Inject
+	@GrpcService
 	BookingServiceGrpcImpl bookingGrpc;
 
 	@Inject
+	@GrpcService
 	GuestServiceGrpcImpl guestGrpc;
 
 	@Inject
+	@GrpcService
 	HotelServiceGrpcImpl hotelGrpc;
 
 	@Inject
+	@GrpcService
 	RoomServiceGrpcImpl roomGrpc;
 
 	// Port aus der Konfiguration lesen, Standardwert 8888

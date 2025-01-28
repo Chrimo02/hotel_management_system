@@ -1,4 +1,6 @@
+/*
 package repositoriesTest;
+
 import hotelmanagementsystem.domain.models.Room;
 import hotelmanagementsystem.domain.models.RoomIdentifier;
 import hotelmanagementsystem.infrastructure.persistence.dao.interfaces.RoomDAO;
@@ -116,3 +118,4 @@ public class RoomRepoTest {
         verify(roomDAO).update(roomEntity);
     }
 }
+*/

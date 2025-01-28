@@ -1,5 +1,6 @@
 package hotelmanagementsystem.domain.services;
 import hotelmanagementsystem.domain.exceptions.BookingNotFoundException;
+import hotelmanagementsystem.domain.exceptions.HotelNotFoundException;
 import hotelmanagementsystem.domain.exceptions.RoomNotFoundException;
 import hotelmanagementsystem.domain.models.*;
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.BookingRepository;
@@ -36,7 +37,7 @@ public class BookingService {
         return booking;
     }
 
-    public Booking makeBooking(long hotelId, LocalDate checkInDate, LocalDate checkOutDate, List<Class<? extends Room>> roomTypes, List<Long> guestIds){
+    public Booking makeBooking(long hotelId, LocalDate checkInDate, LocalDate checkOutDate, List<Class<? extends Room>> roomTypes, List<Long> guestIds) throws HotelNotFoundException {
         List<Room> rooms = roomService.findAvailableRooms(hotelId, roomTypes, checkInDate, checkOutDate);
         List<Guest> guests = guestService.loadGuests(guestIds);
         Hotel hotel = hotelService.getHotelByHotelId(hotelId);

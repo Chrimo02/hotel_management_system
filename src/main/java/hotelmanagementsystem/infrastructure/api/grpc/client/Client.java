@@ -38,37 +38,6 @@ public class Client
 		channel.shutdown( ).awaitTermination( 5, TimeUnit.SECONDS );
 	}
 
-	//TODO:Implement Methods
 
-	/*public void createUser(String name){
-		CreateUser user = CreateUser.newBuilder().setName(name).build();
-		try
-		{
-			final UserId response = blockingStub.createUser( user );
-			System.out.println( "Created user at Id = " + response.getUserId() );
-		}
-		catch ( final StatusRuntimeException e )
-		{
-			return;
-		}
-	}
-
-	public void getUser(long id){
-		UserId userId = UserId.newBuilder().setUserId(id).build();
-		try
-		{
-			final User response = blockingStub.getUser( userId );
-			System.out.println( "User at Id = " + response.getId() + " is " + response.getName());
-			System.out.println( response.getName() + " has following tasks " + response.getTasksList());
-		}
-		catch ( final StatusRuntimeException e )
-		{
-			if (e.getStatus().getCode() == Status.Code.NOT_FOUND) {
-				System.out.println("Error: " + e.getStatus().getDescription());
-			} else {
-				System.err.println("An unexpected error occurred: " + e.getMessage());
-			}
-		}
-	}*/
 
 }

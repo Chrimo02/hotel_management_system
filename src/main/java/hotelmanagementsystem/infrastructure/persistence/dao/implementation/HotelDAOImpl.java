@@ -2,13 +2,14 @@ package hotelmanagementsystem.infrastructure.persistence.dao.implementation;
 
 import hotelmanagementsystem.infrastructure.persistence.dao.interfaces.HotelDAO;
 import hotelmanagementsystem.infrastructure.persistence.entities.HotelEntity;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;
 import java.util.Optional;
-
+@ApplicationScoped
 public class HotelDAOImpl implements HotelDAO {
 
     @Inject
@@ -50,13 +51,15 @@ public class HotelDAOImpl implements HotelDAO {
         }
 
     }
-
+/* alt -> war vor filtering
     @Override
     public List<HotelEntity> findAll() {
         EntityManager entityManager = entityManager();
         TypedQuery<HotelEntity> query = entityManager.createQuery("SELECT h FROM HotelEntity h", HotelEntity.class);
         return query.getResultList();
     }
+
+ */
 
     @Override
     public void updateHotel(HotelEntity hotel) {
@@ -96,4 +99,80 @@ public class HotelDAOImpl implements HotelDAO {
         entityManager.close();
     }
     }
+
+    // --------------------------------------------
+    //  METHODEN für Filter + Paging
+    // --------------------------------------------
+
+    @Override
+    public long countByFilter(String city, double minRating) {
+        EntityManager em = null;
+        try {
+            em = entityManager();
+            em.getTransaction().begin();
+
+            String jpqlCount =
+                    "SELECT COUNT(h) FROM HotelEntity h " +
+                            "WHERE (:city IS NULL OR h.location.city = :city) " +
+                            "  AND (h.averageRating >= :minRating)";
+
+            TypedQuery<Long> countQuery = em.createQuery(jpqlCount, Long.class);
+            countQuery.setParameter("city", (city == null || city.isBlank()) ? null : city);
+            countQuery.setParameter("minRating", minRating);
+
+            long total = countQuery.getSingleResult();
+
+            em.getTransaction().commit();
+            return total;
+
+        } catch (Exception e) {
+            if (em != null && em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw new DataAccessException("Error counting hotels by filter", e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+    @Override
+    public List<HotelEntity> findByFilter(String city, double minRating, int offset, int limit) {
+        EntityManager em = null;
+        try {
+            em = entityManager();
+            em.getTransaction().begin();
+
+            String jpqlSelect =
+                    "SELECT h FROM HotelEntity h " +
+                            "WHERE (:city IS NULL OR h.location.city = :city) " +
+                            "  AND (h.averageRating >= :minRating) " +
+                            "ORDER BY h.id ASC";
+
+            TypedQuery<HotelEntity> query = em.createQuery(jpqlSelect, HotelEntity.class);
+            query.setParameter("city", (city == null || city.isBlank()) ? null : city);
+            query.setParameter("minRating", minRating);
+
+            // Paging
+            query.setFirstResult(offset);   // Startindex
+            query.setMaxResults(limit);     // Anzahl pro Seite
+
+            List<HotelEntity> results = query.getResultList();
+
+            em.getTransaction().commit();
+            return results;
+        } catch (Exception e) {
+            if (em != null && em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw new DataAccessException("Error retrieving hotels by filter with paging", e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+
 }

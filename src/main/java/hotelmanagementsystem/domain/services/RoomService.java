@@ -1,6 +1,7 @@
 package hotelmanagementsystem.domain.services;
 
 import hotelmanagementsystem.domain.exceptions.BookingNotFoundException;
+import hotelmanagementsystem.domain.exceptions.HotelNotFoundException;
 import hotelmanagementsystem.domain.exceptions.RoomNotFoundException;
 import hotelmanagementsystem.domain.models.*;
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.RoomIdentifierRepository;
@@ -79,7 +80,7 @@ public class RoomService {
         return null; // No matching booking found
     }
 
-    public Room createRoom(double pricePerNight, RoomIdentifier roomIdentifier, long hotelId, Class<? extends Room> roomType) {
+    public Room createRoom(double pricePerNight, RoomIdentifier roomIdentifier, long hotelId, Class<? extends Room> roomType) throws HotelNotFoundException {
         Hotel hotel = hotelService.getHotelByHotelId(hotelId);
         Room room;
         if (roomType.equals(SingleRoom.class)) {
@@ -98,7 +99,7 @@ public class RoomService {
         roomRepository.removeRoom(roomId);
     }
 
-    public List<Room> findAvailableRooms(long hotelId, List<Class<? extends Room>> roomTypes, LocalDate checkInDate, LocalDate checkOutDate) {
+    public List<Room> findAvailableRooms(long hotelId, List<Class<? extends Room>> roomTypes, LocalDate checkInDate, LocalDate checkOutDate) throws HotelNotFoundException{
         List<Room> rooms = new ArrayList<>();
         for (Class<? extends Room> roomType : roomTypes) {
             Room room = findAvailableRoom(hotelId, roomType, checkInDate, checkOutDate);
@@ -125,7 +126,7 @@ public class RoomService {
                 checkIn.isAfter(existingBooking.getCheckOutDate()));
     }
 
-    private Room findAvailableRoom(long hotelID, Class<? extends Room> roomType, LocalDate checkInToCheck, LocalDate checkOutToCheck) {
+    private Room findAvailableRoom(long hotelID, Class<? extends Room> roomType, LocalDate checkInToCheck, LocalDate checkOutToCheck) throws HotelNotFoundException {
         Hotel hotel = hotelService.getHotelByHotelId(hotelID);
         for (Room room : hotel.getRooms()) {
             if (roomType.isInstance(room)) {

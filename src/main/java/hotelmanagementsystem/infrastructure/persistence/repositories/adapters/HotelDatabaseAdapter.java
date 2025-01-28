@@ -1,7 +1,9 @@
 package hotelmanagementsystem.infrastructure.persistence.repositories.adapters;
 
 import hotelmanagementsystem.domain.models.Hotel;
+import hotelmanagementsystem.domain.models.PagedHotels;
 import hotelmanagementsystem.infrastructure.persistence.dao.interfaces.HotelDAO;
+import hotelmanagementsystem.infrastructure.persistence.entities.HotelEntity;
 import hotelmanagementsystem.infrastructure.persistence.mapper.HotelMapper;
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.HotelRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -41,11 +43,25 @@ public class HotelDatabaseAdapter implements HotelRepository {
     }
 
     @Override
-    public List<Hotel> findAll() {
-        // Retrieve all entities from the DAO and map them to domain objects
-        return hotelDAO.findAll().stream()
-                .map(hotelMapper::mapHotelEntityToDomainHotel)
-                .collect(Collectors.toList());
+    public PagedHotels findPagedByFilter(String city, double minRating, int pageNumber, int pageSize){
+        try {
+            // 1) Offset + Limit berechnen
+            int offset = (pageNumber - 1) * pageSize;
+
+            // 2) DAO nutzen
+            long totalCount = hotelDAO.countByFilter(city, minRating);
+            List<HotelEntity> entities = hotelDAO.findByFilter(city, minRating, offset, pageSize);
+
+            // 3) Entities -> Domain
+            List<Hotel> domainHotels = entities.stream()
+                    .map(hotelMapper::mapHotelEntityToDomainHotel)
+                    .collect(Collectors.toList());
+
+            return new PagedHotels(domainHotels, (int) totalCount);
+        }
+        catch (Exception e){
+            throw new RuntimeException("Error while finding paged hotels: " + e.getMessage(), e);
+        }
     }
 
     @Override

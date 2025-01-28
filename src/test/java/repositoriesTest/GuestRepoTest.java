@@ -57,7 +57,7 @@ class GuestRepoTest {
         GuestEntity guestEntity = new GuestEntity();
         when(guestDAO.read(guest.getId())).thenReturn(guestEntity);
 
-        guestDatabaseAdapter.updateEmail(guest);
+        guestDatabaseAdapter.updateGuest(guest);
 
         assertEquals("newemail@example.com", guestEntity.geteMail());
         verify(guestDAO, times(1)).update(guestEntity);
@@ -69,7 +69,7 @@ class GuestRepoTest {
         GuestEntity guestEntity = new GuestEntity();
         when(guestDAO.read(guest.getId())).thenReturn(guestEntity);
 
-        guestDatabaseAdapter.updatePhone(guest);
+        guestDatabaseAdapter.updateGuest(guest);
 
         assertEquals("1234567890", guestEntity.getPhoneNumber());
         verify(guestDAO, times(1)).update(guestEntity);
@@ -81,7 +81,7 @@ class GuestRepoTest {
         GuestEntity guestEntity = new GuestEntity();
         when(guestDAO.read(guest.getId())).thenReturn(guestEntity);
 
-        guestDatabaseAdapter.updateLastName(guest);
+        guestDatabaseAdapter.updateGuest(guest);
 
         assertEquals("Doe", guestEntity.getLastName());
         verify(guestDAO, times(1)).update(guestEntity);
@@ -93,7 +93,7 @@ class GuestRepoTest {
         GuestEntity guestEntity = new GuestEntity();
         when(guestDAO.read(guest.getId())).thenReturn(guestEntity);
 
-        guestDatabaseAdapter.updateTitle(guest);
+        guestDatabaseAdapter.updateGuest(guest);
 
         assertEquals("Dr.", guestEntity.getTitle());
         verify(guestDAO, times(1)).update(guestEntity);

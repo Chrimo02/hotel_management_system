@@ -1,7 +1,5 @@
 package hotelmanagementsystem.infrastructure.api.dto;
-
 import hotelmanagementsystem.infrastructure.api.grpc.generated.RoomIdentifier;
-
 public class RoomIdentifierDTO {
     private long id;
     private String building;
