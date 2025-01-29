@@ -17,9 +17,11 @@ import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.
 import hotelmanagementsystem.domain.models.Hotel;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class BookingDatabaseAdapter implements BookingRepository {
@@ -74,4 +76,13 @@ public class BookingDatabaseAdapter implements BookingRepository {
 
         return new Booking(bookingEntity.getId(), hotel, bookingEntity.getCheckInDate(), bookingEntity.getCheckOutDate(), rooms, guests, bookingEntity.isStatus(), bookingEntity.getCheckInTime(), bookingEntity.getCheckOutTime());
     }
+
+    @Override
+    public List<Booking> findBookingsByCheckInDate(LocalDate checkInDate) {
+        List<BookingEntity> bookingEntities = bookingDAO.findBookingsByCheckInDate(checkInDate);
+        return bookingEntities.stream()
+                .map(bookingMapper::bookingEntityToBooking)
+                .collect(Collectors.toList());
+    }
+
 }

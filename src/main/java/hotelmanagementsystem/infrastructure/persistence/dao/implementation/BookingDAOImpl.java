@@ -5,7 +5,11 @@ import hotelmanagementsystem.infrastructure.persistence.entities.BookingEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @ApplicationScoped
 public class BookingDAOImpl implements BookingDAO {
@@ -57,6 +61,22 @@ public class BookingDAOImpl implements BookingDAO {
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException("Error while updating booking entity", e);
+        }
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.SUPPORTS)
+    public List<BookingEntity> findBookingsByCheckInDate(LocalDate checkInDate) {
+        try {
+            TypedQuery<BookingEntity> query = em.createQuery(
+                    "SELECT b FROM BookingEntity b WHERE b.checkInDate = :checkInDate AND b.status = true",
+                    BookingEntity.class
+            );
+            query.setParameter("checkInDate", checkInDate);
+            return query.getResultList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error retrieving bookings by check-in date", e);
         }
     }
 }

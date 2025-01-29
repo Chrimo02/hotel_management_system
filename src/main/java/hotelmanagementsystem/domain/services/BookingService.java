@@ -72,5 +72,14 @@ public class BookingService {
         return getNotNullBooking(bookingID);
     }
 
+    /**
+     * Findet alle Buchungen mit dem angegebenen Check-In-Datum.
+     *
+     * @param checkInDate Das Check-In-Datum.
+     * @return Liste der passenden Buchungen.
+     */
+    public List<Booking> findAllByCheckInDate(LocalDate checkInDate) {
+        return bookingRepository.findBookingsByCheckInDate(checkInDate);
+    }
 
 }
