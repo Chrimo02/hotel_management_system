@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "room_identifier")
 public class RoomIdentifierEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String building;
     private int floor;

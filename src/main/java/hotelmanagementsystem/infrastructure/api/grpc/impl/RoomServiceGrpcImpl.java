@@ -1,7 +1,9 @@
 package hotelmanagementsystem.infrastructure.api.grpc.impl;
 
+import hotelmanagementsystem.domain.models.DoubleRoom;
 import hotelmanagementsystem.domain.models.Room;
 import hotelmanagementsystem.domain.models.RoomIdentifier;
+import hotelmanagementsystem.domain.models.SingleRoom;
 import hotelmanagementsystem.infrastructure.api.dto.RoomDTO;
 import hotelmanagementsystem.infrastructure.api.mapper.RoomMapper;
 import hotelmanagementsystem.domain.services.RoomService;
@@ -31,11 +33,22 @@ public class RoomServiceGrpcImpl extends RoomServiceGrpc.RoomServiceImplBase {
     @Override
     public void createRoom(CreateRoomRequest request, StreamObserver<RoomResponse> responseObserver) {
         try {
+            String typeString = request.getType();
+            System.out.println(typeString);
+
+            Class<? extends Room> roomTypeClass;
+            if ("SINGLE".equalsIgnoreCase(typeString)) {
+                roomTypeClass = SingleRoom.class;
+            } else if ("DOUBLE".equalsIgnoreCase(typeString)) {
+                roomTypeClass = DoubleRoom.class;
+            } else {
+                throw new IllegalArgumentException("in gprcservice" + "Unsupported room type: " + typeString);
+            }
             Room room = roomService.createRoom(
                     request.getPricePerNight(),
                     new RoomIdentifier(request.getRoomIdentifier().getBuilding(),request.getRoomIdentifier().getFloor(),request.getRoomIdentifier().getRoomNumber()),
                     request.getHotelId(),
-                    Class.forName(request.getType()).asSubclass(Room.class)
+                    roomTypeClass
             );
 
             RoomDTO roomDTO = RoomMapper.toDTO(room);

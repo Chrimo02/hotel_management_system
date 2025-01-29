@@ -30,7 +30,7 @@ public class RoomService {
 
     public Room getRoomById(long roomId) throws RoomNotFoundException {
         Room room = roomRepository.findRoomById(roomId);
-        if (room == null) throw new RoomNotFoundException("There is no Booking with the specified ID!");
+        if (room == null) throw new RoomNotFoundException("There is no Room with the specified ID!");
         return room;
     }
     public void bookRooms(Booking booking) {
