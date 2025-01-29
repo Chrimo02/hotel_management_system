@@ -80,7 +80,7 @@ public class Hotel {
         private HotelLocation location;
         private List<Room> rooms;
         private List<Booking> bookings;
-        private List<HotelRating> ratings;
+        private List<HotelRating> ratings = new ArrayList<>();
 
         public HotelBuilder() {
         }

@@ -159,10 +159,10 @@ public class HotelService {
 
     private void validateInputs(String name, String description, HotelLocation hotelLocation) throws RuntimeException {
 
-        if (name == null || name.isBlank()) {
+        if (name == null) {
             throw new IllegalArgumentException("Hotel name must not be empty");
         }
-        if (description == null || description.isBlank()) {
+        if (description == null) {
             throw new IllegalArgumentException("Hotel description must not be empty");
         }
         //HotelLocation validieren

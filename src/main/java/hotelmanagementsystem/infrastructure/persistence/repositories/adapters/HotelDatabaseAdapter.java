@@ -31,7 +31,8 @@ public class HotelDatabaseAdapter implements HotelRepository {
         try {
             return hotelMapper.mapHotelEntityToDomainHotel(hotelDAO.createHotel(hotelMapper.mapDomainHotelToHotelEntity(hotel)));
         } catch (Exception e) {
-            throw new RuntimeException("Error saving Hotel", e);
+            e.printStackTrace();
+            throw new RuntimeException("Error saving Hotel - DB ADAPTER", e);
         }
     }
 

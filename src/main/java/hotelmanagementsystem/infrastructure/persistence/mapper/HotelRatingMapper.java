@@ -5,6 +5,7 @@ import hotelmanagementsystem.infrastructure.persistence.entities.HotelRatingEnti
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +30,9 @@ public class HotelRatingMapper {
 
     // Map a list of HotelRating to a list of HotelRatingEntity
     public List<HotelRatingEntity> mapToEntityList(List<HotelRating> hotelRatings) {
+        if (hotelRatings == null) {
+            return Collections.emptyList();
+        }
         return hotelRatings.stream()
                 .map(this::mapToEntity) // Map each domain model to its entity representation
                 .collect(Collectors.toList());

@@ -8,7 +8,7 @@ public class TestClient {
     public static void main(String[] args) {
         // 1) Channel aufbauen
         ManagedChannel channel = ManagedChannelBuilder
-                .forAddress("localhost", 8888) // ggf. richtigen Port anpassen
+                .forAddress("localhost", 9000) // ggf. richtigen Port anpassen
                 .usePlaintext()
                 .build();
 
