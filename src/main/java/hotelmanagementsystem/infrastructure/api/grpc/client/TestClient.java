@@ -1,9 +1,6 @@
 package hotelmanagementsystem.infrastructure.api.grpc.client;
 
-import hotelmanagementsystem.infrastructure.api.grpc.generated.Hotel;
-import hotelmanagementsystem.infrastructure.api.grpc.generated.HotelServiceGrpc;
-import hotelmanagementsystem.infrastructure.api.grpc.generated.ListHotelsRequest;
-import hotelmanagementsystem.infrastructure.api.grpc.generated.ListHotelsResponse;
+import hotelmanagementsystem.infrastructure.api.grpc.generated.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
@@ -19,6 +16,21 @@ public class TestClient {
         HotelServiceGrpc.HotelServiceBlockingStub hotelStub =
                 HotelServiceGrpc.newBlockingStub(channel);
 
+        GuestServiceGrpc.GuestServiceBlockingStub guestStub = GuestServiceGrpc.newBlockingStub(channel);
+
+        CreateGuestRequest request = CreateGuestRequest
+                .newBuilder()
+                .setFirstName("Max")
+                .setLastName("Mustermann")
+                .setTitle("Dr. von und zu")
+                .setBirthday("2000-01-01")
+                .setEmail("max.mustermann@gmail.com")
+                .setPhoneNumber("12345 678910")
+                .build();
+
+        GuestResponse response = guestStub.createGuest(request);
+        System.out.println(response.getGuest().getId());
+/*
         // 3) Request bauen (Filter/Paging)
         ListHotelsRequest request = ListHotelsRequest.newBuilder()
                 .setFilterCity("")  // kein City-Filter
@@ -38,6 +50,8 @@ public class TestClient {
                     + ", City: " + h.getLocation().getCity()
                     + ", Rating: " + h.getAverageRating());
         }
+
+ */
 
         // 6) Channel schließen
         channel.shutdown();

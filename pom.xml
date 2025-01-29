@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.thws.fiw.backendsystems</groupId>
@@ -13,19 +15,20 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>22</maven.compiler.source>
         <maven.compiler.target>22</maven.compiler.target>
+
+        <!-- Let Quarkus manage the Hibernate versions; do not override them explicitly. -->
         <protobuf.version>4.27.4</protobuf.version>
         <grpc.version>1.66.0</grpc.version>
-        <hibernate.version>6.4.0.Final</hibernate.version>
-        <jakarta.persistence.version>3.2.0</jakarta.persistence.version>
-        <junit.jupiter.version>5.11.0</junit.jupiter.version>
-        <h2.version>2.2.220</h2.version>
-        <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
+
+        <!-- Quarkus platform BOM coordinates -->
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
+        <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.version>3.12.3</quarkus.platform.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!-- Import the Quarkus BOM to align versions correctly -->
             <dependency>
                 <groupId>${quarkus.platform.group-id}</groupId>
                 <artifactId>${quarkus.platform.artifact-id}</artifactId>
@@ -37,6 +40,7 @@
     </dependencyManagement>
 
     <dependencies>
+        <!-- gRPC libraries -->
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
@@ -52,17 +56,13 @@
             <artifactId>protobuf-java</artifactId>
             <version>${protobuf.version}</version>
         </dependency>
-
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-stub</artifactId>
             <version>${grpc.version}</version>
         </dependency>
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <version>1.3.2</version>
-        </dependency>
+
+        <!-- Quarkus dependencies -->
         <dependency>
             <groupId>${quarkus.platform.group-id}</groupId>
             <artifactId>${quarkus.platform.artifact-id}</artifactId>
@@ -70,6 +70,7 @@
             <type>pom</type>
             <scope>import</scope>
         </dependency>
+
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-orm</artifactId>
@@ -82,11 +83,12 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-grpc</artifactId>
         </dependency>
-
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-arc</artifactId>
         </dependency>
+
+        <!-- Testing -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5</artifactId>
@@ -101,7 +103,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.jupiter.version}</version>
+            <version>5.11.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -109,6 +111,13 @@
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>5.5.0</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- If you need annotations: -->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
         </dependency>
     </dependencies>
 
@@ -121,6 +130,7 @@
             </extension>
         </extensions>
         <plugins>
+            <!-- Compile with Java 22 (make sure your JDK is set up for that) -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
@@ -129,19 +139,24 @@
                     <target>22</target>
                 </configuration>
             </plugin>
+
+            <!-- gRPC / protobuf codegen -->
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>0.6.1</version>
                 <configuration>
-                    <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}</protocArtifact>
+                    <protocArtifact>
+                        com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
+                    </protocArtifact>
                     <pluginId>grpc-java</pluginId>
-                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
+                    <pluginArtifact>
+                        io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}
+                    </pluginArtifact>
                     <protoSourceRoot>src/main/proto</protoSourceRoot>
                     <outputDirectory>${project.build.directory}/generated-sources/grpc</outputDirectory>
                     <clearOutputDirectory>true</clearOutputDirectory>
                 </configuration>
-
                 <executions>
                     <execution>
                         <id>generate-proto-sources</id>
@@ -154,6 +169,7 @@
                 </executions>
             </plugin>
 
+            <!-- Quarkus build plugin -->
             <plugin>
                 <groupId>${quarkus.platform.group-id}</groupId>
                 <artifactId>quarkus-maven-plugin</artifactId>

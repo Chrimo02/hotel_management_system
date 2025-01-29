@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HotelDAO {
-    EntityManager entityManager();
     HotelEntity createHotel(HotelEntity hotel);
     Optional<HotelEntity> findById(Long id);
     void updateHotel(HotelEntity hotel);

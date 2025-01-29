@@ -6,11 +6,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Map;
-
-
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -18,102 +17,99 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public class HotelRatingDAOImpl implements HotelRatingDAO {
 
-    private final EntityManager entityManager;
     @Inject
-    public HotelRatingDAOImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    EntityManager em;
 
     @Override
+    @Transactional
     public Optional<HotelRatingEntity> createRating(HotelRatingEntity rating) {
         try {
-            entityManager.getTransaction().begin();
-            entityManager.persist(rating);
-            entityManager.getTransaction().commit();
+            em.persist(rating);
             return Optional.of(rating);
         } catch (Exception e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-            throw new RuntimeException("Error saving HotelRating", e);
+            throw new DataAccessException("Error saving HotelRating", e);
         }
     }
 
     @Override
+    @Transactional(Transactional.TxType.SUPPORTS)
     public Optional<HotelRatingEntity> findById(Long id) {
-        HotelRatingEntity entity = entityManager.find(HotelRatingEntity.class, id);
-        return entity != null ? Optional.of(entity) : Optional.empty();
+        try {
+            HotelRatingEntity entity = em.find(HotelRatingEntity.class, id);
+            return entity != null ? Optional.of(entity) : Optional.empty();
+        } catch (Exception e) {
+            throw new DataAccessException("Error while finding HotelRating by ID", e);
+        }
     }
 
     @Override
+    @Transactional(Transactional.TxType.SUPPORTS)
     public Optional<Map<Long, HotelRatingEntity>> findAll() {
-        TypedQuery<HotelRatingEntity> query = entityManager.createQuery(
-                "SELECT r FROM HotelRatingEntity r",
-                HotelRatingEntity.class
-        );
-        List<HotelRatingEntity> resultList = query.getResultList();
+        try {
+            TypedQuery<HotelRatingEntity> query = em.createQuery(
+                    "SELECT r FROM HotelRatingEntity r", HotelRatingEntity.class
+            );
+            List<HotelRatingEntity> resultList = query.getResultList();
 
-        if (resultList.isEmpty()) {
-            return Optional.empty();
+            if (resultList.isEmpty()) {
+                return Optional.empty();
+            }
+
+            Map<Long, HotelRatingEntity> ratingMap = resultList.stream()
+                    .collect(Collectors.toMap(HotelRatingEntity::getId, Function.identity()));
+
+            return Optional.of(ratingMap);
+        } catch (Exception e) {
+            throw new DataAccessException("Error while finding all HotelRatings", e);
         }
-
-        Map<Long, HotelRatingEntity> ratingMap = resultList.stream()
-                .collect(Collectors.toMap(HotelRatingEntity::getId, Function.identity()));
-
-        return Optional.of(ratingMap);
     }
 
-
     @Override
+    @Transactional(Transactional.TxType.SUPPORTS)
     public Optional<List<HotelRatingEntity>> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment) {
-        String queryString = "SELECT r FROM HotelRatingEntity r WHERE r.hotel.id = :hotelID AND r.starRating = :starRating";
-        if (onlyWithComment) {
-            queryString += " AND r.commentRating IS NOT NULL AND r.commentRating != ''";
+        try {
+            String queryString = "SELECT r FROM HotelRatingEntity r " +
+                    "WHERE r.hotel.id = :hotelID " +
+                    "  AND r.starRating = :starRating";
+            if (onlyWithComment) {
+                queryString += " AND r.commentRating IS NOT NULL AND r.commentRating != ''";
+            }
+
+            TypedQuery<HotelRatingEntity> query = em.createQuery(queryString, HotelRatingEntity.class);
+            query.setParameter("hotelID", hotelID);
+            query.setParameter("starRating", starRating);
+
+            List<HotelRatingEntity> resultList = query.getResultList();
+
+            if (resultList.isEmpty()) {
+                return Optional.empty();
+            }
+            return Optional.of(resultList);
+        } catch (Exception e) {
+            throw new DataAccessException("Error finding filtered hotel ratings", e);
         }
-
-        TypedQuery<HotelRatingEntity> query = entityManager.createQuery(queryString, HotelRatingEntity.class);
-        query.setParameter("hotelID", hotelID);
-        query.setParameter("starRating", starRating);
-
-        List<HotelRatingEntity> resultList = query.getResultList();
-
-        if (resultList.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(resultList);
     }
 
-
-
     @Override
+    @Transactional
     public void updateRating(HotelRatingEntity rating) {
         try {
-            entityManager.getTransaction().begin();
-            entityManager.merge(rating);
-            entityManager.getTransaction().commit();
+            em.merge(rating);
         } catch (Exception e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-            throw new RuntimeException("Error updating HotelRating", e);
+            throw new DataAccessException("Error updating HotelRating", e);
         }
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         try {
-            entityManager.getTransaction().begin();
-            HotelRatingEntity entity = entityManager.find(HotelRatingEntity.class, id);
+            HotelRatingEntity entity = em.find(HotelRatingEntity.class, id);
             if (entity != null) {
-                entityManager.remove(entity);
+                em.remove(entity);
             }
-            entityManager.getTransaction().commit();
         } catch (Exception e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-            throw new RuntimeException("Error deleting HotelRating", e);
+            throw new DataAccessException("Error deleting HotelRating", e);
         }
     }
 }

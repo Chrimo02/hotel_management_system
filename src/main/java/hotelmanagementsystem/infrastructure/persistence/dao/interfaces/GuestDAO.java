@@ -6,7 +6,6 @@ import hotelmanagementsystem.infrastructure.persistence.entities.BookingEntity;
 import java.util.List;
 
 public interface GuestDAO {
-    EntityManager entityManager();
     void create(GuestEntity guestEntity);
     GuestEntity read(long id);
     void update(GuestEntity guestEntity);

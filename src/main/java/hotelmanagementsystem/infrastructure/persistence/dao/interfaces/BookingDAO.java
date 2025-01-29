@@ -4,7 +4,6 @@ import hotelmanagementsystem.infrastructure.persistence.entities.BookingEntity;
 import jakarta.persistence.EntityManager;
 
 public interface BookingDAO {
-    EntityManager entityManager();
     BookingEntity create(BookingEntity bookingEntity);
     BookingEntity read(long id);
     void update(BookingEntity guestEntity);

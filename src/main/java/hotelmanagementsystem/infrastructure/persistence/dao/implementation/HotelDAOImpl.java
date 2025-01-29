@@ -6,98 +6,60 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
 @ApplicationScoped
 public class HotelDAOImpl implements HotelDAO {
 
     @Inject
-    public EntityManager entityManager() {
-
-      return JpaUtil.getEntityManagerFactory().createEntityManager();
-    }
+    EntityManager em;
 
     @Override
+    @Transactional
     public HotelEntity createHotel(HotelEntity hotel) {
-        EntityManager entityManager = null;
         try {
-            entityManager = entityManager();
-            entityManager.getTransaction().begin();
-            entityManager.persist(hotel);
-            entityManager.getTransaction().commit();
+            em.persist(hotel);
             return hotel;
         } catch (Exception e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
-            throw new DataAccessException("Error while creating hotel entity, rolled back", e);
-        }
-        finally {
-            entityManager.close();
+            throw new DataAccessException("Error while creating hotel entity", e);
         }
     }
 
     @Override
+    @Transactional(Transactional.TxType.SUPPORTS)
     public Optional<HotelEntity> findById(Long id) {
         try {
-            EntityManager entityManager = entityManager();
-            HotelEntity entity = entityManager.find(HotelEntity.class, id);
+            HotelEntity entity = em.find(HotelEntity.class, id);
             return entity != null ? Optional.of(entity) : Optional.empty();
         } catch (Exception e) {
             throw new DataAccessException("Error while finding hotel by ID", e);
-        } finally {
-            entityManager().close();
         }
-
-    }
-/* alt -> war vor filtering
-    @Override
-    public List<HotelEntity> findAll() {
-        EntityManager entityManager = entityManager();
-        TypedQuery<HotelEntity> query = entityManager.createQuery("SELECT h FROM HotelEntity h", HotelEntity.class);
-        return query.getResultList();
     }
 
- */
-
     @Override
+    @Transactional
     public void updateHotel(HotelEntity hotel) {
-        EntityManager entityManager = entityManager();
-            try {
-                entityManager.getTransaction().begin();
-                entityManager.merge(hotel);
-                entityManager.getTransaction().commit();
-            } catch (Exception e) {
-                if (entityManager.getTransaction().isActive()) {
-                    entityManager.getTransaction().rollback();
-                }
-                throw new DataAccessException("Error updating Hotel", e);
-            }
-            finally {
-                entityManager.close();
-            }
+        try {
+            em.merge(hotel);
+        } catch (Exception e) {
+            throw new DataAccessException("Error updating Hotel", e);
+        }
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
-        EntityManager entityManager = entityManager();
         try {
-            entityManager.getTransaction().begin();
-            HotelEntity entity = entityManager.find(HotelEntity.class, id);
+            HotelEntity entity = em.find(HotelEntity.class, id);
             if (entity != null) {
-                entityManager.remove(entity);
+                em.remove(entity);
             }
-            entityManager.getTransaction().commit();
         } catch (Exception e) {
-            if (entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().rollback();
-            }
             throw new DataAccessException("Error deleting Hotel", e);
-
-    } finally {
-        entityManager.close();
-    }
+        }
     }
 
     // --------------------------------------------
@@ -105,12 +67,9 @@ public class HotelDAOImpl implements HotelDAO {
     // --------------------------------------------
 
     @Override
+    @Transactional(Transactional.TxType.SUPPORTS)
     public long countByFilter(String city, double minRating) {
-        EntityManager em = null;
         try {
-            em = entityManager();
-            em.getTransaction().begin();
-
             String jpqlCount =
                     "SELECT COUNT(h) FROM HotelEntity h " +
                             "WHERE (:city IS NULL OR h.location.city = :city) " +
@@ -120,30 +79,16 @@ public class HotelDAOImpl implements HotelDAO {
             countQuery.setParameter("city", (city == null || city.isBlank()) ? null : city);
             countQuery.setParameter("minRating", minRating);
 
-            long total = countQuery.getSingleResult();
-
-            em.getTransaction().commit();
-            return total;
-
+            return countQuery.getSingleResult();
         } catch (Exception e) {
-            if (em != null && em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
             throw new DataAccessException("Error counting hotels by filter", e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
         }
     }
 
     @Override
+    @Transactional(Transactional.TxType.SUPPORTS)
     public List<HotelEntity> findByFilter(String city, double minRating, int offset, int limit) {
-        EntityManager em = null;
         try {
-            em = entityManager();
-            em.getTransaction().begin();
-
             String jpqlSelect =
                     "SELECT h FROM HotelEntity h " +
                             "WHERE (:city IS NULL OR h.location.city = :city) " +
@@ -155,24 +100,12 @@ public class HotelDAOImpl implements HotelDAO {
             query.setParameter("minRating", minRating);
 
             // Paging
-            query.setFirstResult(offset);   // Startindex
-            query.setMaxResults(limit);     // Anzahl pro Seite
+            query.setFirstResult(offset);
+            query.setMaxResults(limit);
 
-            List<HotelEntity> results = query.getResultList();
-
-            em.getTransaction().commit();
-            return results;
+            return query.getResultList();
         } catch (Exception e) {
-            if (em != null && em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
             throw new DataAccessException("Error retrieving hotels by filter with paging", e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
         }
     }
-
-
 }

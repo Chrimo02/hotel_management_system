@@ -13,6 +13,7 @@ import hotelmanagementsystem.infrastructure.api.mapper.GuestMapper;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import io.quarkus.grpc.GrpcService;
+import io.smallrye.common.annotation.Blocking;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 @GrpcService
 @Singleton
+@Blocking
 public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
 {
     private final GuestService guestService;

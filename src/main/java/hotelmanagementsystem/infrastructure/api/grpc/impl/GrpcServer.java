@@ -1,5 +1,5 @@
 package hotelmanagementsystem.infrastructure.api.grpc.impl;
-
+/*
 import io.grpc.Server;
 import io.grpc.netty.NettyServerBuilder;
 import io.quarkus.grpc.GrpcService;
@@ -41,6 +41,7 @@ public class GrpcServer {
 	 * von CDI automatisch aufgerufen (@PostConstruct).
 	 * Hier wird der gRPC-Server gebaut und gestartet.
 	 */
+/*
 	@PostConstruct
 	public void init() {
 		try {
@@ -63,6 +64,7 @@ public class GrpcServer {
 	 * Wird von CDI gerufen, wenn der Context beendet wird (@PreDestroy).
 	 * Hier wird der gRPC-Server ordnungsgemäß heruntergefahren.
 	 */
+/*
 	@PreDestroy
 	public void stop() {
 		if (server != null) {
@@ -72,3 +74,6 @@ public class GrpcServer {
 		}
 	}
 }
+
+
+ */
