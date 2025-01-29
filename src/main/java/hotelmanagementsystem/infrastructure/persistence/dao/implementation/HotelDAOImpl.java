@@ -24,6 +24,7 @@ public class HotelDAOImpl implements HotelDAO {
             em.persist(hotel);
             return hotel;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while creating hotel entity", e);
         }
     }
@@ -35,6 +36,7 @@ public class HotelDAOImpl implements HotelDAO {
             HotelEntity entity = em.find(HotelEntity.class, id);
             return entity != null ? Optional.of(entity) : Optional.empty();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while finding hotel by ID", e);
         }
     }
@@ -45,6 +47,7 @@ public class HotelDAOImpl implements HotelDAO {
         try {
             em.merge(hotel);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error updating Hotel", e);
         }
     }
@@ -58,6 +61,7 @@ public class HotelDAOImpl implements HotelDAO {
                 em.remove(entity);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error deleting Hotel", e);
         }
     }
@@ -81,6 +85,7 @@ public class HotelDAOImpl implements HotelDAO {
 
             return countQuery.getSingleResult();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error counting hotels by filter", e);
         }
     }
@@ -105,6 +110,7 @@ public class HotelDAOImpl implements HotelDAO {
 
             return query.getResultList();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error retrieving hotels by filter with paging", e);
         }
     }

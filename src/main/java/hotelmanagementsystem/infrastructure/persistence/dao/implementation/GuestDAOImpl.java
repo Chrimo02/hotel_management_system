@@ -23,6 +23,7 @@ public class GuestDAOImpl implements GuestDAO {
         try {
             em.persist(guestEntity);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while creating guest entity", e);
         }
     }
@@ -33,6 +34,7 @@ public class GuestDAOImpl implements GuestDAO {
         try {
             return em.find(GuestEntity.class, id);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while reading guest entity!", e);
         }
     }
@@ -43,6 +45,7 @@ public class GuestDAOImpl implements GuestDAO {
         try {
             em.merge(guestEntity);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while updating guest entity", e);
         }
     }
@@ -53,6 +56,7 @@ public class GuestDAOImpl implements GuestDAO {
         try {
             em.remove(em.contains(guestEntity) ? guestEntity : em.merge(guestEntity));
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while deleting guest entity", e);
         }
     }
@@ -66,6 +70,7 @@ public class GuestDAOImpl implements GuestDAO {
             query.setParameter("guestId", guestId);
             return query.getResultList();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error retrieving bookings for guest ID: " + guestId, e);
         }
     }

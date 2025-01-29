@@ -61,6 +61,7 @@ public class HotelDatabaseAdapter implements HotelRepository {
             return new PagedHotels(domainHotels, (int) totalCount);
         }
         catch (Exception e){
+            e.printStackTrace();
             throw new RuntimeException("Error while finding paged hotels: " + e.getMessage(), e);
         }
     }
@@ -71,6 +72,7 @@ public class HotelDatabaseAdapter implements HotelRepository {
             // Map the domain object to the entity and pass it to the DAO for updating
             hotelDAO.updateHotel(hotelMapper.mapDomainHotelToHotelEntity(hotel));
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("Error updating Hotel", e);
         }
     }
@@ -81,6 +83,7 @@ public class HotelDatabaseAdapter implements HotelRepository {
             // Use the DAO to delete the hotel by ID
             hotelDAO.deleteById(id);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("Error deleting Hotel", e);
         }
     }

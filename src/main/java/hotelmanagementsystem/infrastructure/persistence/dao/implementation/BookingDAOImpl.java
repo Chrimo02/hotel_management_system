@@ -24,6 +24,7 @@ public class BookingDAOImpl implements BookingDAO {
             em.persist(bookingEntity);
             return bookingEntity;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while creating booking entity", e);
         }
     }
@@ -40,6 +41,7 @@ public class BookingDAOImpl implements BookingDAO {
         try {
             return em.find(BookingEntity.class, id);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while reading booking entity!", e);
         }
     }
@@ -53,6 +55,7 @@ public class BookingDAOImpl implements BookingDAO {
         try {
             em.merge(bookingEntity);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while updating booking entity", e);
         }
     }

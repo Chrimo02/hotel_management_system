@@ -19,6 +19,7 @@ public class RoomIdentifierDAOImpl implements RoomIdentifierDAO {
         try {
             em.persist(entity);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error creating RoomIdentifierEntity", e);
         }
     }

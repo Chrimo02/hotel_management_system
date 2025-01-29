@@ -20,6 +20,7 @@ public class RoomDAOImpl implements RoomDAO {
             em.persist(roomEntity);
             return roomEntity.getId();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error creating RoomEntity", e);
         }
     }
@@ -30,6 +31,7 @@ public class RoomDAOImpl implements RoomDAO {
         try {
             return em.find(RoomEntity.class, roomId);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error reading RoomEntity with ID=" + roomId, e);
         }
     }
@@ -40,6 +42,7 @@ public class RoomDAOImpl implements RoomDAO {
         try {
             em.merge(roomEntity);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error updating RoomEntity", e);
         }
     }
@@ -50,6 +53,7 @@ public class RoomDAOImpl implements RoomDAO {
         try {
             em.remove(em.contains(roomEntity) ? roomEntity : em.merge(roomEntity));
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error deleting RoomEntity", e);
         }
     }

@@ -27,6 +27,7 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
             em.persist(rating);
             return Optional.of(rating);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error saving HotelRating", e);
         }
     }
@@ -38,6 +39,7 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
             HotelRatingEntity entity = em.find(HotelRatingEntity.class, id);
             return entity != null ? Optional.of(entity) : Optional.empty();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while finding HotelRating by ID", e);
         }
     }
@@ -60,6 +62,7 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
 
             return Optional.of(ratingMap);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while finding all HotelRatings", e);
         }
     }
@@ -86,6 +89,7 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
             }
             return Optional.of(resultList);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error finding filtered hotel ratings", e);
         }
     }
@@ -96,6 +100,7 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
         try {
             em.merge(rating);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error updating HotelRating", e);
         }
     }
@@ -109,6 +114,7 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
                 em.remove(entity);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error deleting HotelRating", e);
         }
     }

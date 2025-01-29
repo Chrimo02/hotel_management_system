@@ -23,6 +23,7 @@ public class HotelLocationDAOImpl implements HotelLocationDAO {
         try {
             em.persist(hotelLocation);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while creating HotelLocation entity", e);
         }
     }
@@ -33,6 +34,7 @@ public class HotelLocationDAOImpl implements HotelLocationDAO {
         try {
             return em.find(HotelLocationEntity.class, id);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while reading HotelLocation entity!", e);
         }
     }
@@ -44,6 +46,7 @@ public class HotelLocationDAOImpl implements HotelLocationDAO {
             return em.createQuery("SELECT h FROM HotelLocationEntity h", HotelLocationEntity.class)
                     .getResultList();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while reading all HotelLocation entities!", e);
         }
     }
@@ -54,6 +57,7 @@ public class HotelLocationDAOImpl implements HotelLocationDAO {
         try {
             em.merge(hotelLocation);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while updating HotelLocation entity", e);
         }
     }
@@ -64,6 +68,7 @@ public class HotelLocationDAOImpl implements HotelLocationDAO {
         try {
             em.remove(em.contains(hotelLocation) ? hotelLocation : em.merge(hotelLocation));
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while deleting HotelLocation entity", e);
         }
     }
@@ -79,8 +84,10 @@ public class HotelLocationDAOImpl implements HotelLocationDAO {
             query.setParameter("hotelId", hotelId);
             return query.getSingleResult();
         } catch (NoResultException e) {
+            e.printStackTrace();
             throw new IllegalArgumentException("No location found for Hotel ID: " + hotelId, e);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while finding location by Hotel ID", e);
         }
     }
