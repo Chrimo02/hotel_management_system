@@ -148,15 +148,19 @@
             </extension>
         </extensions>
         <plugins>
-            <!-- Compile with Java 22 (make sure your JDK is set up for that) -->
+
+            <!-- Java Compiler Plugin -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
                     <source>22</source>
                     <target>22</target>
+                    <generatedSourcesDirectory>${project.build.directory}/generated-sources/grpc</generatedSourcesDirectory>
                 </configuration>
             </plugin>
+
 
             <!-- gRPC / protobuf codegen -->
             <plugin>

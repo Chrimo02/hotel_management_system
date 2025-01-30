@@ -7,6 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="hotel-management-system" />
+      </profile>
+      <profile name="Annotation profile for Hotel-Management-System" enabled="true">
+        <sourceOutputDir name="target/generated-sources/grpc" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
         <module name="hotelmanagement" />
       </profile>
     </annotationProcessing>

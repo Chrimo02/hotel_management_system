@@ -17,13 +17,13 @@ public class BookingMapper {
         dto.setId(booking.getId());
         dto.setHotelId(booking.getHotel().getId());
 
-        // Extract all guest IDs
+        // Alle Gast-IDs extrahieren
         List<Long> guestIds = booking.getGuests().stream()
                 .map(Guest::getId)
                 .collect(Collectors.toList());
         dto.setGuestIds(guestIds);
 
-        // Extract all room IDs
+        // Alle Raum-IDs extrahieren
         List<Long> roomIds = booking.getRooms().stream()
                 .map(Room::getId)
                 .collect(Collectors.toList());
@@ -31,13 +31,22 @@ public class BookingMapper {
 
         dto.setCheckInDate(booking.getCheckInDate());
         dto.setCheckOutDate(booking.getCheckOutDate());
+        dto.setStatus(booking.getStatus());
+        dto.setTotalPrice(booking.getTotalPrice());
+
+        // Optional: Check-In und Check-Out Zeiten setzen
+        if (booking.getCheckInTime() != null) {
+            dto.setCheckInTime(booking.getCheckInTime());
+        }
+
+        if (booking.getCheckOutTime() != null) {
+            dto.setCheckOutTime(booking.getCheckOutTime());
+        }
 
         return dto;
     }
 
     // --- Map DTO -> Domain Booking ---
-    // Typically used if you're reconstructing a domain Booking from a DTO, e.g. if you had an update scenario.
-    // For createBooking, you generally pass domain data to BookingService directly (like room classes, etc.)
     public static Booking toDomain(BookingDTO dto, Hotel hotel, List<Room> rooms, List<Guest> guests) {
         return new Booking(
                 dto.getId(),
@@ -46,9 +55,9 @@ public class BookingMapper {
                 dto.getCheckOutDate(),
                 rooms,
                 guests,
-                true,   // default status
-                null,   // check-in time
-                null    // check-out time
+                true,   // Standardstatus ist aktiv
+                dto.getCheckInTime(),
+                dto.getCheckOutTime()
         );
     }
 }
