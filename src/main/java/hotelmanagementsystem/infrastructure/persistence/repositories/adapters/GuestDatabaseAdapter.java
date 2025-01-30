@@ -27,19 +27,21 @@ public class GuestDatabaseAdapter implements GuestRepository {
 
 
     @Override
-    public void createGuest(Guest guest) {
+    public Guest createGuest(Guest guest) {
         GuestEntity guestEntity = guestMapper.guestToGuestEntity(guest);
-        guestDAO.create(guestEntity);
+        GuestEntity createdGuest = guestDAO.create(guestEntity);
+        return guestMapper.guestEntityToGuest(createdGuest);
     }
 
     @Override
-    public void updateGuest(Guest guest) {
+    public Guest updateGuest(Guest guest) {
         GuestEntity guestEntity = guestDAO.read(guest.getId());
         guestEntity.seteMail(guest.geteMail());
         guestEntity.setTitle(guest.getTitle());
         guestEntity.setPhoneNumber(guest.getPhoneNumber());
         guestEntity.setLastName(guest.getLastName());
-        guestDAO.update(guestEntity);
+        return guestMapper.guestEntityToGuest(guestDAO.update(guestEntity));
+
     }
 
     @Override
@@ -51,15 +53,8 @@ public class GuestDatabaseAdapter implements GuestRepository {
     @Override
     public Guest getGuestById(long id) {
         GuestEntity entity = guestDAO.read(id);
-        return new Guest.GuestBuilder()
-                .withId(entity.getId())
-                .withFirstName(entity.getFirstName())
-                .withLastName(entity.getLastName())
-                .withTitle(entity.getTitle())
-                .withBirthday(entity.getBirthday().getYear(), entity.getBirthday().getMonthValue(), entity.getBirthday().getDayOfMonth())
-                .withEMail(entity.geteMail())
-                .withPhoneNumber(entity.getPhoneNumber())
-                .build();
+        return guestMapper.guestEntityToGuest(entity);
+
     }
 
     public List<Booking> getBookingsByGuestId(long guestId) {

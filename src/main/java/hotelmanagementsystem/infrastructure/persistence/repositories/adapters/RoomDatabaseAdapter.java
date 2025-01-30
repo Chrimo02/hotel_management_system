@@ -30,9 +30,9 @@ public class RoomDatabaseAdapter implements RoomRepository {
         return roomMapper.entityToDomain(roomEntity);
     }
     @Override
-    public long saveRoom(Room room) {
+    public Room saveRoom(Room room) {
         RoomEntity entity = roomMapper.domainToEntity(room);
-        return roomDAO.create(entity);
+        return roomMapper.entityToDomain(roomDAO.create(entity));
     }
     @Override
     public void removeRoom(long roomId) {

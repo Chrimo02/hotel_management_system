@@ -19,9 +19,10 @@ public class GuestDAOImpl implements GuestDAO {
 
     @Override
     @Transactional
-    public void create(GuestEntity guestEntity) {
+    public GuestEntity create(GuestEntity guestEntity) {
         try {
             em.persist(guestEntity);
+            return guestEntity;
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException("Error while creating guest entity", e);
@@ -41,9 +42,10 @@ public class GuestDAOImpl implements GuestDAO {
 
     @Override
     @Transactional
-    public void update(GuestEntity guestEntity) {
+    public GuestEntity update(GuestEntity guestEntity) {
         try {
             em.merge(guestEntity);
+            return guestEntity;
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException("Error while updating guest entity", e);

@@ -15,7 +15,7 @@ public class RoomDAOImpl implements RoomDAO {
 
     @Override
     @Transactional
-    public long create(RoomEntity roomEntity) {
+    public RoomEntity create(RoomEntity roomEntity) {
         try {
             em.persist(roomEntity);
             return roomEntity.getId();

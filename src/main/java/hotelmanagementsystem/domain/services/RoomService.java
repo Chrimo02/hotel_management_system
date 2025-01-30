@@ -92,7 +92,7 @@ public class RoomService {
         else throw new RuntimeException("Invalid room type!"); //wird nicht gebraucht, wenn wir sicher sind, dass nur 2 mögliche Room Arten bekommen werden
         long id = roomRepository.saveRoom(room);
         roomIdentifierRepository.saveRoomIdentifier(roomIdentifier);
-        return room;
+        return newRoom;
     }
 
     public void removeRoom(long roomId) {
