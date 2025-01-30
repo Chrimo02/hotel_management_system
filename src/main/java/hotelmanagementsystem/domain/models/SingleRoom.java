@@ -2,7 +2,7 @@ package hotelmanagementsystem.domain.models;
 
 public class SingleRoom extends Room {
     public SingleRoom(Builder builder) {
-        super(builder.id, builder.pricePerNight, builder.roomIdentifier, builder.hotel);
+        super(builder.pricePerNight, builder.roomIdentifier, builder.hotel);
     }
     public static class Builder {
         private long id;

@@ -1,6 +1,7 @@
 package hotelmanagementsystem.infrastructure.persistence.repositories.adapters;
 
 import hotelmanagementsystem.domain.models.Room;
+import hotelmanagementsystem.infrastructure.persistence.dao.implementation.RoomDAOImpl;
 import hotelmanagementsystem.infrastructure.persistence.dao.interfaces.RoomDAO;
 import hotelmanagementsystem.infrastructure.persistence.entities.RoomEntity;
 import hotelmanagementsystem.infrastructure.persistence.mapper.BookingMapper;
