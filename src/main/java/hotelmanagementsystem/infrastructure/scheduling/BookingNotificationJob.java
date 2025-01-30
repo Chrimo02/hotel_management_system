@@ -27,6 +27,7 @@ public class BookingNotificationJob {
      * und sendet eine E-Mail-Benachrichtigung an die entsprechenden Gäste.
      */
     @Scheduled(cron = "0 0 0 * * ?") // Täglich um Mitternacht
+    //@Scheduled(cron = "0 * * * * ?") // Jede Minute -> nur zum test
     public void sendReminderForUpcomingBookings() {
         LocalDate targetDate = LocalDate.now().plusDays(7);
 
