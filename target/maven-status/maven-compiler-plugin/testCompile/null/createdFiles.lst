@@ -1,8 +1,0 @@
-repositoriesTest\RoomIdentifierRepoTest.class
-repositoriesTest\BookingRepoTest.class
-domainModelsTest\BookingTest.class
-repositoriesTest\GuestRepoTest.class
-domainModelsTest\GuestTest.class
-domainModelsTest\RoomTest.class
-domainModelsTest\HotelTest.class
-domainModelsTest\RoomIdentifierTest.class

@@ -1,3 +1,4 @@
+/*
 package hotelmanagementsystem.infrastructure.scheduling;
 
 import io.quarkus.mailer.Mail;
@@ -27,3 +28,4 @@ public class MailTestResource {
         }
     }
 }
+*/

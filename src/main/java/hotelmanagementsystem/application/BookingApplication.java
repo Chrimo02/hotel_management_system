@@ -13,7 +13,7 @@ import java.util.List;
 public class BookingApplication {
 
     @Inject
-    BookingClient bookingClient;
+    BookingClient bookingClient; // ✅ Quarkus-managed injection
 
     public BookingResponse createBooking(long hotelId, List<String> roomTypes, List<Long> guestIds, String checkInDate, String checkOutDate) {
         CreateBookingRequest request = CreateBookingRequest.newBuilder()
