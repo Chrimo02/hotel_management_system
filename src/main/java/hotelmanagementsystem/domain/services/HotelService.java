@@ -66,24 +66,6 @@ public class HotelService {
                         isUpdated = true;
                     }
                     break;
-                case "address":
-                    if (!value.equals(hotel.getLocation().getAddress())) {
-                        hotel.getLocation().setAddress(value);
-                        isUpdated = true;
-                    }
-                    break;
-                case "city":
-                    if (!value.equals(hotel.getLocation().getCity())) {
-                        hotel.getLocation().setCity(value);
-                        isUpdated = true;
-                    }
-                    break;
-                case "country":
-                    if (!value.equals(hotel.getLocation().getCountry())) {
-                        hotel.getLocation().setCountry(value);
-                        isUpdated = true;
-                    }
-                    break;
                 default:
                     throw new IllegalArgumentException("Invalid field: " + field);
             }

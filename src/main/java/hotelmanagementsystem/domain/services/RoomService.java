@@ -90,7 +90,7 @@ public class RoomService {
             room = new DoubleRoom.Builder(pricePerNight, roomIdentifier, hotel).build();
         }
         else throw new RuntimeException("Invalid room type!"); //wird nicht gebraucht, wenn wir sicher sind, dass nur 2 mögliche Room Arten bekommen werden
-        long id = roomRepository.saveRoom(room);
+        Room newRoom = roomRepository.saveRoom(room);
         roomIdentifierRepository.saveRoomIdentifier(roomIdentifier);
         return newRoom;
     }

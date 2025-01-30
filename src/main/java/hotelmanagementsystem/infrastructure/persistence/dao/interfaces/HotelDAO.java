@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface HotelDAO {
     HotelEntity createHotel(HotelEntity hotel);
     Optional<HotelEntity> findById(Long id);
-    void updateHotel(HotelEntity hotel);
+    HotelEntity updateHotel(HotelEntity hotel);
     void deleteById(Long id);
 
     //List<HotelEntity> findAll(); --> alt, war vor filtering

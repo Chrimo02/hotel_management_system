@@ -11,5 +11,5 @@ public interface BookingRepository {
     Booking createBooking(Hotel hotel, LocalDate checkInDate, LocalDate checkOutDate, List<Room> rooms, List<Guest> guests);
     void updateBooking(Booking booking);
     Booking getBookingById(long bookingId);
-    public List<Booking> findBookingsByCheckInDate(LocalDate checkInDate);
+    List<Booking> findBookingsByCheckInDate(LocalDate checkInDate);
 }

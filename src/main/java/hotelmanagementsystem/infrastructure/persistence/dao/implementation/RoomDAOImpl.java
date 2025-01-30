@@ -18,7 +18,7 @@ public class RoomDAOImpl implements RoomDAO {
     public RoomEntity create(RoomEntity roomEntity) {
         try {
             em.persist(roomEntity);
-            return roomEntity.getId();
+            return roomEntity;
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException("Error creating RoomEntity", e);

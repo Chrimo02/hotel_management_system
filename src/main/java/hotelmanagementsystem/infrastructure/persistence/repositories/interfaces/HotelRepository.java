@@ -12,7 +12,7 @@ public interface HotelRepository {
 
     PagedHotels findPagedByFilter(String city, double minRating, int pageNumber, int pageSize);
 
-    void update(Hotel hotel);
+    Hotel update(Hotel hotel);
 
     void deleteById(Long id);
 

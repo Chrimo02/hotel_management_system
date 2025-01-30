@@ -67,10 +67,10 @@ public class HotelDatabaseAdapter implements HotelRepository {
     }
 
     @Override
-    public void update(Hotel hotel) {
+    public Hotel update(Hotel hotel) {
         try {
             // Map the domain object to the entity and pass it to the DAO for updating
-            hotelDAO.updateHotel(hotelMapper.mapDomainHotelToHotelEntity(hotel));
+            return hotelMapper.mapHotelEntityToDomainHotel(hotelDAO.updateHotel(hotelMapper.mapDomainHotelToHotelEntity(hotel)));
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Error updating Hotel", e);

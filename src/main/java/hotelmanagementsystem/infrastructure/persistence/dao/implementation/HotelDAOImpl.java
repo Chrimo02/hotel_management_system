@@ -43,9 +43,10 @@ public class HotelDAOImpl implements HotelDAO {
 
     @Override
     @Transactional
-    public void updateHotel(HotelEntity hotel) {
+    public HotelEntity updateHotel(HotelEntity hotel) {
         try {
             em.merge(hotel);
+            return hotel;
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException("Error updating Hotel", e);
