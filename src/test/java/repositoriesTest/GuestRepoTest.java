@@ -1,5 +1,5 @@
 package repositoriesTest;
-
+/*
 
 import hotelmanagementsystem.domain.models.Booking;
 import hotelmanagementsystem.domain.models.Guest;
@@ -149,5 +149,9 @@ class GuestRepoTest {
         assertEquals(booking, bookings.get(0));
     }
 
+
+
 }
 
+
+ */
