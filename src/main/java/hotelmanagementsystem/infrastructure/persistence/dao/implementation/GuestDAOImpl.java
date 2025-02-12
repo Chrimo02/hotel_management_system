@@ -1,103 +1,79 @@
 package hotelmanagementsystem.infrastructure.persistence.dao.implementation;
 
 import hotelmanagementsystem.infrastructure.persistence.dao.interfaces.GuestDAO;
+import hotelmanagementsystem.infrastructure.persistence.entities.BookingEntity;
 import hotelmanagementsystem.infrastructure.persistence.entities.GuestEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import java.util.List;
-import hotelmanagementsystem.infrastructure.persistence.entities.BookingEntity;
 import jakarta.persistence.TypedQuery;
+import jakarta.transaction.Transactional;
+
+import java.util.List;
 
 @ApplicationScoped
 public class GuestDAOImpl implements GuestDAO {
+
     @Inject
-    public EntityManager entityManager() {
-        return JpaUtil.getEntityManagerFactory().createEntityManager();
-    }
+    EntityManager em;
+
     @Override
-    public void create(GuestEntity guestEntity){
-        EntityManager em = null;
+    @Transactional
+    public GuestEntity create(GuestEntity guestEntity) {
         try {
-            em = entityManager();
-            em.getTransaction().begin();
             em.persist(guestEntity);
-            em.getTransaction().commit();
+            return guestEntity;
         } catch (Exception e) {
-            if (em != null && em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            throw new DataAccessException("Error while creating guest entity, rolled back", e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
+            e.printStackTrace();
+            throw new DataAccessException("Error while creating guest entity", e);
         }
     }
+
     @Override
+    @Transactional(Transactional.TxType.SUPPORTS)
     public GuestEntity read(long id) {
-        try (EntityManager em = entityManager()) {
+        try {
             return em.find(GuestEntity.class, id);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new DataAccessException("Error while reading guest entity!", e);
         }
     }
+
     @Override
-    public void update(GuestEntity guestEntity) {
-        EntityManager em = null;
+    @Transactional
+    public GuestEntity update(GuestEntity guestEntity) {
         try {
-            em = entityManager();
-            em.getTransaction().begin();
             em.merge(guestEntity);
-            em.getTransaction().commit();
+            return guestEntity;
         } catch (Exception e) {
-            if (em != null && em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            throw new DataAccessException("Error while updating guest entity, rolled back", e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
+            e.printStackTrace();
+            throw new DataAccessException("Error while updating guest entity", e);
         }
     }
 
     @Override
+    @Transactional
     public void delete(GuestEntity guestEntity) {
-        EntityManager em = null;
         try {
-            em = entityManager();
-            em.getTransaction().begin();
-            em.remove(guestEntity);
-            em.getTransaction().commit();
+            em.remove(em.contains(guestEntity) ? guestEntity : em.merge(guestEntity));
         } catch (Exception e) {
-            if (em != null && em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            throw new DataAccessException("Error while deleting guest entity, rolled back", e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
+            e.printStackTrace();
+            throw new DataAccessException("Error while deleting guest entity", e);
         }
     }
 
     @Override
+    @Transactional(Transactional.TxType.SUPPORTS)
     public List<BookingEntity> findBookingsByGuestId(long guestId) {
-        EntityManager em = null;
         try {
-            em = entityManager();
-            // JPQL-Abfrage, um alle Buchungen des Gastes zu finden, egal in welchem Hotel
             String jpql = "SELECT b FROM BookingEntity b JOIN b.guests g WHERE g.id = :guestId";
             TypedQuery<BookingEntity> query = em.createQuery(jpql, BookingEntity.class);
             query.setParameter("guestId", guestId);
             return query.getResultList();
         } catch (Exception e) {
-            throw new DataAccessException("Error while retrieving bookings for guest ID: " + guestId, e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
+            e.printStackTrace();
+            throw new DataAccessException("Error retrieving bookings for guest ID: " + guestId, e);
         }
     }
 }

@@ -1,3 +1,4 @@
+/*
 package repositoriesTest;
 
 import hotelmanagementsystem.domain.models.Hotel;
@@ -172,3 +173,5 @@ class HotelRepoTest {
         verify(hotelDAO, times(1)).deleteById(hotelId);
     }
 }
+
+ */

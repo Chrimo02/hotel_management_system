@@ -1,7 +1,5 @@
 package hotelmanagementsystem.infrastructure.api.dto;
-
 import hotelmanagementsystem.infrastructure.api.grpc.generated.Room;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

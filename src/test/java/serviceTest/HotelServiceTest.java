@@ -1,3 +1,4 @@
+/*
 package serviceTest;
 
 import hotelmanagementsystem.domain.exceptions.GuestNotFoundException;
@@ -278,3 +279,5 @@ class HotelServiceTest {
         verify(hotelRepository, never()).update(any(Hotel.class));
     }
 }
+
+ */

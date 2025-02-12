@@ -3,28 +3,24 @@ package hotelmanagementsystem.infrastructure.persistence.dao.implementation;
 import hotelmanagementsystem.infrastructure.persistence.dao.interfaces.RoomIdentifierDAO;
 import hotelmanagementsystem.infrastructure.persistence.entities.RoomIdentifierEntity;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class RoomIdentifierDAOImpl implements RoomIdentifierDAO {
-    EntityManagerFactory emf;
-    public RoomIdentifierDAOImpl() {
-        emf = Persistence.createEntityManagerFactory("my-persistence-unit");
-    }
+
+    @Inject
+    EntityManager em;
+
     @Override
+    @Transactional
     public void create(RoomIdentifierEntity entity) {
-        EntityManager em = emf.createEntityManager();
         try {
-            em.getTransaction().begin();
             em.persist(entity);
-            em.getTransaction().commit();
         } catch (Exception e) {
-            em.getTransaction().rollback();
             e.printStackTrace();
-        } finally {
-            em.close();
+            throw new DataAccessException("Error creating RoomIdentifierEntity", e);
         }
     }
 }

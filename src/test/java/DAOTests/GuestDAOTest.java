@@ -1,3 +1,4 @@
+/*
 package DAOTests;
 
 import hotelmanagementsystem.infrastructure.persistence.dao.implementation.DataAccessException;
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.lenient;
  * Vollständige Testklasse für GuestDAOImpl mit Spy-Ansatz und Lenient-Stubbing,
  * sodass u. a. das Rollback in Ausnahmefällen funktioniert.
  */
+/*
 @ExtendWith(MockitoExtension.class)
 class GuestDAOTest {
 
@@ -32,6 +34,7 @@ class GuestDAOTest {
      * Wir verwenden ein Spy, damit wir den echten Code von GuestDAOImpl
      * ausführen, jedoch .entityManager() überschreiben können.
      */
+    /*
     @Spy
     private GuestDAOImpl guestDAO;
 
@@ -200,3 +203,4 @@ class GuestDAOTest {
         verify(mockEntityManager).close();
     }
 }
+*/

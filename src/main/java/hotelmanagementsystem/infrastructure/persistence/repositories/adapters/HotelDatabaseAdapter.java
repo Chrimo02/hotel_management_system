@@ -1,7 +1,9 @@
 package hotelmanagementsystem.infrastructure.persistence.repositories.adapters;
 
 import hotelmanagementsystem.domain.models.Hotel;
+import hotelmanagementsystem.domain.models.PagedHotels;
 import hotelmanagementsystem.infrastructure.persistence.dao.interfaces.HotelDAO;
+import hotelmanagementsystem.infrastructure.persistence.entities.HotelEntity;
 import hotelmanagementsystem.infrastructure.persistence.mapper.HotelMapper;
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.HotelRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -29,7 +31,8 @@ public class HotelDatabaseAdapter implements HotelRepository {
         try {
             return hotelMapper.mapHotelEntityToDomainHotel(hotelDAO.createHotel(hotelMapper.mapDomainHotelToHotelEntity(hotel)));
         } catch (Exception e) {
-            throw new RuntimeException("Error saving Hotel", e);
+            e.printStackTrace();
+            throw new RuntimeException("Error saving Hotel - DB ADAPTER", e);
         }
     }
 
@@ -41,19 +44,35 @@ public class HotelDatabaseAdapter implements HotelRepository {
     }
 
     @Override
-    public List<Hotel> findAll() {
-        // Retrieve all entities from the DAO and map them to domain objects
-        return hotelDAO.findAll().stream()
-                .map(hotelMapper::mapHotelEntityToDomainHotel)
-                .collect(Collectors.toList());
+    public PagedHotels findPagedByFilter(String city, double minRating, int pageNumber, int pageSize){
+        try {
+            // 1) Offset + Limit berechnen
+            int offset = (pageNumber - 1) * pageSize;
+
+            // 2) DAO nutzen
+            long totalCount = hotelDAO.countByFilter(city, minRating);
+            List<HotelEntity> entities = hotelDAO.findByFilter(city, minRating, offset, pageSize);
+
+            // 3) Entities -> Domain
+            List<Hotel> domainHotels = entities.stream()
+                    .map(hotelMapper::mapHotelEntityToDomainHotel)
+                    .collect(Collectors.toList());
+
+            return new PagedHotels(domainHotels, (int) totalCount);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("Error while finding paged hotels: " + e.getMessage(), e);
+        }
     }
 
     @Override
-    public void update(Hotel hotel) {
+    public Hotel update(Hotel hotel) {
         try {
             // Map the domain object to the entity and pass it to the DAO for updating
-            hotelDAO.updateHotel(hotelMapper.mapDomainHotelToHotelEntity(hotel));
+            return hotelMapper.mapHotelEntityToDomainHotel(hotelDAO.updateHotel(hotelMapper.mapDomainHotelToHotelEntity(hotel)));
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("Error updating Hotel", e);
         }
     }
@@ -64,6 +83,7 @@ public class HotelDatabaseAdapter implements HotelRepository {
             // Use the DAO to delete the hotel by ID
             hotelDAO.deleteById(id);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("Error deleting Hotel", e);
         }
     }
