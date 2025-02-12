@@ -1,8 +1,6 @@
 package hotelmanagementsystem.infrastructure.api.dto;
-
-import hotelmanagementsystem.infrastructure.api.grpc.generated.Hotel;
 import java.util.List;
-
+import hotelmanagementsystem.infrastructure.api.grpc.generated.Hotel;
 /**
  * DTO-Klasse für Hotel-Daten.
  * Angelehnt an die Struktur von BookingDTO,

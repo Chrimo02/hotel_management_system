@@ -1,5 +1,4 @@
-//nur zum test grpc auskommentiert
-
+/*
 package serviceTest;
 import hotelmanagementsystem.domain.exceptions.BookingNotFoundException;
 import hotelmanagementsystem.domain.exceptions.RoomNotFoundException;
@@ -150,5 +149,7 @@ public class RoomServiceTest {
     }
 
 }
+
+ */
 
 

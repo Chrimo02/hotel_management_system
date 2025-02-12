@@ -1,4 +1,5 @@
 package hotelmanagementsystem.domain.services;
+import hotelmanagementsystem.domain.exceptions.HotelNotFoundException;
 import hotelmanagementsystem.domain.models.*;
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.HotelLocationRepository;
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.HotelRatingRepository;
@@ -39,13 +40,13 @@ public class HotelService {
         return hotelRepository.createHotel(hotel);
     }
 
-    public boolean deleteHotel(long hotelId) {
+    public boolean deleteHotel(long hotelId) throws HotelNotFoundException{
         validateHotelId(hotelId);
         hotelRepository.deleteById(hotelId);
         return true;
     }
 
-    public Hotel updateHotel(long hotelId, Map<String, String> updates) {
+    public Hotel updateHotel(long hotelId, Map<String, String> updates) throws HotelNotFoundException {
         Hotel hotel = validateHotelIdAndReturnObject(hotelId);
         boolean isUpdated = false;
         for (Map.Entry<String, String> entry : updates.entrySet()) {
@@ -65,24 +66,6 @@ public class HotelService {
                         isUpdated = true;
                     }
                     break;
-                case "address":
-                    if (!value.equals(hotel.getLocation().getAddress())) {
-                        hotel.getLocation().setAddress(value);
-                        isUpdated = true;
-                    }
-                    break;
-                case "city":
-                    if (!value.equals(hotel.getLocation().getCity())) {
-                        hotel.getLocation().setCity(value);
-                        isUpdated = true;
-                    }
-                    break;
-                case "country":
-                    if (!value.equals(hotel.getLocation().getCountry())) {
-                        hotel.getLocation().setCountry(value);
-                        isUpdated = true;
-                    }
-                    break;
                 default:
                     throw new IllegalArgumentException("Invalid field: " + field);
             }
@@ -99,28 +82,41 @@ public class HotelService {
     }
 
 
-    public List<Hotel> getHotels(){ return hotelRepository.findAll();}
+    //public List<Hotel> getHotels(){ return hotelRepository.findAll();}
 
-    public Hotel getHotelByHotelId(long hotelId) {
+    public PagedHotels listHotelsFilteredAndPaged(
+            String city, double minRating,
+            int pageNumber, int pageSize
+    ) {
+        // Validierung, Standardwerte etc.
+        if (pageNumber < 1) pageNumber = 1;
+        if (pageSize   < 1) pageSize   = 10;
+
+        // Den eigentlichen Datenbankzugriff delegieren wir ans Repository
+        return hotelRepository.findPagedByFilter(city, minRating, pageNumber, pageSize);
+    }
+
+
+    public Hotel getHotelByHotelId(long hotelId) throws HotelNotFoundException{
         return validateHotelIdAndReturnObject(hotelId);
     }
 
-    public HotelLocation getHotelLocationByHotelId(long hotelId) {
+    public HotelLocation getHotelLocationByHotelId(long hotelId) throws HotelNotFoundException{
         validateHotelId(hotelId);
         return hotelLocationRepository.getHotelLocationByHotelId(hotelId, HotelLocation.class);
     }
 
-    public List<HotelRating> getHotelRatingsByHotelId(long hotelID, int starRating, boolean onlyWithComment) {
+    public List<HotelRating> getHotelRatingsByHotelId(long hotelID, int starRating, boolean onlyWithComment) throws HotelNotFoundException {
         List<HotelRating> hotelRatingMap = validateHotelRatings(hotelID);
         return hotelRatingMap.stream().toList();
     }
-    public void rateHotel(long guestID, long hotelID, HotelRating rating) {
+    public void rateHotel(long guestID, long hotelID, HotelRating rating) throws HotelNotFoundException{
         Hotel hotel = validateInputs(hotelID,guestID);
         hotel.addRating(rating);
         hotel.setAverageRating(calculateHotelRating(hotel));
         hotelRepository.update(hotel);
     }
-    public List<Room> findAvailableRooms(long hotelID, Class<? extends Room> roomType) {
+    public List<Room> findAvailableRooms(long hotelID, Class<? extends Room> roomType) throws HotelNotFoundException{
         Hotel hotel = validateHotelIdAndReturnObject(hotelID);
         List<Room> availableRooms = new ArrayList<>();
         for (Room room : hotel.getRooms()) {
@@ -130,7 +126,7 @@ public class HotelService {
         }
         return availableRooms;
     }
-    public List<HotelRating> filterHotelRatings(long hotelID, int starRating, boolean onlyWithComment) {
+    public List<HotelRating> filterHotelRatings(long hotelID, int starRating, boolean onlyWithComment) throws HotelNotFoundException{
         List<HotelRating> hotelRatingMap = validateHotelRatings(hotelID);
         return hotelRatingMap.stream()
                 .filter(rating -> rating.getStarRating() == starRating)
@@ -145,27 +141,27 @@ public class HotelService {
 
     private void validateInputs(String name, String description, HotelLocation hotelLocation) throws RuntimeException {
 
-        if (name == null || name.isBlank()) {
+        if (name == null) {
             throw new IllegalArgumentException("Hotel name must not be empty");
         }
-        if (description == null || description.isBlank()) {
+        if (description == null) {
             throw new IllegalArgumentException("Hotel description must not be empty");
         }
         //HotelLocation validieren
     }
-    private Hotel validateInputs(long guestId, long hotelID) {
+    private Hotel validateInputs(long guestId, long hotelID) throws HotelNotFoundException{
         Hotel hotel = validateHotelIdAndReturnObject(hotelID);
         validateGuestId(hotel, guestId);
         return hotel;
     }
-    private Hotel validateHotelIdAndReturnObject(long hotelID) {
+    private Hotel validateHotelIdAndReturnObject(long hotelID) throws HotelNotFoundException{
         return hotelRepository.findById(hotelID)
-                .orElseThrow(() -> new IllegalArgumentException("Hotel with ID " + hotelID + " not found!"));
+                .orElseThrow(() -> new HotelNotFoundException("Hotel with ID " + hotelID + " not found!"));
     }
-    private boolean validateHotelId(long hotelID) {
+    private boolean validateHotelId(long hotelID) throws HotelNotFoundException{
         return hotelRepository.findById(hotelID)
                 .map(hotel -> true)
-                .orElseThrow(() -> new IllegalArgumentException("Hotel with ID " + hotelID + " not found!"));
+                .orElseThrow(() -> new HotelNotFoundException("Hotel with ID " + hotelID + " not found!"));
     }
     private void validateGuestId(Hotel hotel, long guestID){
         if (!(hotel.getBookings().stream()
@@ -184,7 +180,7 @@ public class HotelService {
     }
 
 
-    private  List<HotelRating> validateHotelRatings(long hotelID) {
+    private  List<HotelRating> validateHotelRatings(long hotelID) throws HotelNotFoundException{
         List<HotelRating> ratings = validateHotelIdAndReturnObject(hotelID).getRatings();
         if (ratings.isEmpty()) {
             throw new IllegalArgumentException("No Ratings so far");

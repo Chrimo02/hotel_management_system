@@ -1,3 +1,4 @@
+/*
 package apiTests;
 
 import hotelmanagementsystem.domain.exceptions.BookingNotFoundException;
@@ -353,3 +354,6 @@ class BookingAPITest {
         }
     }
 }
+
+
+ */

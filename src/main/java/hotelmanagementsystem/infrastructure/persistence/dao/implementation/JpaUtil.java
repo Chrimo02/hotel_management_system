@@ -1,5 +1,5 @@
 package hotelmanagementsystem.infrastructure.persistence.dao.implementation;
-
+/*
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
@@ -28,3 +28,5 @@ class JpaUtil
         }
     }
 }
+
+ */

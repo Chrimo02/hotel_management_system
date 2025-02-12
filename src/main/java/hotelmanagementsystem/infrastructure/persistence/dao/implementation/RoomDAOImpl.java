@@ -5,64 +5,56 @@ import hotelmanagementsystem.infrastructure.persistence.entities.RoomEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class RoomDAOImpl implements RoomDAO {
-    EntityManagerFactory emf;
+
     @Inject
-    public RoomDAOImpl(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
-    public long create(RoomEntity roomEntity) {
-        EntityManager em = emf.createEntityManager();
-        long id = -1;
-        try {
-            em.getTransaction().begin();
-            em.persist(roomEntity);
-            em.getTransaction().commit();
-            id = roomEntity.getId();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
-        return id;
-    }
+    EntityManager em;
+
     @Override
+    @Transactional
+    public RoomEntity create(RoomEntity roomEntity) {
+        try {
+            em.persist(roomEntity);
+            return roomEntity;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new DataAccessException("Error creating RoomEntity", e);
+        }
+    }
+
+    @Override
+    @Transactional(Transactional.TxType.SUPPORTS)
     public RoomEntity read(long roomId) {
-        try (EntityManager em = emf.createEntityManager()) {
-            return em.find(RoomEntity.class, roomId); // Automatische Typ-Erkennung durch Hibernate
+        try {
+            return em.find(RoomEntity.class, roomId);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            throw new DataAccessException("Error reading RoomEntity with ID=" + roomId, e);
         }
     }
+
+    @Override
+    @Transactional
     public void update(RoomEntity roomEntity) {
-        EntityManager em = emf.createEntityManager();
         try {
-            em.getTransaction().begin();
             em.merge(roomEntity);
-            em.getTransaction().commit();
         } catch (Exception e) {
-            em.getTransaction().rollback();
             e.printStackTrace();
-        } finally {
-            em.close();
+            throw new DataAccessException("Error updating RoomEntity", e);
         }
     }
+
+    @Override
+    @Transactional
     public void delete(RoomEntity roomEntity) {
-        EntityManager em = emf.createEntityManager();
         try {
-            em.getTransaction().begin();
-            em.remove(roomEntity);
-            em.getTransaction().commit();
+            em.remove(em.contains(roomEntity) ? roomEntity : em.merge(roomEntity));
         } catch (Exception e) {
-            em.getTransaction().rollback();
             e.printStackTrace();
-        } finally {
-            em.close();
+            throw new DataAccessException("Error deleting RoomEntity", e);
         }
     }
 }

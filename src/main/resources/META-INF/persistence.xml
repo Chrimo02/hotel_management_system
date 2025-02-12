@@ -26,11 +26,15 @@
 <persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence
-             http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
+                                 http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
              version="2.2">
 
     <persistence-unit name="hotelmanagementPU">
+
+        <!-- This provider is optional in Quarkus, but not harmful. -->
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <!-- List of Entities -->
         <class>hotelmanagementsystem.infrastructure.persistence.entities.GuestEntity</class>
         <class>hotelmanagementsystem.infrastructure.persistence.entities.HotelEntity</class>
         <class>hotelmanagementsystem.infrastructure.persistence.entities.HotelLocationEntity</class>
@@ -40,7 +44,10 @@
         <class>hotelmanagementsystem.infrastructure.persistence.entities.RoomIdentifierEntity</class>
         <class>hotelmanagementsystem.infrastructure.persistence.entities.SingleRoomEntity</class>
         <class>hotelmanagementsystem.infrastructure.persistence.entities.DoubleRoomEntity</class>
+
         <properties>
+            <!-- The following may be overridden by application.properties in Quarkus,
+                 but having them here is fine for local dev. -->
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1"/>
             <property name="javax.persistence.jdbc.user" value="sa"/>
             <property name="javax.persistence.jdbc.password" value=""/>
@@ -50,4 +57,5 @@
             <property name="hibernate.show_sql" value="true"/>
         </properties>
     </persistence-unit>
+
 </persistence>

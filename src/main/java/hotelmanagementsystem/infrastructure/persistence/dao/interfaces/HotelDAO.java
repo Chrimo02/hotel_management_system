@@ -7,10 +7,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HotelDAO {
-    EntityManager entityManager();
     HotelEntity createHotel(HotelEntity hotel);
     Optional<HotelEntity> findById(Long id);
-    List<HotelEntity> findAll();
-    void updateHotel(HotelEntity hotel);
+    HotelEntity updateHotel(HotelEntity hotel);
     void deleteById(Long id);
+
+    //List<HotelEntity> findAll(); --> alt, war vor filtering
+
+    long countByFilter(String city, double minRating);
+    List<HotelEntity> findByFilter(String city, double minRating, int offset, int limit);
+
 }

@@ -7,9 +7,9 @@ import java.util.List;
 
 
 public interface GuestRepository {
-    void createGuest(Guest guest);
+    Guest createGuest(Guest guest);
 
-    void updateGuest(Guest guest);
+    Guest updateGuest(Guest guest);
 
     void deleteGuest(Guest guest);
 

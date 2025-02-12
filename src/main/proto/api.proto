@@ -88,10 +88,25 @@ message DeleteHotelRequest {
   int64 id = 1;
 }
 
-message ListHotelsRequest {}
+message ListHotelsRequest {
+  //Filter:
+  string filterCity = 1;
+  double minRating = 2; //optional, 0 kann heißen "keine Filterung"
+
+  //Paging:
+  int32 pageNumber = 3; //default 1
+  int32 pageSize = 4;   //default 10
+
+}
 
 message ListHotelsResponse {
   repeated Hotel hotels = 1;
+  //Gesamtanzahl anzeigen:
+  int32 totalCount = 2;
+
+  //Zurückgeben, welche Page wir gerade sind + pageSize
+  int32 pageNumber = 3;
+  int32 pageSize = 4;
 }
 
 message HotelResponse {
@@ -176,6 +191,15 @@ message Booking {
   repeated int64 roomIds = 4;
   string checkInDate = 5;
   string checkOutDate = 6;
+  BookingStatus status = 7;
+  double totalPrice = 8;
+  string checkInTime = 9;    // Optional: kann leer sein, wenn noch nicht eingecheckt
+  string checkOutTime = 10;  // Optional: kann leer sein, wenn noch nicht ausgecheckt
+}
+
+enum BookingStatus {
+  ACTIVE = 0;
+  CANCELED = 1;
 }
 
 message CreateBookingRequest {

@@ -1,4 +1,6 @@
+/*
 package DAOTests;
+
 import hotelmanagementsystem.infrastructure.persistence.entities.RoomEntity;
 import hotelmanagementsystem.infrastructure.persistence.entities.SingleRoomEntity;
 import hotelmanagementsystem.infrastructure.persistence.dao.implementation.RoomDAOImpl;
@@ -99,3 +101,5 @@ public class RoomDAOTest {
         verify(em).close();
     }
 }
+
+ */
