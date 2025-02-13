@@ -29,26 +29,7 @@ public class HotelLocationDatabaseAdapter implements HotelLocationRepository {
         hotelLocationDAO.create(hotelLocationEntity);
     }
 
-    @Override
-    public void updateAddress(long hotelId, String newAddress) {
-        HotelLocationEntity hotelLocationEntity = getHotelLocationByHotelId(hotelId, HotelLocationEntity.class);
-        hotelLocationEntity.setAddress(newAddress);
-        hotelLocationDAO.update(hotelLocationEntity);
-    }
 
-    @Override
-    public void updateCity(long hotelId, String newCity) {
-        HotelLocationEntity hotelLocationEntity = getHotelLocationByHotelId(hotelId, HotelLocationEntity.class);
-        hotelLocationEntity.setCity(newCity);
-        hotelLocationDAO.update(hotelLocationEntity);
-    }
-
-    @Override
-    public void updateCountry(long hotelId, String newCountry) {
-        HotelLocationEntity hotelLocationEntity = getHotelLocationByHotelId(hotelId, HotelLocationEntity.class);
-        hotelLocationEntity.setCountry(newCountry);
-        hotelLocationDAO.update(hotelLocationEntity);
-    }
 
     @Override
     public void deleteHotelLocation(long hotelLocationId) {

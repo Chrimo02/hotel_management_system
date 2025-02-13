@@ -38,9 +38,8 @@ public class HotelDatabaseAdapter implements HotelRepository {
 
 
     @Override
-    public Optional<Hotel> findById(Long id) {
-        return hotelDAO.findById(id)
-                .map(hotelMapper::mapHotelEntityToDomainHotel);
+    public Hotel findById(Long id) {
+        return hotelMapper.mapHotelEntityToDomainHotel(hotelDAO.findById(id));
     }
 
     @Override

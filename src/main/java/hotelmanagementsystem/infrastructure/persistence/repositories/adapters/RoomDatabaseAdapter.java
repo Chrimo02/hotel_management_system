@@ -1,7 +1,9 @@
 package hotelmanagementsystem.infrastructure.persistence.repositories.adapters;
 
 import hotelmanagementsystem.domain.models.Room;
+import hotelmanagementsystem.infrastructure.persistence.dao.interfaces.HotelDAO;
 import hotelmanagementsystem.infrastructure.persistence.dao.interfaces.RoomDAO;
+import hotelmanagementsystem.infrastructure.persistence.entities.HotelEntity;
 import hotelmanagementsystem.infrastructure.persistence.entities.RoomEntity;
 import hotelmanagementsystem.infrastructure.persistence.mapper.BookingMapper;
 import hotelmanagementsystem.infrastructure.persistence.mapper.RoomIdentifierMapper;
@@ -14,13 +16,15 @@ import jakarta.inject.Inject;
 public class RoomDatabaseAdapter implements RoomRepository {
     private final RoomMapper roomMapper;
     private final RoomDAO roomDAO;
+    private final HotelDAO hotelDAO;
     private final RoomIdentifierMapper roomIdentifierMapper;
     private final BookingMapper bookingMapper;
 
     @Inject
-    public RoomDatabaseAdapter(RoomDAO roomDAO, RoomMapper roomMapper, RoomIdentifierMapper roomIdentifierMapper, BookingMapper bookingMapper) {
+    public RoomDatabaseAdapter(RoomDAO roomDAO, RoomMapper roomMapper, RoomIdentifierMapper roomIdentifierMapper, BookingMapper bookingMapper, HotelDAO hotelDAO ) {
         this.roomDAO = roomDAO;
         this.roomMapper = roomMapper;
+        this.hotelDAO = hotelDAO;
         this.roomIdentifierMapper = roomIdentifierMapper;
         this.bookingMapper = bookingMapper;
     }
@@ -37,13 +41,11 @@ public class RoomDatabaseAdapter implements RoomRepository {
     @Override
     public void removeRoom(long roomId) {
         RoomEntity roomEntity = roomDAO.read(roomId);
-        roomDAO.delete(roomEntity);
+        HotelEntity hotelEntity = hotelDAO.findById(roomEntity.getHotel().getId());
+        hotelEntity.getRooms().remove(roomEntity);
+        hotelDAO.updateHotel(hotelEntity);
     }
-//    public void updatePrice(long roomId, double pricePerNight) {
-//        RoomEntity roomEntity = roomDAO.read(roomId);
-//        roomEntity.setPricePerNight(pricePerNight);
-//        roomDAO.update(roomEntity);
-//    }
+
     @Override
     public void updateRoom(Room room) {
         RoomEntity roomEntity = roomDAO.read(room.getId());

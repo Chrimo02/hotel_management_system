@@ -161,12 +161,12 @@ public class HotelService {
         if (description == null) {
             throw new IllegalArgumentException("Hotel description must not be empty");
         }
-        //HotelLocation validieren
     }
 
-    private Hotel validateHotelIdAndReturnObject(long hotelID) throws HotelNotFoundException{
-        return hotelRepository.findById(hotelID)
-                .orElseThrow(() -> new HotelNotFoundException("Hotel with ID " + hotelID + " not found!"));
+    private Hotel getNotNullHotel(long hotelId) throws HotelNotFoundException {
+        Hotel hotel = hotelRepository.findById(hotelId);
+        if (hotel == null) throw new HotelNotFoundException("There is no Hotel with the specified ID!");
+        else return hotel;
     }
     private boolean validateHotelId(long hotelID) throws HotelNotFoundException {
         return hotelRepository.findById(hotelID)

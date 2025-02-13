@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface HotelDAO {
     HotelEntity createHotel(HotelEntity hotel);
-    Optional<HotelEntity> findById(Long id);
+    HotelEntity findById(Long id);
     HotelEntity updateHotel(HotelEntity hotel);
     void deleteById(Long id);
     long countByFilter(String city, double minRating);
