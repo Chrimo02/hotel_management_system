@@ -7,10 +7,9 @@ import hotelmanagementsystem.infrastructure.api.grpc.generated.*;
 public class HotelRatingDTO {
 
     private long id;
-    private int rating;          // Sternebewertung (z.B. 1..5)
+    private int rating;
     private String commentRating;
-    private long bookingId;      // ID der zugehörigen Buchung
-    private long guestId;        // ID des Gasts
+    private long guestId;
 
     // --- Getter & Setter ---
 
@@ -33,13 +32,6 @@ public class HotelRatingDTO {
     }
     public void setCommentRating(String commentRating) {
         this.commentRating = commentRating;
-    }
-
-    public long getBookingId() {
-        return bookingId;
-    }
-    public void setBookingId(long bookingId) {
-        this.bookingId = bookingId;
     }
 
     public long getGuestId() {

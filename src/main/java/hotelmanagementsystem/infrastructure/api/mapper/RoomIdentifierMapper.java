@@ -5,7 +5,6 @@ import hotelmanagementsystem.infrastructure.api.dto.RoomIdentifierDTO;
 
 public class RoomIdentifierMapper {
 
-    // --- Map Domain RoomIdentifier -> DTO ---
     public static RoomIdentifierDTO toDTO(RoomIdentifier roomIdentifier) {
         return new RoomIdentifierDTO(
                 roomIdentifier.getBuilding(),
@@ -14,7 +13,6 @@ public class RoomIdentifierMapper {
         );
     }
 
-    // --- Map DTO -> Domain RoomIdentifier ---
     public static RoomIdentifier toDomain(RoomIdentifierDTO dto) {
         return new RoomIdentifier(
                 dto.getBuilding(),

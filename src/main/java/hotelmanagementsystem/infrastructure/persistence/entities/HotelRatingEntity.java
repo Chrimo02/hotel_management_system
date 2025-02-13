@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(
         name = "hotel_ratings",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"hotel_id", "guest_id"}) // Enforce one rating per guest per hotel
+        uniqueConstraints = @UniqueConstraint(columnNames = {"hotel_id", "guest_id"})
 )
 public class HotelRatingEntity {
 
@@ -19,31 +19,26 @@ public class HotelRatingEntity {
     @Column(name = "comment_rating")
     private String commentRating;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hotel_id", nullable = false)
-    private HotelEntity hotel;
+    // Dieser Wert wird automatisch befüllt, wenn das Rating
+    // der Liste im übergeordneten HotelEntity hinzugefügt wird.
+    @Column(name = "hotel_id", insertable = false, updatable = false)
+    private Long hotelId;
 
+    // Änderung: Statt @OneToOne jetzt @ManyToOne,
+    // damit ein Gast mehrere Bewertungen abgeben kann.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "guest_id", nullable = false)
     private GuestEntity guest;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "booking_id", nullable = false)
-    private BookingEntity booking;
-
-    // Default constructor for JPA
     protected HotelRatingEntity() {}
 
     private HotelRatingEntity(Builder builder) {
+        this.id = builder.id;
         this.starRating = builder.rating;
         this.commentRating = builder.commentRating;
-        this.id = builder.id;
-        this.hotel = builder.hotel;
         this.guest = builder.guest;
-        this.booking = builder.booking;
     }
 
-    // Getters
     public Long getId() {
         return id;
     }
@@ -56,34 +51,19 @@ public class HotelRatingEntity {
         return commentRating;
     }
 
-    public HotelEntity getHotel() {
-        return hotel;
-    }
-
-    public void setHotel(HotelEntity hotel) {
-        this.hotel = hotel;
+    public Long getHotelId() {
+        return hotelId;
     }
 
     public GuestEntity getGuest() {
         return guest;
     }
 
-    public void setGuest(GuestEntity guest) {
-        this.guest = guest;
-    }
-
-    public BookingEntity getBooking() {
-        return booking;
-    }
-
-    // Builder Class
     public static class Builder {
-        private int rating; // Required field
-        private String commentRating = ""; // Optional, default value
         private Long id;
-        private HotelEntity hotel;
+        private int rating;
+        private String commentRating = "";
         private GuestEntity guest;
-        private BookingEntity booking;
 
         public Builder withId(Long id) {
             this.id = id;
@@ -100,18 +80,8 @@ public class HotelRatingEntity {
             return this;
         }
 
-        public Builder withHotel(HotelEntity hotel) {
-            this.hotel = hotel;
-            return this;
-        }
-
         public Builder withGuest(GuestEntity guest) {
             this.guest = guest;
-            return this;
-        }
-
-        public Builder withBooking(BookingEntity booking) {
-            this.booking = booking;
             return this;
         }
 

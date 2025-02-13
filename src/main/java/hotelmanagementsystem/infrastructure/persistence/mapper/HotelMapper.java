@@ -16,23 +16,31 @@ public class HotelMapper {
 
     private final BookingMapper bookingMapper;
     private final HotelLocationMapper hotelLocationMapper;
-    private final HotelRatingMapper hotelRatingMapper;
     private final RoomMapper roomMapper;
+
+    // Neu: Wir injecten jetzt bewusst HotelRatingMapper,
+    // damit wir beim Laden eines Hotels alle Ratings mappen können.
+    private final HotelRatingMapper hotelRatingMapper;
 
     @Inject
     public HotelMapper(
             BookingMapper bookingMapper,
             HotelLocationMapper hotelLocationMapper,
-            HotelRatingMapper hotelRatingMapper,
-            RoomMapper roomMapper
+            RoomMapper roomMapper,
+            HotelRatingMapper hotelRatingMapper
     ) {
         this.bookingMapper = bookingMapper;
         this.hotelLocationMapper = hotelLocationMapper;
-        this.hotelRatingMapper = hotelRatingMapper;
         this.roomMapper = roomMapper;
+        this.hotelRatingMapper = hotelRatingMapper;
     }
 
-    // Domain -> Entity
+    /**
+     * Domain -> Entity.
+     * Wenn du auch die Ratings des Hotels in der DB updaten/speichern willst,
+     * rufst du hier hotelRatingMapper.mapToEntityList(...) auf.
+     * So werden auch neue/aktualisierte Ratings in der DB persistiert.
+     */
     public HotelEntity mapDomainHotelToHotelEntity(Hotel hotel) {
         if (hotel == null) return null;
 
@@ -42,19 +50,27 @@ public class HotelMapper {
                 .withDescription(hotel.getDescription())
                 .withLocation(hotelLocationMapper.mapToEntity(hotel.getLocation()))
                 .withBookings(bookingMapper.toEntityList(hotel.getBookings()))
-                .withRatings(hotelRatingMapper.mapToEntityList(hotel.getRatings()))
                 .withRooms(roomMapper.toEntityList(hotel.getRooms()))
-                // averageRating kann man optional übernehmen
+                // Wichtig: Ratings aus dem Domain-Hotel in Entities umwandeln.
+                .withRatings(hotelRatingMapper.mapToEntityList(hotel.getRatings()))
+                .withAverageRating(hotel.getAverageRating())
                 .build();
     }
 
-    // Entity -> Domain
+    /**
+     * Entity -> Domain.
+     * Hier fügen wir das Mapping der Ratings hinzu,
+     * damit das Domain-Hotel am Ende ein "hotel.getRatings()" hat.
+     */
     public Hotel mapHotelEntityToDomainHotel(HotelEntity entity) {
         if (entity == null) return null;
 
+        // Buchungen
         List<Booking> domainBookings = bookingMapper.toDomainList(entity.getBookings());
-        List<HotelRating> domainRatings = hotelRatingMapper.mapToDomainList(entity.getRatings());
+        // Rooms
         List<Room> domainRooms = roomMapper.toDomainList(entity.getRooms());
+        // Ratings
+        List<HotelRating> domainRatings = hotelRatingMapper.mapToDomainList(entity.getRatings());
 
         return new Hotel.HotelBuilder()
                 .withId(entity.getId())
@@ -63,9 +79,9 @@ public class HotelMapper {
                 .withLocation(hotelLocationMapper.mapToDomain(entity.getLocation()))
                 .withBookingList(domainBookings)
                 .withRoomsList(domainRooms)
+                // Hier werden nun die Ratings dem Hotel hinzugefügt.
                 .withRatingMap(domainRatings)
-                // averageRating hättest du in entity.getAverageRating()
-                // => hotel.setAverageRating(...)
+                .withAverageRating(entity.getAverageRating())
                 .build();
     }
 }

@@ -3,69 +3,58 @@ package hotelmanagementsystem.domain.models;
 public class HotelRating {
 
     private Long id;
-    private String commentRating;
-    private int rating;
-    private Booking booking;
+    private Hotel hotel;  // Optionally unused in your business logic.
     private Guest guest;
+    private int rating;
+    private String commentRating;
 
     private HotelRating(Builder builder) {
+        this.id = builder.id;
+        this.hotel = builder.hotel;
+        this.guest = builder.guest;
         this.rating = builder.rating;
         this.commentRating = builder.commentRating;
-        this.id = builder.id;
-        this.booking = builder.booking;
-        this.guest = builder.guest;
     }
-
-    // Getter für die Sternebewertung
-    public int getStarRating() {
-        return rating;
-    }
-
 
     public Long getId() {
         return id;
     }
 
-    public Booking getBooking(){
-        return booking;
+    public Hotel getHotel() {
+        return hotel;
     }
-    public Guest getGuest(){
+
+    public Guest getGuest() {
         return guest;
     }
 
-    //Getter for the comment
+    public int getStarRating() {
+        return rating;
+    }
+
     public String getGuestComment() {
         return commentRating;
     }
 
-    public boolean setCommentRating(String commentRating) {
-        this.commentRating = commentRating;
-        return true;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-
-    // Methode zur Ausgabe der Sternebewertung
-    public void displayRating() {
-        System.out.println("Hotel Rating: " + rating + " Stars");
-        if (!commentRating.isEmpty()) {
-            System.out.println("Guest Comment: " + commentRating);
-        }
-    }
-
     public static class Builder {
-        private int rating; // Pflichtfeld
-        private String commentRating = ""; // Optional, Standardwert
         private Long id;
-        private Booking booking;
+        private Hotel hotel;
         private Guest guest;
-        // Pflichtfeld-Methode
+        private int rating;
+        private String commentRating = "";
 
         public Builder withId(Long id) {
             this.id = id;
+            return this;
+        }
+
+        public Builder withHotel(Hotel hotel) {
+            this.hotel = hotel;
+            return this;
+        }
+
+        public Builder withGuest(Guest guest) {
+            this.guest = guest;
             return this;
         }
 
@@ -74,24 +63,12 @@ public class HotelRating {
             return this;
         }
 
-        // Optionales Feld
-        public Builder withComment(String commentRating) {
-            this.commentRating = commentRating;
+        public Builder withComment(String comment) {
+            this.commentRating = comment;
             return this;
         }
 
-        public Builder withBooking(Booking booking) {
-            this.booking = booking;
-            return this;
-        }
-        public Builder withGuest(Guest guest){
-            this.guest = guest;
-            return this;
-        }
-
-        // Build-Methode zum Erstellen eines HotelRating-Objekts
         public HotelRating build() {
-
             return new HotelRating(this);
         }
     }

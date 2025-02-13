@@ -53,7 +53,6 @@ public class BookingDatabaseAdapter implements BookingRepository {
 
     }
 
-    //can only change status, checkintime and checkouttime as everything other than that is permanent.
     @Override
     public void updateBooking(Booking booking) {
 

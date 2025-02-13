@@ -6,7 +6,6 @@ option java_package = "hotelmanagementsystem.infrastructure.api.grpc.generated";
 option java_multiple_files = true;
 option java_outer_classname = "HotelManagement";
 
-// Hotel Service
 service HotelService {
   rpc CreateHotel (CreateHotelRequest) returns (HotelResponse);
   rpc GetHotelById (GetHotelByIdRequest) returns (HotelResponse);
@@ -17,19 +16,16 @@ service HotelService {
   rpc FindAvailableRooms (FindAvailableRoomsRequest) returns (ListRoomsResponse);
 }
 
-// Guest Service
 service GuestService {
   rpc CreateGuest (CreateGuestRequest) returns (GuestResponse);
   rpc GetGuestById (GetGuestByIdRequest) returns (GuestResponse);
   rpc UpdateGuestEmail (UpdateGuestEmailRequest) returns (GuestResponse);
   rpc UpdateGuestPhone (UpdateGuestPhoneRequest) returns (GuestResponse);
   rpc UpdateGuestLastName (UpdateGuestLastNameRequest) returns (GuestResponse);
-  rpc UpdateGuestTitle (UpdateGuestTitleRequest) returns (GuestResponse);
   rpc DeleteGuest (DeleteGuestRequest) returns (Empty);
   rpc GetBookingsByGuestId (GetBookingsByGuestIdRequest) returns (ListBookingsResponse);
 }
 
-// Booking Service
 service BookingService {
   rpc CreateBooking (CreateBookingRequest) returns (BookingResponse);
   rpc GetBookingById (GetBookingByIdRequest) returns (BookingResponse);
@@ -38,7 +34,6 @@ service BookingService {
   rpc CheckOutGuest (CheckOutGuestRequest) returns (Empty);
 }
 
-// Room Service
 service RoomService {
   rpc CreateRoom (CreateRoomRequest) returns (RoomResponse);
   rpc GetRoomById (GetRoomByIdRequest) returns (RoomResponse);
@@ -46,9 +41,6 @@ service RoomService {
   rpc RemoveRoom (RemoveRoomRequest) returns (Empty);
 }
 
-// Messages
-
-// Hotel
 message Hotel {
   int64 id = 1;
   string name = 2;
@@ -81,7 +73,6 @@ message UpdateHotelRequest {
   int64 id = 1;
   string name = 2;
   string description = 3;
-  HotelLocation location = 4;
 }
 
 message DeleteHotelRequest {
@@ -89,22 +80,18 @@ message DeleteHotelRequest {
 }
 
 message ListHotelsRequest {
-  //Filter:
   string filterCity = 1;
-  double minRating = 2; //optional, 0 kann heißen "keine Filterung"
+  double minRating = 2;
 
-  //Paging:
-  int32 pageNumber = 3; //default 1
-  int32 pageSize = 4;   //default 10
+  int32 pageNumber = 3;
+  int32 pageSize = 4;
 
 }
 
 message ListHotelsResponse {
   repeated Hotel hotels = 1;
-  //Gesamtanzahl anzeigen:
   int32 totalCount = 2;
 
-  //Zurückgeben, welche Page wir gerade sind + pageSize
   int32 pageNumber = 3;
   int32 pageSize = 4;
 }
@@ -122,17 +109,15 @@ message RateHotelRequest {
 
 message FindAvailableRoomsRequest {
   int64 hotelId = 1;
-  string roomType = 2; // Optional: Filter nach Typ
+  string roomType = 2;
   string checkInDate = 3;
   string checkOutDate = 4;
 }
 
-// Guest
 message Guest {
   int64 id = 1;
   string firstName = 2;
   string lastName = 3;
-  optional string title = 4;
   string birthday = 5;
   string email = 6;
   string phoneNumber = 7;
@@ -141,7 +126,6 @@ message Guest {
 message CreateGuestRequest {
   string firstName = 1;
   string lastName = 2;
-  optional string title = 3;
   string birthday = 4;
   string email = 5;
   string phoneNumber = 6;
@@ -166,11 +150,6 @@ message UpdateGuestLastNameRequest {
   string newLastName = 2;
 }
 
-message UpdateGuestTitleRequest {
-  int64 guestId = 1;
-  string newTitle = 2;
-}
-
 message DeleteGuestRequest {
   int64 id = 1;
 }
@@ -183,18 +162,17 @@ message GuestResponse {
   Guest guest = 1;
 }
 
-// Booking
 message Booking {
   int64 id = 1;
   int64 hotelId = 2;
-  repeated int64 guestIds = 3; // Change to "repeated" to support multiple guests
+  repeated int64 guestIds = 3;
   repeated int64 roomIds = 4;
   string checkInDate = 5;
   string checkOutDate = 6;
   BookingStatus status = 7;
   double totalPrice = 8;
-  string checkInTime = 9;    // Optional: kann leer sein, wenn noch nicht eingecheckt
-  string checkOutTime = 10;  // Optional: kann leer sein, wenn noch nicht ausgecheckt
+  string checkInTime = 9;
+  string checkOutTime = 10;
 }
 
 enum BookingStatus {
@@ -204,8 +182,8 @@ enum BookingStatus {
 
 message CreateBookingRequest {
   int64 hotelId = 1;
-  repeated string roomTypes = 2;  // "SINGLE", "DOUBLE"
-  repeated int64 guestIds = 3;    // All guest IDs
+  repeated string roomTypes = 2;
+  repeated int64 guestIds = 3;
   string checkInDate = 4;
   string checkOutDate = 5;
 }
@@ -234,7 +212,6 @@ message ListBookingsResponse {
   repeated Booking bookings = 1;
 }
 
-// Room
 message Room {
   int64 id = 1;
   double pricePerNight = 2;
@@ -245,9 +222,9 @@ message Room {
 }
 
 message RoomIdentifier {
-   string building = 1;
-   int32 floor = 2;
-   string roomNumber = 3;
+  string building = 1;
+  int32 floor = 2;
+  string roomNumber = 3;
 }
 
 message CreateRoomRequest {
@@ -278,5 +255,4 @@ message ListRoomsResponse {
   repeated Room rooms = 1;
 }
 
-// Gemeinsame Nachrichten
 message Empty {}

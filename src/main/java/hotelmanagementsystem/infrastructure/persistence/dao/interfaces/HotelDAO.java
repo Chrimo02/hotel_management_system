@@ -11,9 +11,6 @@ public interface HotelDAO {
     Optional<HotelEntity> findById(Long id);
     HotelEntity updateHotel(HotelEntity hotel);
     void deleteById(Long id);
-
-    //List<HotelEntity> findAll(); --> alt, war vor filtering
-
     long countByFilter(String city, double minRating);
     List<HotelEntity> findByFilter(String city, double minRating, int offset, int limit);
 

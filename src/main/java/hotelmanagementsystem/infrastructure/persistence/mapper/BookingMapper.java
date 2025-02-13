@@ -20,7 +20,6 @@ public class BookingMapper {
 
     private final GuestMapper guestMapper;
     private final RoomMapper roomMapper;
-    // private final HotelMapper hotelMapper; -> In der alten Version hattest du das evtl.
 
     @Inject
     public BookingMapper(GuestMapper guestMapper, RoomMapper roomMapper) {
@@ -28,13 +27,9 @@ public class BookingMapper {
         this.roomMapper = roomMapper;
     }
 
-    // ---------------------------------------
-    // DOMAIN -> ENTITY
-    // ---------------------------------------
     public BookingEntity bookingToBookingEntity(Booking booking) {
         if (booking == null) return null;
 
-        // Minimal HotelEntity (nur ID)
         HotelEntity minimalHotelEntity = null;
         if (booking.getHotel() != null && booking.getHotel().getId() != null) {
             minimalHotelEntity = new HotelEntity.HotelBuilder()
@@ -42,12 +37,10 @@ public class BookingMapper {
                     .build();
         }
 
-        // Rooms und Guests kannst du normal oder ebenfalls flach mappen
         List<RoomEntity> roomEntities = roomMapper.toEntityList(booking.getRooms());
 
         List<GuestEntity> guestEntities = guestMapper.guestsToGuestEntities(booking.getGuests());
 
-        // BookingEntity anlegen
         BookingEntity bookingEntity = new BookingEntity(
                 booking.getId(),
                 minimalHotelEntity,
@@ -63,13 +56,9 @@ public class BookingMapper {
         return bookingEntity;
     }
 
-    // ---------------------------------------
-    // ENTITY -> DOMAIN
-    // ---------------------------------------
     public Booking bookingEntityToBooking(BookingEntity bookingEntity) {
         if (bookingEntity == null) return null;
 
-        // Minimales HotelDomain
         Hotel hotelDomain = null;
         if (bookingEntity.getHotel() != null) {
             hotelDomain = new Hotel.HotelBuilder()
@@ -78,12 +67,9 @@ public class BookingMapper {
                     .build();
         }
 
-        // Rooms -> RoomMapper
         List<Room> rooms = roomMapper.toDomainList(bookingEntity.getRooms());
-        // Guests -> GuestMapper
         List<Guest> guests = guestMapper.guestEntitiesToGuests(bookingEntity.getGuests());
 
-        // Booking Domain
         Booking domainBooking = new Booking(
                 bookingEntity.getId(),
                 hotelDomain,

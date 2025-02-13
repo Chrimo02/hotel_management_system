@@ -13,7 +13,6 @@ import java.util.List;
 
 @ApplicationScoped
 public class HotelLocationDatabaseAdapter implements HotelLocationRepository {
-// hier werden daos aufgerufen
     private final HotelLocationDAO hotelLocationDAO;
     private final HotelDAO hotelDAO;
     private final HotelLocationMapper hotelLocationMapper;
@@ -77,7 +76,4 @@ public class HotelLocationDatabaseAdapter implements HotelLocationRepository {
                 .map(hotelLocationMapper::mapToDomain) // Convert each HotelLocationEntity to HotelLocation
                 .toList(); // Collect results into a List
     }
-
-
-
 }

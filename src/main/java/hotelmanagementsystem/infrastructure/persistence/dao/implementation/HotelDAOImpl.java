@@ -106,7 +106,6 @@ public class HotelDAOImpl implements HotelDAO {
             query.setParameter("city", (city == null || city.isBlank()) ? null : city);
             query.setParameter("minRating", minRating);
 
-            // Paging
             query.setFirstResult(offset);
             query.setMaxResults(limit);
 
