@@ -5,7 +5,6 @@ public class Guest {
     private long id;
     private String firstName;
     private String lastName;
-    private String title;
     private LocalDate birthday;
     private String eMail;
     private String phoneNumber;
@@ -13,7 +12,6 @@ public class Guest {
     private Guest(GuestBuilder guestBuilder) {
         this.firstName = guestBuilder.firstName;
         this.lastName = guestBuilder.lastName;
-        this.title = guestBuilder.title;
         this.birthday = guestBuilder.birthday;
         this.eMail = guestBuilder.eMail;
         this.phoneNumber = guestBuilder.phoneNumber;
@@ -32,9 +30,6 @@ public class Guest {
         return lastName;
     }
 
-    public String getTitle() {
-        return title;
-    }
 
     public LocalDate getBirthday() {
         return birthday;
@@ -60,9 +55,6 @@ public class Guest {
         this.lastName = lastName;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
 
 
@@ -70,7 +62,6 @@ public class Guest {
         long id;
         String firstName;
         String lastName;
-        String title;
         LocalDate birthday;
         String eMail;
         String phoneNumber;
@@ -84,10 +75,7 @@ public class Guest {
             this.lastName = lastName;
             return this;
         }
-        public GuestBuilder withTitle(String title){
-            this.title = title;
-            return this;
-        }
+
         public GuestBuilder withBirthday(int year, int month, int day){
             this.birthday = LocalDate.of(year,month,day);
             return this;

@@ -17,10 +17,6 @@ public class BookingDAOImpl implements BookingDAO {
     @Inject
     EntityManager em;  // In Quarkus per @Inject statt selbst gebautes JpaUtil
 
-    /**
-     * Persistiert ein neues BookingEntity.
-     * Dank @Transactional muss nicht manuell getTransaction().begin/commit aufgerufen werden.
-     */
     @Override
     @Transactional
     public BookingEntity create(BookingEntity bookingEntity) {
@@ -33,12 +29,6 @@ public class BookingDAOImpl implements BookingDAO {
         }
     }
 
-    /**
-     * Liest ein BookingEntity per ID. Für einfache Lesevorgänge können wir
-     * entweder @Transactional(Transactional.TxType.SUPPORTS) verwenden oder
-     * (wie hier) transaktionslos belassen – Quarkus öffnet dann eine
-     * Lese-Transaktion.
-     */
     @Override
     @Transactional(Transactional.TxType.SUPPORTS)
     public BookingEntity read(long id) {
@@ -50,9 +40,6 @@ public class BookingDAOImpl implements BookingDAO {
         }
     }
 
-    /**
-     * Updatet ein bestehendes BookingEntity.
-     */
     @Override
     @Transactional
     public void update(BookingEntity bookingEntity) {

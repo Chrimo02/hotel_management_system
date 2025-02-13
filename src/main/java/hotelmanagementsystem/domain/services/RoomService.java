@@ -3,12 +3,17 @@ package hotelmanagementsystem.domain.services;
 import hotelmanagementsystem.domain.exceptions.BookingNotFoundException;
 import hotelmanagementsystem.domain.exceptions.HotelNotFoundException;
 import hotelmanagementsystem.domain.exceptions.RoomNotFoundException;
-import hotelmanagementsystem.domain.models.*;
+import hotelmanagementsystem.domain.models.Booking;
+import hotelmanagementsystem.domain.models.Hotel;
+import hotelmanagementsystem.domain.models.Room;
+import hotelmanagementsystem.domain.models.RoomIdentifier;
+import hotelmanagementsystem.domain.models.SingleRoom;
+import hotelmanagementsystem.domain.models.DoubleRoom;
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.RoomIdentifierRepository;
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.RoomRepository;
-import hotelmanagementsystem.domain.models.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,51 +38,43 @@ public class RoomService {
         if (room == null) throw new RoomNotFoundException("There is no Room with the specified ID!");
         return room;
     }
+
+    @Transactional
     public void bookRooms(Booking booking) {
-        List<Room> rooms = booking.getRooms();
-        for(Room room : rooms){
+        for (Room room : booking.getRooms()) {
+            // Check if the room is available for the booking dates
+            if (!isAvailable(room, booking.getCheckInDate(), booking.getCheckOutDate())) {
+                throw new RuntimeException("Room with ID " + room.getId() + " is no longer available for the specified dates.");
+            }
+            // Add the booking to the room's bookings
             room.getBookings().add(booking);
             roomRepository.updateRoom(room);
         }
     }
 
-    public void cancelRoom(long roomId, LocalDate checkIn, LocalDate checkOut) throws RoomNotFoundException, BookingNotFoundException {
+    public void cancelRoom(long roomId, Booking bookingToCancel) throws RoomNotFoundException, BookingNotFoundException {
         Room room = getRoomById(roomId);
-        Booking bookingToCancel = findBookingByDates(room, checkIn, checkOut);
-
         if (bookingToCancel != null) {
             room.getBookings().remove(bookingToCancel);
             roomRepository.updateRoom(room);
         } else {
-            throw new BookingNotFoundException("Booking not found for the specified dates.");
+            throw new BookingNotFoundException("Booking not found");
         }
     }
 
-    // Helper method to check if a room is available for the given booking
-    private boolean isAvailable(Room room, Booking booking) {
-        Set<Booking> bookings = room.getBookings();
-        for (Booking existingBooking : bookings) {
-            if (isOverlapping(existingBooking, booking)) {
-                return false; // Found an overlapping booking
+    public boolean isAvailable(Room room, LocalDate checkIn, LocalDate checkOut) {
+        for (Booking existingBooking : room.getBookings()) {
+            if (isOverlapping(existingBooking, checkIn, checkOut)) {
+                return false;
             }
         }
         return true;
     }
 
-    // Method to check if two bookings overlap
-    private boolean isOverlapping(Booking existingBooking, Booking newBooking) {
-        return !(newBooking.getCheckOutDate().isBefore(existingBooking.getCheckInDate()) ||
-                newBooking.getCheckInDate().isAfter(existingBooking.getCheckOutDate()));
-    }
+    private boolean isOverlapping(Booking existingBooking, LocalDate newCheckIn, LocalDate newCheckOut) {
+        return newCheckIn.isBefore(existingBooking.getCheckOutDate()) &&
+                newCheckOut.isAfter(existingBooking.getCheckInDate());
 
-    // Helper method to find a booking by check-in and check-out dates
-    private Booking findBookingByDates(Room room, LocalDate checkIn, LocalDate checkOut) {
-        for (Booking booking : room.getBookings()) {
-            if (booking.getCheckInDate().equals(checkIn) && booking.getCheckOutDate().equals(checkOut)) {
-                return booking;
-            }
-        }
-        return null; // No matching booking found
     }
 
     public Room createRoom(double pricePerNight, RoomIdentifier roomIdentifier, long hotelId, Class<? extends Room> roomType) throws HotelNotFoundException {
@@ -85,92 +82,70 @@ public class RoomService {
         Room room;
         if (roomType.equals(SingleRoom.class)) {
             room = new SingleRoom.Builder(pricePerNight, roomIdentifier, hotel).build();
-        }
-        else if (roomType.equals(DoubleRoom.class)) {
+        } else if (roomType.equals(DoubleRoom.class)) {
             room = new DoubleRoom.Builder(pricePerNight, roomIdentifier, hotel).build();
+        } else {
+            throw new RuntimeException("Invalid room type!");
         }
-        else throw new RuntimeException("Invalid room type!"); //wird nicht gebraucht, wenn wir sicher sind, dass nur 2 mögliche Room Arten bekommen werden
         Room newRoom = roomRepository.saveRoom(room);
         roomIdentifierRepository.saveRoomIdentifier(roomIdentifier);
         return newRoom;
     }
 
-    public void removeRoom(long roomId) {
+    public void removeRoom(long roomId) throws RoomNotFoundException {
+        Room room = getRoomById(roomId);
+        // Prüfe, ob aktive Buchungen (Status true) existieren
+        boolean hasActiveBookings = room.getBookings().stream().anyMatch(b -> b.getStatus());
+        if (hasActiveBookings) {
+            throw new RuntimeException("Cannot remove room with active bookings.");
+        }
         roomRepository.removeRoom(roomId);
     }
 
-    public List<Room> findAvailableRooms(long hotelId, List<Class<? extends Room>> roomTypes, LocalDate checkInDate, LocalDate checkOutDate) throws HotelNotFoundException{
-        List<Room> rooms = new ArrayList<>();
-        for (Class<? extends Room> roomType : roomTypes) {
-            Room room = findAvailableRoom(hotelId, roomType, checkInDate, checkOutDate);
-            if (room == null) {
-                throw new RuntimeException("Available Room not found");
-            }
-            rooms.add(room);
-        }
-        return rooms;
-    }
-
-    public boolean isAvailable(Room room, LocalDate checkIn, LocalDate checkOut) {
-        Set<Booking> bookings = room.getBookings();
-        for (Booking existingBooking : bookings) {
-            if (isOverlapping(existingBooking, checkIn, checkOut)) {
-                return false; // Found an overlapping booking
-            }
-        }
-        return true;
-    }
-
-    private boolean isOverlapping(Booking existingBooking, LocalDate checkIn, LocalDate checkOut) {
-        return !(checkOut.isBefore(existingBooking.getCheckInDate()) ||
-                checkIn.isAfter(existingBooking.getCheckOutDate()));
-    }
-
-    private Room findAvailableRoom(long hotelID, Class<? extends Room> roomType, LocalDate checkInToCheck, LocalDate checkOutToCheck) throws HotelNotFoundException {
-        Hotel hotel = hotelService.getHotelByHotelId(hotelID);
-        for (Room room : hotel.getRooms()) {
-            if (roomType.isInstance(room)) {
-                if (isAvailable(room, checkInToCheck, checkOutToCheck)) {
-                    return room;
-                }
-            }
-        }
-        return null;
-    }
-
     public Room updatePricePerNight(long roomId, Double newPricePerNight) throws RoomNotFoundException {
-        // Retrieve existing room
         Room room = roomRepository.findRoomById(roomId);
         if (room == null) {
             throw new RoomNotFoundException("Room with ID " + roomId + " not found.");
         }
-
-        // Update room price if provided
         if (newPricePerNight != null) {
             room.setPricePerNight(newPricePerNight);
         }
-
-        // Save the updated room back to the repository
         roomRepository.updateRoom(room);
-
         return room;
     }
+
     public Room updateRoomIdentifier(long roomId, RoomIdentifier newRoomIdentifier) throws RoomNotFoundException {
-        // Retrieve existing room
         Room room = roomRepository.findRoomById(roomId);
         if (room == null) {
             throw new RoomNotFoundException("Room with ID " + roomId + " not found.");
         }
-
-        // Update room identifier if provided
         if (newRoomIdentifier != null) {
             room.setRoomIdentifier(newRoomIdentifier);
             roomIdentifierRepository.saveRoomIdentifier(newRoomIdentifier);
         }
-
-        // Save the updated room back to the repository
         roomRepository.updateRoom(room);
-
         return room;
+    }
+
+    public List<Room> findAvailableRooms(long hotelId, List<Class<? extends Room>> roomTypes, LocalDate checkInDate, LocalDate checkOutDate) throws HotelNotFoundException {
+        List<Room> availableRooms = new ArrayList<>();
+        for (Class<? extends Room> roomType : roomTypes) {
+            Room room = findAvailableRoom(hotelId, roomType, checkInDate, checkOutDate);
+            if (room == null) {
+                throw new RuntimeException("Available Room not found for room type: " + roomType.getSimpleName());
+            }
+            availableRooms.add(room);
+        }
+        return availableRooms;
+    }
+
+    private Room findAvailableRoom(long hotelId, Class<? extends Room> roomType, LocalDate checkIn, LocalDate checkOut) throws HotelNotFoundException {
+        Hotel hotel = hotelService.getHotelByHotelId(hotelId);
+        for (Room room : hotel.getRooms()) {
+            if (roomType.isInstance(room) && isAvailable(room, checkIn, checkOut)) {
+                return room;
+            }
+        }
+        return null;
     }
 }

@@ -53,12 +53,12 @@ public class BookingDatabaseAdapter implements BookingRepository {
 
     }
 
-    //can only change status, checkintime and checkouttime as everything other than that is permanent.
     @Override
     public void updateBooking(Booking booking) {
 
         BookingEntity bookingEntity = bookingDAO.read(booking.getId());
 
+        bookingEntity.setRooms(roomMapper.toEntityList(booking.getRooms()));
         bookingEntity.setStatus(booking.getStatus());
         bookingEntity.setCheckInTime(booking.getCheckInTime());
         bookingEntity.setCheckOutTime(booking.getCheckOutTime());

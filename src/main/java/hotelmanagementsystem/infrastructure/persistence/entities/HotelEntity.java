@@ -24,22 +24,19 @@ public class HotelEntity {
     @Column(name = "average_rating")
     private double averageRating;
 
+    // For Rooms and Bookings we keep the bidirectional mapping:
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RoomEntity> rooms;
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BookingEntity> bookings;
 
-    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    // Ratings are mapped unidirectionally.
+    // JPA will write the hotel's id into the hotel_id column of hotel_ratings.
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "hotel_id")
     private List<HotelRatingEntity> ratings;
 
-    /*@ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "hotel_ratings", joinColumns = @JoinColumn(name = "hotel_id"))
-    @MapKeyColumn(name = "guest_id")
-    @Column(name = "rating")
-    private Map<Long, HotelRatingEntity> ratings;*/
-
-    // Default constructor for JPA
     protected HotelEntity() {}
 
     private HotelEntity(HotelBuilder builder) {
@@ -53,7 +50,6 @@ public class HotelEntity {
         this.ratings = builder.ratings;
     }
 
-    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -85,14 +81,16 @@ public class HotelEntity {
     public List<HotelRatingEntity> getRatings() {
         return ratings;
     }
+    public void setRatings(List<HotelRatingEntity> ratings){
+        this.ratings = ratings;
+    }
 
-    // Builder Class
     public static class HotelBuilder {
         private Long id;
         private String name;
         private String description;
         private HotelLocationEntity location;
-        private double averageRating = 0.0; // Default rating
+        private double averageRating = 0.0;
         private List<RoomEntity> rooms;
         private List<BookingEntity> bookings;
         private List<HotelRatingEntity> ratings;
@@ -131,7 +129,10 @@ public class HotelEntity {
             this.ratings = ratings;
             return this;
         }
-
+        public HotelBuilder withAverageRating(double avg){
+            this.averageRating = avg;
+            return this;
+        }
 
         public HotelEntity build() {
             return new HotelEntity(this);

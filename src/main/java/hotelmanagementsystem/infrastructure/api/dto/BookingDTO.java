@@ -9,8 +9,8 @@ import java.util.List;
 public class BookingDTO {
     private long id;
     private long hotelId;
-    private List<Long> guestIds;    // All guest IDs in the booking
-    private List<Long> roomIds;     // The final assigned room IDs
+    private List<Long> guestIds;
+    private List<Long> roomIds;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
     private boolean status;
@@ -19,7 +19,6 @@ public class BookingDTO {
     private LocalDateTime checkOutTime;
 
 
-    // --- Getters and Setters ---
     public long getId() {
         return id;
     }
@@ -94,15 +93,14 @@ public class BookingDTO {
         this.checkOutTime = checkOutTime;
     }
 
-    // --- Convert DTO to gRPC Booking (proto) ---
     public Booking toProtobuf() {
         BookingStatus bookingStatus = status ? BookingStatus.ACTIVE : BookingStatus.CANCELED;
 
         Booking.Builder builder = Booking.newBuilder()
                 .setId(this.id)
                 .setHotelId(this.hotelId)
-                .addAllGuestIds(this.guestIds)   // Mehrere Gäste
-                .addAllRoomIds(this.roomIds)     // Final zugewiesene Räume
+                .addAllGuestIds(this.guestIds)
+                .addAllRoomIds(this.roomIds)
                 .setCheckInDate(this.checkInDate.toString())
                 .setCheckOutDate(this.checkOutDate.toString())
                 .setStatus(bookingStatus)

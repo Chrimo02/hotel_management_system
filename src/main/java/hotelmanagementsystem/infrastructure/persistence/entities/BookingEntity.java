@@ -113,4 +113,8 @@ public class BookingEntity {
     public LocalDateTime getCheckOutTime() {
         return checkOutTime;
     }
+
+    public void setRooms(List<RoomEntity> rooms) {
+        this.rooms = rooms;
+    }
 }

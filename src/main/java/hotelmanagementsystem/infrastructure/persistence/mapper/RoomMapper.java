@@ -1,10 +1,6 @@
 package hotelmanagementsystem.infrastructure.persistence.mapper;
-
-import hotelmanagementsystem.domain.models.DoubleRoom;
-import hotelmanagementsystem.domain.models.Hotel;
-import hotelmanagementsystem.domain.models.Room;
-import hotelmanagementsystem.domain.models.RoomIdentifier;
-import hotelmanagementsystem.domain.models.SingleRoom;
+import java.util.Set;
+import hotelmanagementsystem.domain.models.*;
 import hotelmanagementsystem.infrastructure.persistence.entities.DoubleRoomEntity;
 import hotelmanagementsystem.infrastructure.persistence.entities.HotelEntity;
 import hotelmanagementsystem.infrastructure.persistence.entities.RoomEntity;
@@ -20,10 +16,12 @@ import java.util.stream.Collectors;
 public class RoomMapper {
 
     private final RoomIdentifierMapper roomIdentifierMapper;
+    private final BookingMapper bookingMapper;
 
     @Inject
-    public RoomMapper(RoomIdentifierMapper roomIdentifierMapper) {
+    public RoomMapper(RoomIdentifierMapper roomIdentifierMapper, BookingMapper bookingMapper) {
         this.roomIdentifierMapper = roomIdentifierMapper;
+        this.bookingMapper = bookingMapper;
     }
 
     // ---------------------------------------
@@ -94,42 +92,40 @@ public class RoomMapper {
         RoomIdentifier roomIdentifier =
                 roomIdentifierMapper.entityToDomain(roomEntity.getRoomIdentifier());
 
-        // Minimaler Hotel-Domain-Teil (nur ID/Name), um keine Schleife zu verursachen
+        // Minimaler Hotel-Domain-Teil (nur ID und evtl. Name)
         Hotel hotelDomain = null;
         if (roomEntity.getHotel() != null) {
             hotelDomain = new Hotel.HotelBuilder()
                     .withId(roomEntity.getHotel().getId())
-                    .withName(roomEntity.getHotel().getName()) // optional
+                    .withName(roomEntity.getHotel().getName())
                     .build();
         }
 
-        // SingleRoom oder DoubleRoom?
         Room domainRoom;
         if (roomEntity instanceof SingleRoomEntity) {
             domainRoom = new SingleRoom.Builder(
                     roomEntity.getPricePerNight(),
                     roomIdentifier,
                     hotelDomain
-            )
-                    .withId(roomEntity.getId())
-                    .build();
+            ).withId(roomEntity.getId()).build();
         } else if (roomEntity instanceof DoubleRoomEntity) {
             domainRoom = new DoubleRoom.Builder(
                     roomEntity.getPricePerNight(),
                     roomIdentifier,
                     hotelDomain
-            )
-                    .withId(roomEntity.getId())
-                    .build();
+            ).withId(roomEntity.getId()).build();
         } else {
-            throw new RuntimeException("Unknown subtype of RoomEntity: "
-                    + roomEntity.getClass().getSimpleName());
+            throw new RuntimeException("Unknown subtype of RoomEntity: " + roomEntity.getClass().getSimpleName());
         }
 
-        // Buchungen -> optional flach mappen (z. B. nur IDs) oder weglassen
+        Set<Booking> bookings = roomEntity.getBookings().stream()
+                .map(bookingMapper::toMinimalBooking)
+                .collect(Collectors.toSet());
+        domainRoom.setBookings(bookings);
 
         return domainRoom;
     }
+
 
     public List<Room> toDomainList(List<RoomEntity> roomEntities) {
         if (roomEntities == null) return null;
@@ -137,4 +133,34 @@ public class RoomMapper {
                 .map(this::entityToDomain)
                 .collect(Collectors.toList());
     }
+
+    public Room toMinimalDomain(RoomEntity roomEntity) {
+        if (roomEntity == null) return null;
+
+        // Hier verwenden wir vorhandene Daten, falls möglich.
+        // Falls du wirklich nur die ID benötigst, kannst du auch Standardwerte oder null übergeben.
+        RoomIdentifier roomIdentifier = roomIdentifierMapper.entityToDomain(roomEntity.getRoomIdentifier());
+
+        // Falls du im Minimalmapping keine Hotel-Details brauchst, kannst du hier auch null übergeben.
+        Hotel minimalHotel = null;
+
+        if (roomEntity instanceof SingleRoomEntity) {
+            return new SingleRoom.Builder(
+                    roomEntity.getPricePerNight(), // oder einen Standardwert
+                    roomIdentifier,
+                    minimalHotel
+            ).withId(roomEntity.getId()).build();
+        } else if (roomEntity instanceof DoubleRoomEntity) {
+            return new DoubleRoom.Builder(
+                    roomEntity.getPricePerNight(), // oder einen Standardwert
+                    roomIdentifier,
+                    minimalHotel
+            ).withId(roomEntity.getId()).build();
+        } else {
+            throw new RuntimeException("Unsupported Room subtype: " + roomEntity.getClass().getSimpleName());
+        }
+    }
+
+
+
 }

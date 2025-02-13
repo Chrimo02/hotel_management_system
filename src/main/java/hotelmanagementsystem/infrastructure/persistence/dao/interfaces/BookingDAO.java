@@ -13,6 +13,5 @@ public interface BookingDAO {
     BookingEntity create(BookingEntity bookingEntity);
     BookingEntity read(long id);
     void update(BookingEntity guestEntity);
-    //no need to delete bookings because we have cancel method and so it makes bookinghistory possible
 }
 

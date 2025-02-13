@@ -7,7 +7,6 @@ public class HotelLocationDTO {
     private String city;
     private String country;
 
-    // --- Getter & Setter ---
     public long getId() {
         return id;
     }
@@ -36,7 +35,6 @@ public class HotelLocationDTO {
         this.country = country;
     }
 
-    // --- Konvertierung DTO -> gRPC (Protobuf) ---
     public HotelLocation toProtobuf() {
         return HotelLocation.newBuilder()
                 .setId(this.id)

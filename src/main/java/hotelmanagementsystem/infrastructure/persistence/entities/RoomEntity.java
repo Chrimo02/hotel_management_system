@@ -18,16 +18,9 @@ public abstract class RoomEntity {
     @ManyToOne
     @JoinColumn(name = "hotel_id")
     private HotelEntity hotel;
-    @OneToOne
-    private BookingEntity currentBooking;
 
     @ManyToMany(mappedBy = "rooms", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<BookingEntity> bookings = new HashSet<>();
-
-
-
-
-
 
     public RoomEntity() {
 
@@ -45,10 +38,6 @@ public abstract class RoomEntity {
         this.roomIdentifier = roomIdentifierEntity;
         this.hotel = hotelEntity;
 
-    }
-
-    public BookingEntity getCurrentBooking() {
-        return currentBooking;
     }
 
     public long getId() {
@@ -81,10 +70,6 @@ public abstract class RoomEntity {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public void setCurrentBooking(BookingEntity currentBooking) {
-        this.currentBooking = currentBooking;
     }
 
     public Set<BookingEntity> getBookings() {

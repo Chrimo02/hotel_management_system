@@ -37,7 +37,6 @@ public class GuestDatabaseAdapter implements GuestRepository {
     public Guest updateGuest(Guest guest) {
         GuestEntity guestEntity = guestDAO.read(guest.getId());
         guestEntity.seteMail(guest.geteMail());
-        guestEntity.setTitle(guest.getTitle());
         guestEntity.setPhoneNumber(guest.getPhoneNumber());
         guestEntity.setLastName(guest.getLastName());
         return guestMapper.guestEntityToGuest(guestDAO.update(guestEntity));

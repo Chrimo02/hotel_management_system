@@ -33,26 +33,22 @@ public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImp
     @Override
     public void createBooking(CreateBookingRequest request, StreamObserver<BookingResponse> responseObserver) {
         try {
-            // 1) Konvertiere Request-Raumtypen (Strings) -> Domain-Klassen
             List<Class<? extends hotelmanagementsystem.domain.models.Room>> domainRoomTypes =
                     request.getRoomTypesList().stream()
                             .map(this::parseRoomType)
                             .collect(Collectors.toList());
 
-            // 2) Konvertiere String-Daten -> LocalDate
             LocalDate checkIn = LocalDate.parse(request.getCheckInDate());
             LocalDate checkOut = LocalDate.parse(request.getCheckOutDate());
 
-            // 3) Ruf die Domain-Methode makeBooking auf
             Booking booking = bookingService.makeBooking(
                     request.getHotelId(),
                     checkIn,
                     checkOut,
                     domainRoomTypes,
-                    request.getGuestIdsList()  // Mehrere Gäste
+                    request.getGuestIdsList()
             );
 
-            // 4) Konvertiere Domain-Buchung -> DTO -> Protobuf
             BookingDTO bookingDTO = BookingMapper.toDTO(booking);
             BookingResponse response = BookingResponse.newBuilder()
                     .setBooking(bookingDTO.toProtobuf())
@@ -127,9 +123,7 @@ public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImp
         }
     }
 
-    // Beispiel für eine Hilfsmethode zur Konvertierung von String zu Room-Klasse
     private Class<? extends hotelmanagementsystem.domain.models.Room> parseRoomType(String typeName) {
-        // Minimalbeispiel; erweitere für weitere Typen
         switch (typeName.toUpperCase()) {
             case "SINGLE":
                 return hotelmanagementsystem.domain.models.SingleRoom.class;

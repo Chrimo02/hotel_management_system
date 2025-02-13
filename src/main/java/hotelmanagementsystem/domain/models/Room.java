@@ -31,12 +31,15 @@ public abstract class Room {
     public long getId() {
         return id;
     }
+
     public RoomIdentifier getRoomIdentifier() {
         return roomIdentifier;
     }
+
     public void setRoomIdentifier(RoomIdentifier roomIdentifier) {
         this.roomIdentifier = roomIdentifier;
     }
+
     public void setPricePerNight(double pricePerNight) {
         this.pricePerNight = pricePerNight;
     }
@@ -47,5 +50,41 @@ public abstract class Room {
 
     public void setHotel(Hotel hotel) {
         this.hotel = hotel;
+    }
+
+    // ----------------------
+    // Builder for Room class
+    // ----------------------
+    public static class Builder {
+        private long id;
+        private double pricePerNight;
+        private RoomIdentifier roomIdentifier;
+        private Hotel hotel;
+
+        public Builder withId(long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withPricePerNight(double pricePerNight) {
+            this.pricePerNight = pricePerNight;
+            return this;
+        }
+
+        public Builder withRoomIdentifier(RoomIdentifier roomIdentifier) {
+            this.roomIdentifier = roomIdentifier;
+            return this;
+        }
+
+        public Builder withHotel(Hotel hotel) {
+            this.hotel = hotel;
+            return this;
+        }
+
+        public Room build() {
+            return new Room(id, pricePerNight, roomIdentifier, hotel) {
+                // Optional: Hier kannst du einen bestimmten Raumtyp zurückgeben, z. B. SingleRoom oder DoubleRoom
+            };
+        }
     }
 }

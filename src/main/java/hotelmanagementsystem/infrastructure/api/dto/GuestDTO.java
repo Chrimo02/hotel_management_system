@@ -6,7 +6,6 @@ public class GuestDTO {
     private long id;
     private String firstName;
     private String lastName;
-    private String title;
     private LocalDate birthday;
     private String eMail;
     private String phoneNumber;
@@ -33,14 +32,6 @@ public class GuestDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public LocalDate getBirthday() {

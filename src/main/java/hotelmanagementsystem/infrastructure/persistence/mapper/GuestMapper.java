@@ -16,7 +16,7 @@ public class GuestMapper {
         this.bookingMapper = bookingMapper;
     }
     public GuestEntity guestToGuestEntity(Guest guest){
-        GuestEntity guestEntity = new GuestEntity(guest.getFirstName(), guest.getLastName(), guest.getTitle(),guest.getBirthday().getYear(),guest.getBirthday().getMonthValue(),guest.getBirthday().getDayOfMonth(),guest.geteMail(),guest.getPhoneNumber());
+        GuestEntity guestEntity = new GuestEntity(guest.getFirstName(), guest.getLastName(),guest.getBirthday().getYear(),guest.getBirthday().getMonthValue(),guest.getBirthday().getDayOfMonth(),guest.geteMail(),guest.getPhoneNumber());
         guestEntity.setId(guest.getId());
         return guestEntity;
     }
@@ -35,7 +35,6 @@ public class GuestMapper {
                 .withId(guestEntity.getId())
                 .withFirstName(guestEntity.getFirstName())
                 .withLastName(guestEntity.getLastName())
-                .withTitle(guestEntity.getTitle())
                 .withBirthday(guestEntity.getBirthday().getYear(),guestEntity.getBirthday().getMonthValue(),guestEntity.getBirthday().getDayOfMonth())
                 .withEMail(guestEntity.geteMail())
                 .withPhoneNumber(guestEntity.getPhoneNumber())

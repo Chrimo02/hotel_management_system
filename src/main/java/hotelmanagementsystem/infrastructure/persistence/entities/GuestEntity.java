@@ -13,8 +13,6 @@ public class GuestEntity {
     private String firstName;
     @Column (nullable = false)
     private String lastName;
-    @Column (nullable = true)
-    private String title;
     @Column (nullable = false)
     private LocalDate birthday;
     @Column (nullable = false)
@@ -23,10 +21,9 @@ public class GuestEntity {
     private String phoneNumber;
 
 
-    public GuestEntity(String firstName, String lastName, String title, int yearBirthday,int monthBirtday, int dayBirthday, String eMail, String phoneNumber) {
+    public GuestEntity(String firstName, String lastName, int yearBirthday,int monthBirtday, int dayBirthday, String eMail, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.title = title;
         this.birthday = LocalDate.of(yearBirthday,monthBirtday,dayBirthday);
         this.eMail = eMail;
         this.phoneNumber = phoneNumber;
@@ -43,10 +40,6 @@ public class GuestEntity {
 
     public String getLastName() {
         return lastName;
-    }
-
-    public String getTitle() {
-        return title;
     }
 
     public LocalDate getBirthday() {
@@ -72,10 +65,6 @@ public class GuestEntity {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public void setBirthday(LocalDate birthday) {

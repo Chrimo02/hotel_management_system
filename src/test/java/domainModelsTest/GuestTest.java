@@ -29,7 +29,6 @@ public class GuestTest {
                 .withId(1L)
                 .withFirstName("John")
                 .withLastName("Doe")
-                .withTitle("Mr.")
                 .withBirthday(1990, 5, 20)
                 .withEMail("john.doe@example.com")
                 .withPhoneNumber("1234567890")
@@ -41,7 +40,6 @@ public class GuestTest {
         assertEquals(1L, guest.getId());
         assertEquals("John", guest.getFirstName());
         assertEquals("Doe", guest.getLastName());
-        assertEquals("Mr.", guest.getTitle());
         assertEquals(LocalDate.of(1990, 5, 20), guest.getBirthday());
         assertEquals("john.doe@example.com", guest.geteMail());
         assertEquals("1234567890", guest.getPhoneNumber());
@@ -66,12 +64,6 @@ public class GuestTest {
     }
 
     @Test
-    public void testSetTitle_UpdatesTitleCorrectly() {
-        guest.setTitle("Dr.");
-        assertEquals("Dr.", guest.getTitle());
-    }
-
-    @Test
     public void testGuestBuilder_WithOptionalFieldsAndMockedBookings() {
         Guest guestWithBookings = new Guest.GuestBuilder()
                 .withId(2L)
@@ -89,7 +81,6 @@ public class GuestTest {
 
         assertEquals("Minimal", minimalGuest.getFirstName());
         assertNull(minimalGuest.getLastName());
-        assertNull(minimalGuest.getTitle());
         assertNull(minimalGuest.getBirthday());
         assertNull(minimalGuest.geteMail());
         assertNull(minimalGuest.getPhoneNumber());

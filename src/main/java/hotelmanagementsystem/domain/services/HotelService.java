@@ -1,4 +1,5 @@
 package hotelmanagementsystem.domain.services;
+import hotelmanagementsystem.domain.exceptions.GuestNotFoundException;
 import hotelmanagementsystem.domain.exceptions.HotelNotFoundException;
 import hotelmanagementsystem.domain.models.*;
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.HotelLocationRepository;
@@ -22,12 +23,14 @@ public class HotelService {
     private final HotelLocationRepository hotelLocationRepository;
     private final HotelRatingRepository hotelRatingRepository;
     private final RoomService roomService;
+    private final GuestService guestService;
     @Inject
-    public HotelService(RoomService roomService, HotelRepository hotelRepository, HotelLocationRepository hotelLocationRepository, HotelRatingRepository hotelRatingRepository) {
+    public HotelService(RoomService roomService, HotelRepository hotelRepository, HotelLocationRepository hotelLocationRepository, HotelRatingRepository hotelRatingRepository, GuestService guestService) {
         this.hotelRepository = hotelRepository;
         this.hotelLocationRepository = hotelLocationRepository;
         this.hotelRatingRepository = hotelRatingRepository;
         this.roomService = roomService;
+        this.guestService = guestService;
     }
 
     public Hotel createHotel(String name, String description, HotelLocation hotelLocation) throws RuntimeException {
@@ -41,13 +44,14 @@ public class HotelService {
     }
 
     public boolean deleteHotel(long hotelId) throws HotelNotFoundException{
-        validateHotelId(hotelId);
+        Hotel hotel = hotelRepository.findById(hotelId);
+        if (hotel == null) throw new HotelNotFoundException("There is no Hotel with the specified ID!");
         hotelRepository.deleteById(hotelId);
         return true;
     }
 
     public Hotel updateHotel(long hotelId, Map<String, String> updates) throws HotelNotFoundException {
-        Hotel hotel = validateHotelIdAndReturnObject(hotelId);
+        Hotel hotel = getNotNullHotel(hotelId);
         boolean isUpdated = false;
         for (Map.Entry<String, String> entry : updates.entrySet()) {
             String field = entry.getKey().toLowerCase();
@@ -82,50 +86,56 @@ public class HotelService {
     }
 
 
-    //public List<Hotel> getHotels(){ return hotelRepository.findAll();}
-
-    public PagedHotels listHotelsFilteredAndPaged(
-            String city, double minRating,
-            int pageNumber, int pageSize
-    ) {
-        // Validierung, Standardwerte etc.
+    public PagedHotels listHotelsFilteredAndPaged(String city, double minRating, int pageNumber, int pageSize) {
         if (pageNumber < 1) pageNumber = 1;
-        if (pageSize   < 1) pageSize   = 10;
-
-        // Den eigentlichen Datenbankzugriff delegieren wir ans Repository
+        if (pageSize < 1) pageSize = 10;
         return hotelRepository.findPagedByFilter(city, minRating, pageNumber, pageSize);
     }
 
 
     public Hotel getHotelByHotelId(long hotelId) throws HotelNotFoundException{
-        return validateHotelIdAndReturnObject(hotelId);
-    }
-
-    public HotelLocation getHotelLocationByHotelId(long hotelId) throws HotelNotFoundException{
-        validateHotelId(hotelId);
-        return hotelLocationRepository.getHotelLocationByHotelId(hotelId, HotelLocation.class);
+        return getNotNullHotel(hotelId);
     }
 
     public List<HotelRating> getHotelRatingsByHotelId(long hotelID, int starRating, boolean onlyWithComment) throws HotelNotFoundException {
         List<HotelRating> hotelRatingMap = validateHotelRatings(hotelID);
         return hotelRatingMap.stream().toList();
     }
-    public void rateHotel(long guestID, long hotelID, HotelRating rating) throws HotelNotFoundException{
-        Hotel hotel = validateInputs(hotelID,guestID);
+    public void rateHotel(long guestID, long hotelID, int starRating, String comment)
+            throws HotelNotFoundException, GuestNotFoundException {
+        // Hotel und Gast laden
+        Hotel hotel = getNotNullHotel(hotelID);
+        Guest guest = guestService.getGuestById(guestID);
+
+        // Neues Rating erstellen
+        HotelRating rating = new HotelRating.Builder()
+                .withRating(starRating)
+                .withComment(comment != null ? comment : "")
+                .withGuest(guest)
+                .withHotel(hotel)
+                .build();
+
         hotel.addRating(rating);
-        hotel.setAverageRating(calculateHotelRating(hotel));
+        double newAverage = calculateHotelRating(hotel);
+        hotel.setAverageRating(newAverage);
         hotelRepository.update(hotel);
     }
-    public List<Room> findAvailableRooms(long hotelID, Class<? extends Room> roomType) throws HotelNotFoundException{
-        Hotel hotel = validateHotelIdAndReturnObject(hotelID);
+
+
+
+    public List<Room> findAvailableRooms(long hotelID, Class<? extends Room> roomType) throws HotelNotFoundException {
+        Hotel hotel = getNotNullHotel(hotelID);
         List<Room> availableRooms = new ArrayList<>();
         for (Room room : hotel.getRooms()) {
-            if (roomService.isAvailable(room, LocalDate.now(), LocalDate.now().plusDays(1)) && (roomType == null || roomType.isInstance(room))) {
+            boolean available = roomService.isAvailable(room, LocalDate.now(), LocalDate.now().plusDays(1));
+            boolean matchesType = (roomType == null || roomType.isInstance(room));
+            if (available && matchesType) {
                 availableRooms.add(room);
             }
         }
         return availableRooms;
     }
+
     public List<HotelRating> filterHotelRatings(long hotelID, int starRating, boolean onlyWithComment) throws HotelNotFoundException{
         List<HotelRating> hotelRatingMap = validateHotelRatings(hotelID);
         return hotelRatingMap.stream()
@@ -147,28 +157,12 @@ public class HotelService {
         if (description == null) {
             throw new IllegalArgumentException("Hotel description must not be empty");
         }
-        //HotelLocation validieren
     }
-    private Hotel validateInputs(long guestId, long hotelID) throws HotelNotFoundException{
-        Hotel hotel = validateHotelIdAndReturnObject(hotelID);
-        validateGuestId(hotel, guestId);
-        return hotel;
-    }
-    private Hotel validateHotelIdAndReturnObject(long hotelID) throws HotelNotFoundException{
-        return hotelRepository.findById(hotelID)
-                .orElseThrow(() -> new HotelNotFoundException("Hotel with ID " + hotelID + " not found!"));
-    }
-    private boolean validateHotelId(long hotelID) throws HotelNotFoundException{
-        return hotelRepository.findById(hotelID)
-                .map(hotel -> true)
-                .orElseThrow(() -> new HotelNotFoundException("Hotel with ID " + hotelID + " not found!"));
-    }
-    private void validateGuestId(Hotel hotel, long guestID){
-        if (!(hotel.getBookings().stream()
-                .flatMap(booking -> booking.getGuests().stream())
-                .anyMatch(guest -> guest.getId() == guestID))) {
-            throw new IllegalArgumentException("Guest with ID " + guestID + " has no booking in this hotel!");
-        }
+
+    private Hotel getNotNullHotel(long hotelId) throws HotelNotFoundException {
+        Hotel hotel = hotelRepository.findById(hotelId);
+        if (hotel == null) throw new HotelNotFoundException("There is no Hotel with the specified ID!");
+        else return hotel;
     }
 
     private double calculateHotelRating(Hotel hotel) {
@@ -181,7 +175,7 @@ public class HotelService {
 
 
     private  List<HotelRating> validateHotelRatings(long hotelID) throws HotelNotFoundException{
-        List<HotelRating> ratings = validateHotelIdAndReturnObject(hotelID).getRatings();
+        List<HotelRating> ratings = getNotNullHotel(hotelID).getRatings();
         if (ratings.isEmpty()) {
             throw new IllegalArgumentException("No Ratings so far");
         }

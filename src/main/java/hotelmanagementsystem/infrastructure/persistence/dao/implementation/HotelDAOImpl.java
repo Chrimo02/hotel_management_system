@@ -31,10 +31,10 @@ public class HotelDAOImpl implements HotelDAO {
 
     @Override
     @Transactional(Transactional.TxType.SUPPORTS)
-    public Optional<HotelEntity> findById(Long id) {
+    public HotelEntity findById(Long id) {
         try {
             HotelEntity entity = em.find(HotelEntity.class, id);
-            return entity != null ? Optional.of(entity) : Optional.empty();
+            return entity;
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException("Error while finding hotel by ID", e);
@@ -52,6 +52,7 @@ public class HotelDAOImpl implements HotelDAO {
             throw new DataAccessException("Error updating Hotel", e);
         }
     }
+
 
     @Override
     @Transactional
@@ -105,7 +106,6 @@ public class HotelDAOImpl implements HotelDAO {
             query.setParameter("city", (city == null || city.isBlank()) ? null : city);
             query.setParameter("minRating", minRating);
 
-            // Paging
             query.setFirstResult(offset);
             query.setMaxResults(limit);
 

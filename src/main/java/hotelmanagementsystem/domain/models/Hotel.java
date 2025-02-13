@@ -1,5 +1,6 @@
 package hotelmanagementsystem.domain.models;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class Hotel {
 
     private List<Room> rooms;
     private List<Booking> bookings;
-    private final List<HotelRating> ratings;
+    private List<HotelRating> ratings;
 
     private Hotel(HotelBuilder hotelBuilder) {
         this.id = hotelBuilder.id;
@@ -22,7 +23,7 @@ public class Hotel {
         this.description = hotelBuilder.description;
         this.location = hotelBuilder.location;
         this.ratings = hotelBuilder.ratings;
-        this.averageRating = 0.0;
+        this.averageRating = hotelBuilder.averageRating;
         this.bookings = hotelBuilder.bookings;
     }
 
@@ -47,7 +48,6 @@ public class Hotel {
     public List<Booking> getBookings() {return bookings;}
     public List<HotelRating> getRatings() {return ratings;}
 
-
     public void setName(String name) {
         this.name = name;
     }
@@ -68,9 +68,8 @@ public class Hotel {
         this.bookings = bookings;
     }
 
-    public void addRating(HotelRating rating) { this.ratings.add(rating);}
-    public void addRoom(Room room){rooms.add(room);}
-
+    public void addRating(HotelRating rating) { this.ratings.add(rating); }
+    public void addRoom(Room room){ rooms.add(room); }
 
     public static class HotelBuilder {
 
@@ -81,6 +80,7 @@ public class Hotel {
         private List<Room> rooms;
         private List<Booking> bookings;
         private List<HotelRating> ratings = new ArrayList<>();
+        private double averageRating = 0.0;
 
         public HotelBuilder() {
         }
@@ -116,14 +116,18 @@ public class Hotel {
         }
 
         public HotelBuilder withRatingMap(List<HotelRating> ratings){
-            this.ratings = ratings;
+            if (ratings != null){
+                this.ratings = ratings;
+            }
             return this;
         }
-
+        public HotelBuilder withAverageRating(double avg){
+            this.averageRating = avg;
+            return this;
+        }
 
         public Hotel build() {
             return new Hotel(this);
         }
-
     }
 }

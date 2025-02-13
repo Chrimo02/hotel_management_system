@@ -22,10 +22,10 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
 
     @Override
     @Transactional
-    public Optional<HotelRatingEntity> createRating(HotelRatingEntity rating) {
+    public HotelRatingEntity createRating(HotelRatingEntity rating) {
         try {
             em.persist(rating);
-            return Optional.of(rating);
+            return rating;
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException("Error saving HotelRating", e);
@@ -34,10 +34,10 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
 
     @Override
     @Transactional(Transactional.TxType.SUPPORTS)
-    public Optional<HotelRatingEntity> findById(Long id) {
+    public HotelRatingEntity findById(Long id) {
         try {
             HotelRatingEntity entity = em.find(HotelRatingEntity.class, id);
-            return entity != null ? Optional.of(entity) : Optional.empty();
+            return entity;
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException("Error while finding HotelRating by ID", e);
@@ -46,21 +46,17 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
 
     @Override
     @Transactional(Transactional.TxType.SUPPORTS)
-    public Optional<Map<Long, HotelRatingEntity>> findAll() {
+    public Map<Long, HotelRatingEntity> findAll() {
         try {
             TypedQuery<HotelRatingEntity> query = em.createQuery(
                     "SELECT r FROM HotelRatingEntity r", HotelRatingEntity.class
             );
             List<HotelRatingEntity> resultList = query.getResultList();
 
-            if (resultList.isEmpty()) {
-                return Optional.empty();
-            }
-
             Map<Long, HotelRatingEntity> ratingMap = resultList.stream()
                     .collect(Collectors.toMap(HotelRatingEntity::getId, Function.identity()));
 
-            return Optional.of(ratingMap);
+            return ratingMap;
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException("Error while finding all HotelRatings", e);
@@ -69,25 +65,29 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
 
     @Override
     @Transactional(Transactional.TxType.SUPPORTS)
-    public Optional<List<HotelRatingEntity>> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment) {
+    public List<HotelRatingEntity> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment) {
         try {
-            String queryString = "SELECT r FROM HotelRatingEntity r " +
-                    "WHERE r.hotel.id = :hotelID " +
-                    "  AND r.starRating = :starRating";
+            String queryString =
+                    "SELECT r FROM HotelRatingEntity r WHERE r.hotelId = :hotelID";
+
+            if (starRating > 0) {
+                queryString += " AND r.starRating = :starRating";
+            }
             if (onlyWithComment) {
                 queryString += " AND r.commentRating IS NOT NULL AND r.commentRating != ''";
             }
 
             TypedQuery<HotelRatingEntity> query = em.createQuery(queryString, HotelRatingEntity.class);
             query.setParameter("hotelID", hotelID);
-            query.setParameter("starRating", starRating);
+
+            if (starRating > 0) {
+                query.setParameter("starRating", starRating);
+            }
+
 
             List<HotelRatingEntity> resultList = query.getResultList();
 
-            if (resultList.isEmpty()) {
-                return Optional.empty();
-            }
-            return Optional.of(resultList);
+            return resultList;
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException("Error finding filtered hotel ratings", e);

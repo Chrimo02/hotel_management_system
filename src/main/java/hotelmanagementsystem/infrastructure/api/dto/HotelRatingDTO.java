@@ -1,16 +1,13 @@
 package hotelmanagementsystem.infrastructure.api.dto;
-
 import hotelmanagementsystem.domain.models.Booking;
-import hotelmanagementsystem.domain.models.HotelRating;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.*;
 
 public class HotelRatingDTO {
 
     private long id;
-    private int rating;          // Sternebewertung (z.B. 1..5)
-    private String commentRating;
-    private long bookingId;      // ID der zugehörigen Buchung
-    private long guestId;        // ID des Gasts
+    private int rating;
+    private String comment;
+    private long guestId;
 
     // --- Getter & Setter ---
 
@@ -28,18 +25,11 @@ public class HotelRatingDTO {
         this.rating = rating;
     }
 
-    public String getCommentRating() {
-        return commentRating;
+    public String getComment() {
+        return comment;
     }
-    public void setCommentRating(String commentRating) {
-        this.commentRating = commentRating;
-    }
-
-    public long getBookingId() {
-        return bookingId;
-    }
-    public void setBookingId(long bookingId) {
-        this.bookingId = bookingId;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     public long getGuestId() {
@@ -50,13 +40,10 @@ public class HotelRatingDTO {
     }
 
     // --- Konvertierung DTO -> gRPC (Protobuf) ---
-//    public HotelRating toProtobuf() {
-//        return new HotelRating.Builder()
-//                .withId(this.id)
-//                .withRating(this.rating)
-//                .withComment(this.commentRating != null ? this.commentRating : "")
-//                .withBooking(this.bookingId)
-//                .withGuestId(this.guestId)
-//                .build();
-//    }
+    public HotelRating toProtobuf() {
+        return HotelRating.newBuilder()
+                .setStarRating(this.getRating())
+                .setComment(this.getComment())
+                .build();
+    }
 }

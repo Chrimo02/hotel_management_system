@@ -1,13 +1,11 @@
 package hotelmanagementsystem.infrastructure.persistence.mapper;
 
-import hotelmanagementsystem.domain.models.Booking;
 import hotelmanagementsystem.domain.models.HotelRating;
-import hotelmanagementsystem.infrastructure.persistence.entities.BookingEntity;
-import hotelmanagementsystem.infrastructure.persistence.entities.HotelEntity;
+import hotelmanagementsystem.domain.models.Guest;
 import hotelmanagementsystem.infrastructure.persistence.entities.HotelRatingEntity;
+import hotelmanagementsystem.infrastructure.persistence.entities.GuestEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,67 +13,67 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public class HotelRatingMapper {
 
-    private final BookingMapper bookingMapper;
-    // private final HotelMapper hotelMapper; // Ggf. gar nicht mehr nötig
+    private final GuestMapper guestMapper;
 
     @Inject
-    public HotelRatingMapper(BookingMapper bookingMapper) {
-        this.bookingMapper = bookingMapper;
+    public HotelRatingMapper(GuestMapper guestMapper) {
+        this.guestMapper = guestMapper;
     }
 
-    // -----------------------------
-    // ENTITY -> DOMAIN
-    // -----------------------------
+    /**
+     * Maps a HotelRatingEntity (from the DB) to a domain HotelRating.
+     * Note that we ignore the hotel reference.
+     */
     public HotelRating mapToDomain(HotelRatingEntity entity) {
-        if (entity == null) return null;
+        if (entity == null) {
+            return null;
+        }
 
-        // Booking minimal
-        Booking bookingDomain = bookingMapper.bookingEntityToBooking(entity.getBooking());
+        Guest domainGuest = guestMapper.guestEntityToGuest(entity.getGuest());
 
-        HotelRating ratingDomain = new HotelRating.Builder()
+        return new HotelRating.Builder()
                 .withId(entity.getId())
+                // We set hotel to null – ratings will be accessed only via a Hotel.
+                .withHotel(null)
+                .withGuest(domainGuest)
                 .withRating(entity.getStarRating())
                 .withComment(entity.getCommentRating())
-                .withBooking(bookingDomain)
-                // Guest -> Falls du willst, kannst du hier guestMapper holen
-                // .withGuest(...)
                 .build();
-        return ratingDomain;
     }
 
-    // -----------------------------
-    // DOMAIN -> ENTITY
-    // -----------------------------
+    /**
+     * Maps a domain HotelRating to a HotelRatingEntity.
+     * The hotel is not set here because it will be stored
+     * only as part of the parent HotelEntity.
+     */
     public HotelRatingEntity mapToEntity(HotelRating rating) {
-        if (rating == null) return null;
+        if (rating == null) {
+            return null;
+        }
 
-        // Minimales BookingEntity
-        BookingEntity bookingEntity = bookingMapper.bookingToBookingEntity(rating.getBooking());
+        GuestEntity guestEntity = guestMapper.guestToGuestEntity(rating.getGuest());
 
-        // Minimales HotelEntity? => Falls das RatingEntity ein Hotel braucht,
-        // setze nur ID oder so. id = rating.getBooking().getHotel().getId()
-
-        // Guest -> auch minimal per ID, etc.
-
-        HotelRatingEntity entity = new HotelRatingEntity.Builder()
+        return new HotelRatingEntity.Builder()
                 .withId(rating.getId())
                 .withRating(rating.getStarRating())
                 .withComment(rating.getGuestComment())
-                .withBooking(bookingEntity)
+                .withGuest(guestEntity)
                 .build();
-        return entity;
     }
 
-    // Helpers
-    public List<HotelRating> mapToDomainList(List<HotelRatingEntity> list) {
-        if (list == null) return Collections.emptyList();
-        return list.stream()
+    public List<HotelRating> mapToDomainList(List<HotelRatingEntity> entities) {
+        if (entities == null) {
+            return Collections.emptyList();
+        }
+        return entities.stream()
                 .map(this::mapToDomain)
                 .collect(Collectors.toList());
     }
 
     public List<HotelRatingEntity> mapToEntityList(List<HotelRating> ratings) {
-        if (ratings == null) return Collections.emptyList();
+        if (ratings == null) {
+            return Collections.emptyList();
+        }
         return ratings.stream()
                 .map(this::mapToEntity)
                 .collect(Collectors.toList());
