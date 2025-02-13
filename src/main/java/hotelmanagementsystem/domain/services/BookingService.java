@@ -57,8 +57,9 @@ public class BookingService {
         if(java.time.temporal.ChronoUnit.DAYS.between(LocalDate.now(), booking.getCheckInDate()) < 2)
             throw new RuntimeException("Sorry, the cancellation deadline has already expired!");
         for(Room room : booking.getRooms()){
-            roomService.cancelRoom(room.getId(), booking.getCheckInDate(), booking.getCheckOutDate());
+            roomService.cancelRoom(room.getId(), booking);
         }
+        booking.setRooms(new ArrayList<>());
         booking.setStatus(false);
         bookingRepository.updateBooking(booking);
     }

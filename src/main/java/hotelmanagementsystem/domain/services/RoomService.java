@@ -52,14 +52,13 @@ public class RoomService {
         }
     }
 
-    public void cancelRoom(long roomId, LocalDate checkIn, LocalDate checkOut) throws RoomNotFoundException, BookingNotFoundException {
+    public void cancelRoom(long roomId, Booking bookingToCancel) throws RoomNotFoundException, BookingNotFoundException {
         Room room = getRoomById(roomId);
-        Booking bookingToCancel = findBookingByDates(room, checkIn, checkOut);
         if (bookingToCancel != null) {
             room.getBookings().remove(bookingToCancel);
             roomRepository.updateRoom(room);
         } else {
-            throw new BookingNotFoundException("Booking not found for the specified dates.");
+            throw new BookingNotFoundException("Booking not found");
         }
     }
 
@@ -76,15 +75,6 @@ public class RoomService {
         return newCheckIn.isBefore(existingBooking.getCheckOutDate()) &&
                 newCheckOut.isAfter(existingBooking.getCheckInDate());
 
-    }
-
-    private Booking findBookingByDates(Room room, LocalDate checkIn, LocalDate checkOut) {
-        for (Booking booking : room.getBookings()) {
-            if (booking.getCheckInDate().equals(checkIn) && booking.getCheckOutDate().equals(checkOut)) {
-                return booking;
-            }
-        }
-        return null;
     }
 
     public Room createRoom(double pricePerNight, RoomIdentifier roomIdentifier, long hotelId, Class<? extends Room> roomType) throws HotelNotFoundException {

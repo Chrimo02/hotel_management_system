@@ -58,6 +58,7 @@ public class BookingDatabaseAdapter implements BookingRepository {
 
         BookingEntity bookingEntity = bookingDAO.read(booking.getId());
 
+        bookingEntity.setRooms(roomMapper.toEntityList(booking.getRooms()));
         bookingEntity.setStatus(booking.getStatus());
         bookingEntity.setCheckInTime(booking.getCheckInTime());
         bookingEntity.setCheckOutTime(booking.getCheckOutTime());

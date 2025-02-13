@@ -103,6 +103,10 @@ public class Booking implements Comparable<Booking> {
         return checkOutTime != null; // Checked out if checkOutTime is not null
     }
 
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
+    }
+
     @Override
     public int compareTo(Booking other) {
         return this.checkInDate.compareTo(other.checkInDate);
