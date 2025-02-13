@@ -109,14 +109,25 @@ public class BookingMapper {
         List<Room> rooms = bookingEntity.getRooms().stream()
                 .map(roomEntity -> roomMapper.toMinimalDomain(roomEntity))
                 .collect(Collectors.toList());
+        List<Guest> guests = bookingEntity.getGuests().stream()
+                .map(guestMapper::guestEntityToGuest)
+                .collect(Collectors.toList());
+
+        Hotel minimalHotel = null;
+        if (bookingEntity.getHotel() != null) {
+            minimalHotel = new Hotel.HotelBuilder()
+                    .withId(bookingEntity.getHotel().getId())
+                    .withName(bookingEntity.getHotel().getName()) // falls verfügbar
+                    .build();
+        }
 
         return new Booking(
                 bookingEntity.getId(),
-                null, // No hotel details
+                minimalHotel,
                 bookingEntity.getCheckInDate(),
                 bookingEntity.getCheckOutDate(),
                 rooms,
-                null, // No guests
+                guests, // No guests
                 bookingEntity.isStatus(),
                 bookingEntity.getCheckInTime(),
                 bookingEntity.getCheckOutTime()
