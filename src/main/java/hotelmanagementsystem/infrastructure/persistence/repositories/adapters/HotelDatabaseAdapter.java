@@ -46,14 +46,9 @@ public class HotelDatabaseAdapter implements HotelRepository {
     @Override
     public PagedHotels findPagedByFilter(String city, double minRating, int pageNumber, int pageSize){
         try {
-            // 1) Offset + Limit berechnen
             int offset = (pageNumber - 1) * pageSize;
-
-            // 2) DAO nutzen
             long totalCount = hotelDAO.countByFilter(city, minRating);
             List<HotelEntity> entities = hotelDAO.findByFilter(city, minRating, offset, pageSize);
-
-            // 3) Entities -> Domain
             List<Hotel> domainHotels = entities.stream()
                     .map(hotelMapper::mapHotelEntityToDomainHotel)
                     .collect(Collectors.toList());
@@ -69,18 +64,25 @@ public class HotelDatabaseAdapter implements HotelRepository {
     @Override
     public Hotel update(Hotel hotel) {
         try {
-            // Map the domain object to the entity and pass it to the DAO for updating
-            return hotelMapper.mapHotelEntityToDomainHotel(hotelDAO.updateHotel(hotelMapper.mapDomainHotelToHotelEntity(hotel)));
+            // Aus dem Domain-Hotel ein HotelEntity bauen
+            HotelEntity hotelEntity = hotelMapper.mapDomainHotelToHotelEntity(hotel);
+
+            // Dann DAO-Ebene aufrufen
+            HotelEntity updated = hotelDAO.updateHotel(hotelEntity);
+
+            // Rückübersetzen in Domain
+            return hotelMapper.mapHotelEntityToDomainHotel(updated);
+            //return hotelMapper.mapHotelEntityToDomainHotel(hotelDAO.updateHotel(hotelMapper.mapDomainHotelToHotelEntity(hotel)));
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Error updating Hotel", e);
         }
     }
 
+
     @Override
     public void deleteById(Long id) {
         try {
-            // Use the DAO to delete the hotel by ID
             hotelDAO.deleteById(id);
         } catch (Exception e) {
             e.printStackTrace();

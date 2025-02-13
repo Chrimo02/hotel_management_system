@@ -8,10 +8,10 @@ import java.util.Map;
 
 
 public interface HotelRatingDAO {
-    Optional<HotelRatingEntity> createRating(HotelRatingEntity rating);           // Save or update a rating
-    Optional<HotelRatingEntity> findById(Long id);                        // Find a rating by its ID
-    Optional<Map<Long, HotelRatingEntity>> findAll(); // Find ratings by star rating
+    HotelRatingEntity createRating(HotelRatingEntity rating);
+    HotelRatingEntity findById(Long id);
+    Map<Long, HotelRatingEntity> findAll();
     void deleteById(Long id);
     void updateRating(HotelRatingEntity rating);
-    Optional<List<HotelRatingEntity>> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment);// Delete a rating
+    List<HotelRatingEntity> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment);
 }

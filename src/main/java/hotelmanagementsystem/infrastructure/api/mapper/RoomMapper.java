@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 
 public class RoomMapper {
 
- // --- Map Domain Room -> DTO ---
  public static RoomDTO toDTO(Room room) {
   RoomIdentifierDTO roomIdentifierDTO = RoomIdentifierMapper.toDTO(room.getRoomIdentifier());
   List<BookingDTO> bookingDTOs = room.getBookings().stream()
@@ -24,11 +23,10 @@ public class RoomMapper {
           roomIdentifierDTO,
           room.getHotel().getId(),
           bookingDTOs,
-          room.getClass().getSimpleName() // Room-Typ als String
+          room.getClass().getSimpleName()
   );
  }
 
- // --- Map DTO -> Domain Room ---
  public static Room toDomain(RoomDTO dto, Hotel hotel, Set<Booking> bookings) {
   RoomIdentifier roomIdentifier = RoomIdentifierMapper.toDomain(dto.getRoomIdentifierDTO());
 

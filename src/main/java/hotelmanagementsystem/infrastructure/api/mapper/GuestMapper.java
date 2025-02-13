@@ -9,7 +9,6 @@ public class GuestMapper {
         dto.setId(guest.getId());
         dto.setFirstName(guest.getFirstName());
         dto.setLastName(guest.getLastName());
-        dto.setTitle(guest.getTitle());
         dto.setBirthday(guest.getBirthday());
         dto.seteMail(guest.geteMail());
         dto.setPhoneNumber(guest.getPhoneNumber());
@@ -21,7 +20,6 @@ public class GuestMapper {
                 .withId(dto.getId())
                 .withFirstName(dto.getFirstName())
                 .withLastName(dto.getLastName())
-                .withTitle(dto.getTitle())
                 .withBirthday(dto.getBirthday().getYear(),dto.getBirthday().getMonthValue(),dto.getBirthday().getDayOfMonth())
                 .withEMail(dto.geteMail())
                 .withPhoneNumber(dto.getPhoneNumber())

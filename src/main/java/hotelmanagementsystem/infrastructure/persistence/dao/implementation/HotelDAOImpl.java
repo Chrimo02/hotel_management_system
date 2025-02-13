@@ -53,6 +53,7 @@ public class HotelDAOImpl implements HotelDAO {
         }
     }
 
+
     @Override
     @Transactional
     public void deleteById(Long id) {

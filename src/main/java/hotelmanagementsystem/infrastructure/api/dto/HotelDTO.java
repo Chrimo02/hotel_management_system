@@ -1,11 +1,7 @@
 package hotelmanagementsystem.infrastructure.api.dto;
 import java.util.List;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.Hotel;
-/**
- * DTO-Klasse für Hotel-Daten.
- * Angelehnt an die Struktur von BookingDTO,
- * inkl. einer toProtobuf()-Methode für gRPC.
- */
+
 public class HotelDTO {
 
     private long id;
@@ -14,8 +10,7 @@ public class HotelDTO {
     private double averageRating;
     private List<Long> roomIds;
     private List<Long> bookingIds;
-
-    // --- Getter / Setter ---
+    private List<Long> hotelRatingIds;
 
     public long getId() {
         return id;
@@ -59,11 +54,14 @@ public class HotelDTO {
         this.bookingIds = bookingIds;
     }
 
-    // --- Konvertierung DTO -> gRPC (Protobuf) ---
+    public List<Long> getHotelRatingIdsds() {
+        return hotelRatingIds;
+    }
+    public void setHotelRatingIds(List<Long> hotelRatingIds) {
+        this.hotelRatingIds = hotelRatingIds;
+    }
+
     public Hotel toProtobuf() {
-        // Annahme: Dein Proto 'Hotel' hat Felder wie:
-        //   int64 id, string name, string description, double averageRating
-        //   repeated int64 roomIds, repeated int64 bookingIds
         return Hotel.newBuilder()
                 .setId(this.id)
                 .setName(this.name)
@@ -71,6 +69,7 @@ public class HotelDTO {
                 .setAverageRating(this.averageRating)
                 .addAllRoomIds(this.roomIds != null ? this.roomIds : List.of())
                 .addAllBookingIds(this.bookingIds != null ? this.bookingIds : List.of())
+                .addAllHotelRatingIds(this.hotelRatingIds != null ? this.hotelRatingIds : List.of())
                 .build();
     }
 }

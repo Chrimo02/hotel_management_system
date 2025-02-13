@@ -40,7 +40,6 @@ public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
             Guest guest = guestService.createGuest(
                     request.getFirstName(),
                     request.getLastName(),
-                    request.getTitle(),
                     LocalDate.parse(request.getBirthday()).getYear(),
                     LocalDate.parse(request.getBirthday()).getMonthValue(),
                     LocalDate.parse(request.getBirthday()).getDayOfMonth(),
@@ -130,29 +129,6 @@ public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
         try {
             Guest updatedGuest = guestService.updateLastName(request.getGuestId(), request.getNewLastName());
             GuestDTO dto = GuestMapper.toDTO(updatedGuest);
-            GuestResponse response = GuestResponse.newBuilder()
-                    .setGuest(dto.toProtobuf())
-                    .build();
-
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
-        } catch (GuestNotFoundException e) {
-            responseObserver.onError(
-                    Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException()
-            );
-        } catch (Exception e) {
-            responseObserver.onError(
-                    Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException()
-            );
-        }
-    }
-
-    @Override
-    public void updateGuestTitle(UpdateGuestTitleRequest request, StreamObserver<GuestResponse> responseObserver) {
-        try {
-            Guest updatedGuest = guestService.updateTitle(request.getGuestId(), request.getNewTitle());
-            GuestDTO dto = GuestMapper.toDTO(updatedGuest);
-
             GuestResponse response = GuestResponse.newBuilder()
                     .setGuest(dto.toProtobuf())
                     .build();

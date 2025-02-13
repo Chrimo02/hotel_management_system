@@ -11,19 +11,16 @@ import java.util.stream.Collectors;
 
 public class BookingMapper {
 
-    // --- Map Domain Booking -> DTO ---
     public static BookingDTO toDTO(Booking booking) {
         BookingDTO dto = new BookingDTO();
         dto.setId(booking.getId());
         dto.setHotelId(booking.getHotel().getId());
 
-        // Alle Gast-IDs extrahieren
         List<Long> guestIds = booking.getGuests().stream()
                 .map(Guest::getId)
                 .collect(Collectors.toList());
         dto.setGuestIds(guestIds);
 
-        // Alle Raum-IDs extrahieren
         List<Long> roomIds = booking.getRooms().stream()
                 .map(Room::getId)
                 .collect(Collectors.toList());
@@ -34,7 +31,6 @@ public class BookingMapper {
         dto.setStatus(booking.getStatus());
         dto.setTotalPrice(booking.getTotalPrice());
 
-        // Optional: Check-In und Check-Out Zeiten setzen
         if (booking.getCheckInTime() != null) {
             dto.setCheckInTime(booking.getCheckInTime());
         }
@@ -46,7 +42,6 @@ public class BookingMapper {
         return dto;
     }
 
-    // --- Map DTO -> Domain Booking ---
     public static Booking toDomain(BookingDTO dto, Hotel hotel, List<Room> rooms, List<Guest> guests) {
         return new Booking(
                 dto.getId(),
@@ -55,7 +50,7 @@ public class BookingMapper {
                 dto.getCheckOutDate(),
                 rooms,
                 guests,
-                true,   // Standardstatus ist aktiv
+                true,
                 dto.getCheckInTime(),
                 dto.getCheckOutTime()
         );

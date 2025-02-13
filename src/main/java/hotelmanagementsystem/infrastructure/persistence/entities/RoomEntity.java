@@ -24,11 +24,6 @@ public abstract class RoomEntity {
     @ManyToMany(mappedBy = "rooms", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<BookingEntity> bookings = new HashSet<>();
 
-
-
-
-
-
     public RoomEntity() {
 
     }

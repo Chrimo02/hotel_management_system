@@ -71,16 +71,23 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
     @Transactional(Transactional.TxType.SUPPORTS)
     public Optional<List<HotelRatingEntity>> findFilteredRatings(long hotelID, int starRating, boolean onlyWithComment) {
         try {
-            String queryString = "SELECT r FROM HotelRatingEntity r " +
-                    "WHERE r.hotel.id = :hotelID " +
-                    "  AND r.starRating = :starRating";
+            String queryString =
+                    "SELECT r FROM HotelRatingEntity r WHERE r.hotelId = :hotelID";
+
+            if (starRating > 0) {
+                queryString += " AND r.starRating = :starRating";
+            }
             if (onlyWithComment) {
                 queryString += " AND r.commentRating IS NOT NULL AND r.commentRating != ''";
             }
 
             TypedQuery<HotelRatingEntity> query = em.createQuery(queryString, HotelRatingEntity.class);
             query.setParameter("hotelID", hotelID);
-            query.setParameter("starRating", starRating);
+
+            if (starRating > 0) {
+                query.setParameter("starRating", starRating);
+            }
+
 
             List<HotelRatingEntity> resultList = query.getResultList();
 
