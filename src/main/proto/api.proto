@@ -49,7 +49,11 @@ message Hotel {
   double averageRating = 5;
   repeated int64 roomIds = 6;
   repeated int64 bookingIds = 7;
-  repeated int64 hotelRatingIds = 8;
+  repeated HotelRating hotelRatings = 8;
+}
+message HotelRating {
+  int32 starRating = 1;
+  string comment = 2;
 }
 
 message HotelLocation {

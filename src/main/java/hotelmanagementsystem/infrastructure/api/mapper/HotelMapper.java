@@ -5,6 +5,7 @@ import hotelmanagementsystem.domain.models.Hotel;
 import hotelmanagementsystem.domain.models.HotelRating;
 import hotelmanagementsystem.domain.models.Room;
 import hotelmanagementsystem.infrastructure.api.dto.HotelDTO;
+import hotelmanagementsystem.infrastructure.api.dto.HotelRatingDTO;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,12 +42,12 @@ public class HotelMapper {
         }
 
         if (hotel.getRatings() != null) {
-            List<Long> bookingIds = hotel.getRatings().stream()
-                    .map(HotelRating::getId)
-                    .collect(Collectors.toList());
-            dto.setHotelRatingIds(bookingIds);
+            List<HotelRatingDTO> ratings = hotel.getRatings().stream()
+                    .map(HotelRatingMapper::toDTO)
+                    .toList();
+            dto.setHotelRatings(ratings);
         } else {
-            dto.setHotelRatingIds(Collections.emptyList());
+            dto.setHotelRatings(Collections.emptyList());
         }
         return dto;
     }

@@ -10,7 +10,7 @@ public class HotelDTO {
     private double averageRating;
     private List<Long> roomIds;
     private List<Long> bookingIds;
-    private List<Long> hotelRatingIds;
+    private List<HotelRatingDTO> hotelRatings;
 
     public long getId() {
         return id;
@@ -54,11 +54,12 @@ public class HotelDTO {
         this.bookingIds = bookingIds;
     }
 
-    public List<Long> getHotelRatingIdsds() {
-        return hotelRatingIds;
+    public List<HotelRatingDTO> getHotelRatings() {
+        return hotelRatings;
     }
-    public void setHotelRatingIds(List<Long> hotelRatingIds) {
-        this.hotelRatingIds = hotelRatingIds;
+
+    public void setHotelRatings(List<HotelRatingDTO> hotelRatings) {
+        this.hotelRatings = hotelRatings;
     }
 
     public Hotel toProtobuf() {
@@ -69,7 +70,7 @@ public class HotelDTO {
                 .setAverageRating(this.averageRating)
                 .addAllRoomIds(this.roomIds != null ? this.roomIds : List.of())
                 .addAllBookingIds(this.bookingIds != null ? this.bookingIds : List.of())
-                .addAllHotelRatingIds(this.hotelRatingIds != null ? this.hotelRatingIds : List.of())
+                .addAllHotelRatings(hotelRatings.stream().map(HotelRatingDTO::toProtobuf).toList())
                 .build();
     }
 }

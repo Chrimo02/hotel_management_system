@@ -708,7 +708,7 @@ public class TestClient {
         System.out.println("Average Rating: " + hotel.getAverageRating());
         System.out.println("Room IDs: " + hotel.getRoomIdsList());
         System.out.println("Booking IDs: " + hotel.getBookingIdsList());
-        System.out.println("Hotel Rating IDs: " + hotel.getHotelRatingIdsList());
+        System.out.println("Hotel Ratings: " + hotel.getHotelRatingsList());
     }
 
     private static void printGuest(Guest guest) {
