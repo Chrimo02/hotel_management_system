@@ -44,13 +44,14 @@ public class HotelService {
     }
 
     public boolean deleteHotel(long hotelId) throws HotelNotFoundException{
-        validateHotelId(hotelId);
+        Hotel hotel = hotelRepository.findById(hotelId);
+        if (hotel == null) throw new HotelNotFoundException("There is no Hotel with the specified ID!");
         hotelRepository.deleteById(hotelId);
         return true;
     }
 
     public Hotel updateHotel(long hotelId, Map<String, String> updates) throws HotelNotFoundException {
-        Hotel hotel = validateHotelIdAndReturnObject(hotelId);
+        Hotel hotel = getNotNullHotel(hotelId);
         boolean isUpdated = false;
         for (Map.Entry<String, String> entry : updates.entrySet()) {
             String field = entry.getKey().toLowerCase();
@@ -93,12 +94,7 @@ public class HotelService {
 
 
     public Hotel getHotelByHotelId(long hotelId) throws HotelNotFoundException{
-        return validateHotelIdAndReturnObject(hotelId);
-    }
-
-    public HotelLocation getHotelLocationByHotelId(long hotelId) throws HotelNotFoundException{
-        validateHotelId(hotelId);
-        return hotelLocationRepository.getHotelLocationByHotelId(hotelId, HotelLocation.class);
+        return getNotNullHotel(hotelId);
     }
 
     public List<HotelRating> getHotelRatingsByHotelId(long hotelID, int starRating, boolean onlyWithComment) throws HotelNotFoundException {
@@ -108,7 +104,7 @@ public class HotelService {
     public void rateHotel(long guestID, long hotelID, int starRating, String comment)
             throws HotelNotFoundException, GuestNotFoundException {
         // Hotel und Gast laden
-        Hotel hotel = validateHotelIdAndReturnObject(hotelID);
+        Hotel hotel = getNotNullHotel(hotelID);
         Guest guest = guestService.getGuestById(guestID);
 
         // Neues Rating erstellen
@@ -128,7 +124,7 @@ public class HotelService {
 
 
     public List<Room> findAvailableRooms(long hotelID, Class<? extends Room> roomType) throws HotelNotFoundException {
-        Hotel hotel = validateHotelIdAndReturnObject(hotelID);
+        Hotel hotel = getNotNullHotel(hotelID);
         List<Room> availableRooms = new ArrayList<>();
         for (Room room : hotel.getRooms()) {
             boolean available = roomService.isAvailable(room, LocalDate.now(), LocalDate.now().plusDays(1));
@@ -168,11 +164,6 @@ public class HotelService {
         if (hotel == null) throw new HotelNotFoundException("There is no Hotel with the specified ID!");
         else return hotel;
     }
-    private boolean validateHotelId(long hotelID) throws HotelNotFoundException {
-        return hotelRepository.findById(hotelID)
-                .map(hotel -> true)
-                .orElseThrow(() -> new HotelNotFoundException("Hotel with ID " + hotelID + " not found!"));
-    }
 
     private double calculateHotelRating(Hotel hotel) {
         return hotel.getRatings().stream()
@@ -184,7 +175,7 @@ public class HotelService {
 
 
     private  List<HotelRating> validateHotelRatings(long hotelID) throws HotelNotFoundException{
-        List<HotelRating> ratings = validateHotelIdAndReturnObject(hotelID).getRatings();
+        List<HotelRating> ratings = getNotNullHotel(hotelID).getRatings();
         if (ratings.isEmpty()) {
             throw new IllegalArgumentException("No Ratings so far");
         }

@@ -7,6 +7,7 @@ import hotelmanagementsystem.domain.models.*;
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.BookingRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,18 +33,21 @@ public class BookingService {
         return booking;
     }
 
+    @Transactional
     public Booking makeBooking(long hotelId, LocalDate checkInDate, LocalDate checkOutDate, List<Class<? extends Room>> roomTypes, List<Long> guestIds) throws HotelNotFoundException {
+        // Find available rooms
         List<Room> rooms = roomService.findAvailableRooms(hotelId, roomTypes, checkInDate, checkOutDate);
-        // Doppelte Prüfung, um Überschneidungen zu vermeiden:
-        for (Room room : rooms) {
-            if (!roomService.isAvailable(room, checkInDate, checkOutDate)) {
-                throw new RuntimeException("Room with ID " + room.getId() + " is no longer available for the specified dates.");
-            }
-        }
+
+        // Load guests and hotel
         List<Guest> guests = guestService.loadGuests(guestIds);
         Hotel hotel = hotelService.getHotelByHotelId(hotelId);
+
+        // Create the booking
         Booking booking = bookingRepository.createBooking(hotel, checkInDate, checkOutDate, rooms, guests);
+
+        // Book the rooms (atomic and consistent)
         roomService.bookRooms(booking);
+
         return booking;
     }
 

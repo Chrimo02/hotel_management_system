@@ -54,6 +54,8 @@ public class RoomDatabaseAdapter implements RoomRepository {
 
             roomEntity.setRoomIdentifier(roomIdentifierMapper.domainToEntity(room.getRoomIdentifier()));
 
+            roomEntity.setBookings(bookingMapper.toEntitySet(room.getBookings()));
+
             roomDAO.update(roomEntity);
         }
     }

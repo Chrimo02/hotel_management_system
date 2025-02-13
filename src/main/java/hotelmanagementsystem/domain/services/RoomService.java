@@ -13,6 +13,7 @@ import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.RoomRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,8 +39,14 @@ public class RoomService {
         return room;
     }
 
+    @Transactional
     public void bookRooms(Booking booking) {
         for (Room room : booking.getRooms()) {
+            // Check if the room is available for the booking dates
+            if (!isAvailable(room, booking.getCheckInDate(), booking.getCheckOutDate())) {
+                throw new RuntimeException("Room with ID " + room.getId() + " is no longer available for the specified dates.");
+            }
+            // Add the booking to the room's bookings
             room.getBookings().add(booking);
             roomRepository.updateRoom(room);
         }
@@ -65,10 +72,10 @@ public class RoomService {
         return true;
     }
 
-    // Zwei Buchungen überlappen nicht, wenn das Ende der einen vor oder gleich dem Start der anderen liegt.
     private boolean isOverlapping(Booking existingBooking, LocalDate newCheckIn, LocalDate newCheckOut) {
-        return !(newCheckOut.compareTo(existingBooking.getCheckInDate()) <= 0 ||
-                newCheckIn.compareTo(existingBooking.getCheckOutDate()) >= 0);
+        return newCheckIn.isBefore(existingBooking.getCheckOutDate()) &&
+                newCheckOut.isAfter(existingBooking.getCheckInDate());
+
     }
 
     private Booking findBookingByDates(Room room, LocalDate checkIn, LocalDate checkOut) {

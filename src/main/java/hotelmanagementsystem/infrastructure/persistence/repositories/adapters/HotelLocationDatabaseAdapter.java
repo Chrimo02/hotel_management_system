@@ -36,25 +36,5 @@ public class HotelLocationDatabaseAdapter implements HotelLocationRepository {
         HotelLocationEntity hotelLocationEntity = hotelLocationDAO.read(hotelLocationId);
         hotelLocationDAO.delete(hotelLocationEntity);
     }
-
-    @Override
-    public <T> T getHotelLocationByHotelId(long hotelId, Class<T> returnType) {
-        HotelLocationEntity hotelLocationEntity = hotelDAO.findById(hotelId).get().getLocation();
-
-        if (returnType.isAssignableFrom(HotelLocationEntity.class)) {
-            return returnType.cast(hotelLocationEntity);
-        } else if (returnType.isAssignableFrom(HotelLocation.class)) {
-            return returnType.cast(hotelLocationMapper.mapToDomain(hotelLocationEntity));
-        } else {
-            throw new IllegalArgumentException("Unsupported return type: " + returnType.getName());
-        }
-    }
-
-    @Override
-    public List<HotelLocation> findAll() {
-        return hotelLocationDAO.readAll()
-                .stream()
-                .map(hotelLocationMapper::mapToDomain) // Convert each HotelLocationEntity to HotelLocation
-                .toList(); // Collect results into a List
-    }
+    
 }

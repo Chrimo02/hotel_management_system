@@ -13,6 +13,7 @@ import jakarta.inject.Inject;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -20,11 +21,13 @@ public class BookingMapper {
 
     private final GuestMapper guestMapper;
     private final RoomMapper roomMapper;
+    private final RoomIdentifierMapper roomIdentifierMapper;
 
     @Inject
-    public BookingMapper(GuestMapper guestMapper, RoomMapper roomMapper) {
+    public BookingMapper(GuestMapper guestMapper, RoomMapper roomMapper, RoomIdentifierMapper roomIdentifierMapper) {
         this.guestMapper = guestMapper;
         this.roomMapper = roomMapper;
+        this.roomIdentifierMapper = roomIdentifierMapper;
     }
 
     public BookingEntity bookingToBookingEntity(Booking booking) {
@@ -67,7 +70,10 @@ public class BookingMapper {
                     .build();
         }
 
-        List<Room> rooms = roomMapper.toDomainList(bookingEntity.getRooms());
+        List<Room> rooms = bookingEntity.getRooms().stream()
+                .map(roomMapper::toMinimalDomain)
+                .collect(Collectors.toList());
+
         List<Guest> guests = guestMapper.guestEntitiesToGuests(bookingEntity.getGuests());
 
         Booking domainBooking = new Booking(
@@ -96,5 +102,31 @@ public class BookingMapper {
         return bookings.stream()
                 .map(this::bookingToBookingEntity)
                 .collect(Collectors.toList());
+    }
+    public Booking toMinimalBooking(BookingEntity bookingEntity) {
+        if (bookingEntity == null) return null;
+
+        List<Room> rooms = bookingEntity.getRooms().stream()
+                .map(roomEntity -> roomMapper.toMinimalDomain(roomEntity))
+                .collect(Collectors.toList());
+
+        return new Booking(
+                bookingEntity.getId(),
+                null, // No hotel details
+                bookingEntity.getCheckInDate(),
+                bookingEntity.getCheckOutDate(),
+                rooms,
+                null, // No guests
+                bookingEntity.isStatus(),
+                bookingEntity.getCheckInTime(),
+                bookingEntity.getCheckOutTime()
+        );
+    }
+
+    public Set<BookingEntity> toEntitySet(Set<Booking> bookings) {
+        if (bookings == null) return null;
+        return bookings.stream()
+                .map(this::bookingToBookingEntity)
+                .collect(Collectors.toSet());
     }
 }

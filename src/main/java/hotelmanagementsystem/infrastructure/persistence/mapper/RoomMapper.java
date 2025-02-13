@@ -1,10 +1,6 @@
 package hotelmanagementsystem.infrastructure.persistence.mapper;
-
-import hotelmanagementsystem.domain.models.DoubleRoom;
-import hotelmanagementsystem.domain.models.Hotel;
-import hotelmanagementsystem.domain.models.Room;
-import hotelmanagementsystem.domain.models.RoomIdentifier;
-import hotelmanagementsystem.domain.models.SingleRoom;
+import java.util.Set;
+import hotelmanagementsystem.domain.models.*;
 import hotelmanagementsystem.infrastructure.persistence.entities.DoubleRoomEntity;
 import hotelmanagementsystem.infrastructure.persistence.entities.HotelEntity;
 import hotelmanagementsystem.infrastructure.persistence.entities.RoomEntity;

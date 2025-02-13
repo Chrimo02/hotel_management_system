@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface HotelRepository {
 
-    Optional<Hotel> findById(Long id);
+    Hotel findById(Long id);
 
     PagedHotels findPagedByFilter(String city, double minRating, int pageNumber, int pageSize);
 
