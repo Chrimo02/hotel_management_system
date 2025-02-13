@@ -10,6 +10,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,17 +37,19 @@ public class BookingService {
 
     @Transactional
     public Booking makeBooking(long hotelId, LocalDate checkInDate, LocalDate checkOutDate, List<Class<? extends Room>> roomTypes, List<Long> guestIds) throws HotelNotFoundException {
-        // Find available rooms
+        if (!checkInDate.isAfter(LocalDate.now())){
+            throw new IllegalArgumentException("CheckInDate must be after LocalDate.now");
+        }
+        if (!checkInDate.isBefore(checkOutDate)){
+            throw new IllegalArgumentException("CheckInDate must be before CheckoutDate");
+        }
         List<Room> rooms = roomService.findAvailableRooms(hotelId, roomTypes, checkInDate, checkOutDate);
 
-        // Load guests and hotel
         List<Guest> guests = guestService.loadGuests(guestIds);
         Hotel hotel = hotelService.getHotelByHotelId(hotelId);
 
-        // Create the booking
         Booking booking = bookingRepository.createBooking(hotel, checkInDate, checkOutDate, rooms, guests);
 
-        // Book the rooms (atomic and consistent)
         roomService.bookRooms(booking);
 
         return booking;
@@ -64,17 +67,40 @@ public class BookingService {
         bookingRepository.updateBooking(booking);
     }
 
+
     public void guestCheckIn(long bookingId) throws BookingNotFoundException {
         Booking booking = getNotNullBooking(bookingId);
-        booking.setCheckInTime(java.time.LocalDateTime.now());
+        LocalDate today = LocalDate.now();
+
+        if (today.isBefore(booking.getCheckInDate().minusDays(1))) {
+            throw new IllegalStateException("Guest cannot check in more than one day before the booking's check-in date.");
+        }
+        if (today.isAfter(booking.getCheckOutDate())) {
+            throw new IllegalStateException("Guest cannot check in after the booking's check-out date.");
+        }
+
+        booking.setCheckInTime(LocalDateTime.now());
         bookingRepository.updateBooking(booking);
     }
 
     public void guestCheckOut(long bookingId) throws BookingNotFoundException {
         Booking booking = getNotNullBooking(bookingId);
-        booking.setCheckOutTime(java.time.LocalDateTime.now());
+        LocalDate today = LocalDate.now();
+
+        if (booking.getCheckInTime() == null) {
+            throw new IllegalStateException("Guest cannot check out without checking in first.");
+        }
+        if (today.isBefore(booking.getCheckInDate())) {
+            throw new IllegalStateException("Guest cannot check out before their check-in date.");
+        }
+        if (today.isAfter(booking.getCheckOutDate())) {
+            throw new IllegalStateException("Guest cannot check out after their check-out date.");
+        }
+
+        booking.setCheckOutTime(LocalDateTime.now());
         bookingRepository.updateBooking(booking);
     }
+
 
     public Booking getBookingById(long bookingID) throws BookingNotFoundException {
         return getNotNullBooking(bookingID);
