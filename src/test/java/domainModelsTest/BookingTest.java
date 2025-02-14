@@ -42,21 +42,16 @@ public class BookingTest {
 
     @BeforeEach
     public void setUp() {
-        // Setze Testdaten: Check-in am 1.12.2024, Check-out am 5.12.2024 (4 Nächte)
         checkInDate = LocalDate.of(2024, 12, 1);
         checkOutDate = LocalDate.of(2024, 12, 5);
-        // Beispiel Check-In/Out Zeiten
         checkInTime = LocalDateTime.of(2024, 12, 1, 14, 0);
         checkOutTime = LocalDateTime.of(2024, 12, 5, 11, 0);
 
-        // Stub: Gib für die Rooms einen Preis zurück
         when(room1.getPricePerNight()).thenReturn(100.0);
         when(room2.getPricePerNight()).thenReturn(150.0);
 
-        // Erstelle eine Booking-Instanz mit zwei Räumen und einem Gast
         List<Room> rooms = Arrays.asList(room1, room2);
         List<Guest> guests = Collections.singletonList(dummyGuest);
-        // Status initial true, CheckIn/Out Zeiten zunächst null
         booking = new Booking(1L, dummyHotel, checkInDate, checkOutDate, rooms, guests, true, null, null);
     }
 
@@ -76,14 +71,12 @@ public class BookingTest {
 
     @Test
     public void testCalculateTotalPrice() {
-        // Berechnung: (100 + 150) * 4 Nächte = 1000
         double totalPrice = booking.getTotalPrice();
         assertEquals(1000.0, totalPrice, 0.001, "Der Gesamtpreis sollte 1000.0 betragen");
     }
 
     @Test
     public void testStatusSetterGetter() {
-        // Anfangs sollte der Status true sein
         assertTrue(booking.getStatus(), "Der initiale Status sollte true sein");
         booking.setStatus(false);
         assertFalse(booking.getStatus(), "Nach setStatus(false) sollte false zurückgegeben werden");
@@ -91,7 +84,6 @@ public class BookingTest {
 
     @Test
     public void testCheckInAndCheckOutTimes() {
-        // Ohne gesetzte Zeiten sollten isCheckedIn und isCheckedOut false zurückgeben
         assertFalse(booking.isCheckedIn(), "Ohne Check-in-Zeit sollte isCheckedIn false sein");
         assertFalse(booking.isCheckedOut(), "Ohne Check-out-Zeit sollte isCheckedOut false sein");
 
@@ -103,7 +95,6 @@ public class BookingTest {
 
     @Test
     public void testCompareTo() {
-        // Erstelle eine zweite Booking mit einem späteren Check-in-Datum
         LocalDate laterCheckIn = LocalDate.of(2024, 12, 10);
         Booking laterBooking = new Booking(2L, dummyHotel, laterCheckIn, laterCheckIn.plusDays(3),
                 booking.getRooms(), booking.getGuests(), true, null, null);

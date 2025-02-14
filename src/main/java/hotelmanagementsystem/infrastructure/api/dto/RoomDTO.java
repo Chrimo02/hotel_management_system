@@ -40,10 +40,6 @@ public class RoomDTO {
         return roomIdentifier;
     }
 
-    public void setRoomIdentifierDTO(RoomIdentifierDTO roomIdentifier) {
-        this.roomIdentifier = roomIdentifier;
-    }
-
     public long getHotelId() {
         return hotelId;
     }
@@ -54,10 +50,6 @@ public class RoomDTO {
 
     public List<BookingDTO> getBookingDTOs() {
         return bookings;
-    }
-
-    public void setBookingDTOs(List<BookingDTO> bookings) {
-        this.bookings = bookings;
     }
 
     public String getType() {

@@ -24,27 +24,23 @@ public class RoomMapper {
         this.bookingMapper = bookingMapper;
     }
 
-    // ---------------------------------------
-    // DOMAIN -> ENTITY
-    // ---------------------------------------
     public RoomEntity domainToEntity(Room room) {
         if (room == null) return null;
 
-        // RoomIdentifier -> Entity
-        RoomIdentifierEntity riEntity =
-                roomIdentifierMapper.domainToEntity(room.getRoomIdentifier());
+        RoomIdentifier roomIdentifierDomain = room.getRoomIdentifier();
+        RoomIdentifierEntity riEntity = null;
+        if (roomIdentifierDomain != null) {
+            riEntity = roomIdentifierMapper.domainToEntity(roomIdentifierDomain);
+        }
 
-        // Minimales HotelEntity (nur ID), um keine Schleife Hotel->Room->Hotel zu triggern
         HotelEntity minimalHotelEntity = null;
         Hotel domainHotel = room.getHotel();
         if (domainHotel != null && domainHotel.getId() != null) {
             minimalHotelEntity = new HotelEntity.HotelBuilder()
                     .withId(domainHotel.getId())
                     .build();
-            // Optional: .withName(domainHotel.getName()), etc.
         }
 
-        // RoomEntity anlegen (SingleRoomEntity oder DoubleRoomEntity)
         RoomEntity roomEntity;
         if (room instanceof SingleRoom) {
             roomEntity = new SingleRoomEntity(
@@ -64,14 +60,7 @@ public class RoomMapper {
             throw new RuntimeException("Unsupported Room subtype: " + room.getClass().getSimpleName());
         }
 
-        // **Wichtig**: OneToOne-Beziehung in beide Richtungen setzen
         roomEntity.setRoomIdentifier(riEntity);
-        if (riEntity != null) {
-            riEntity.setRoom(roomEntity);
-        }
-
-        // Optional: Buchungen hier nicht oder nur flach mappen, um endlose Schleifen zu vermeiden
-        // roomEntity.setBookings(...);
 
         return roomEntity;
     }
@@ -83,16 +72,12 @@ public class RoomMapper {
                 .collect(Collectors.toList());
     }
 
-    // ---------------------------------------
-    // ENTITY -> DOMAIN
-    // ---------------------------------------
     public Room entityToDomain(RoomEntity roomEntity) {
         if (roomEntity == null) return null;
 
         RoomIdentifier roomIdentifier =
                 roomIdentifierMapper.entityToDomain(roomEntity.getRoomIdentifier());
 
-        // Minimaler Hotel-Domain-Teil (nur ID und evtl. Name)
         Hotel hotelDomain = null;
         if (roomEntity.getHotel() != null) {
             hotelDomain = new Hotel.HotelBuilder()
@@ -136,23 +121,18 @@ public class RoomMapper {
 
     public Room toMinimalDomain(RoomEntity roomEntity) {
         if (roomEntity == null) return null;
-
-        // Hier verwenden wir vorhandene Daten, falls möglich.
-        // Falls du wirklich nur die ID benötigst, kannst du auch Standardwerte oder null übergeben.
         RoomIdentifier roomIdentifier = roomIdentifierMapper.entityToDomain(roomEntity.getRoomIdentifier());
-
-        // Falls du im Minimalmapping keine Hotel-Details brauchst, kannst du hier auch null übergeben.
         Hotel minimalHotel = null;
 
         if (roomEntity instanceof SingleRoomEntity) {
             return new SingleRoom.Builder(
-                    roomEntity.getPricePerNight(), // oder einen Standardwert
+                    roomEntity.getPricePerNight(),
                     roomIdentifier,
                     minimalHotel
             ).withId(roomEntity.getId()).build();
         } else if (roomEntity instanceof DoubleRoomEntity) {
             return new DoubleRoom.Builder(
-                    roomEntity.getPricePerNight(), // oder einen Standardwert
+                    roomEntity.getPricePerNight(),
                     roomIdentifier,
                     minimalHotel
             ).withId(roomEntity.getId()).build();

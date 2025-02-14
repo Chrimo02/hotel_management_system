@@ -16,10 +16,10 @@ import java.util.List;
 public class BookingNotificationJob {
 
     @Inject
-    BookingService bookingService; // Service, um Buchungen abzurufen
+    BookingService bookingService;
 
     @Inject
-    Mailer mailer; // Quarkus Mailer
+    Mailer mailer;
 
     /**
      * Diese Methode wird täglich um 00:00 Uhr ausgeführt.
@@ -31,7 +31,6 @@ public class BookingNotificationJob {
     public void sendReminderForUpcomingBookings() {
         LocalDate targetDate = LocalDate.now().plusDays(7);
 
-        // Alle Buchungen abrufen, die am targetDate beginnen
         List<Booking> upcomingBookings = bookingService.findAllByCheckInDate(targetDate);
 
         for (Booking booking : upcomingBookings) {
@@ -48,7 +47,6 @@ public class BookingNotificationJob {
                         booking.getCheckInDate()
                 );
 
-                // E-Mail senden
                 try {
                     mailer.send(
                             Mail.withText(to, subject, body)
@@ -56,7 +54,6 @@ public class BookingNotificationJob {
                     System.out.println("E-Mail an " + to + " gesendet.");
                 } catch (Exception e) {
                     System.err.println("Fehler beim Senden der E-Mail an " + to + ": " + e.getMessage());
-                    // Optional: Logging oder Wiederholungslogik hinzufügen
                 }
             }
         }

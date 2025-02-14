@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-//@QuarkusMain
-public class HotelManagementCLI {
+@QuarkusMain
+public class HotelManagementCLI implements QuarkusApplication {
 
     private static final Scanner scanner = new Scanner(System.in);
     private static final String ANSI_RESET = "\u001B[0m";
@@ -55,6 +55,7 @@ public class HotelManagementCLI {
             }
         }
         channel.shutdown();
+        return 0;
     }
 
     private static void printMainMenu() {
@@ -336,10 +337,14 @@ public class HotelManagementCLI {
     private static void listHotels(HotelServiceGrpc.HotelServiceBlockingStub hotelStub) {
         System.out.print("Filter by City (leave empty for all): ");
         String filterCity = scanner.nextLine();
-        System.out.print("Minimum Rating (0 for no filter): ");
-        double minRating = Double.parseDouble(scanner.nextLine());
+        System.out.print("Minimum Rating (leave empty for no filter): ");
+        String minRatingString = scanner.nextLine();
+        if (minRatingString.isEmpty()) minRatingString = "0";
+        double minRating = Double.parseDouble(minRatingString);
         System.out.print("Page Number: ");
-        int pageNumber = Integer.parseInt(scanner.nextLine());
+        String pageNumberString = scanner.nextLine();
+        if (pageNumberString.isEmpty()) pageNumberString ="1";
+        int pageNumber = Integer.parseInt(pageNumberString);
         System.out.print("Page Size: ");
         int pageSize = Integer.parseInt(scanner.nextLine());
 
@@ -699,9 +704,6 @@ public class HotelManagementCLI {
         if (hotel.hasLocation()) {
             HotelLocation location = hotel.getLocation();
             System.out.println("Location:");
-            if (location.getId() != 0) {
-                System.out.println("  Location ID: " + location.getId());
-            }
             System.out.println("  Address: " + location.getAddress());
             System.out.println("  City: " + location.getCity());
             System.out.println("  Country: " + location.getCountry());

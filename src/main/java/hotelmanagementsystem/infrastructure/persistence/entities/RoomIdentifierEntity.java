@@ -11,9 +11,7 @@ public class RoomIdentifierEntity {
     private String building;
     private int floor;
     private String roomNumber;
-    @OneToOne
-    @JoinColumn(name = "room_id")
-    private RoomEntity room;
+
     public RoomIdentifierEntity() {
 
     }
@@ -59,5 +57,13 @@ public class RoomIdentifierEntity {
 
     public void setRoomNumber(String roomNumber) {
         this.roomNumber = roomNumber;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

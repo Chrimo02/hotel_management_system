@@ -5,7 +5,6 @@ import static org.mockito.Mockito.*;
 
 import hotelmanagementsystem.infrastructure.persistence.dao.implementation.RoomIdentifierDAOImpl;
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

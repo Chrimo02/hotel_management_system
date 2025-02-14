@@ -12,7 +12,6 @@ public class HotelRatingTest {
 
     @Test
     public void testBuilder_AllFieldsSet() {
-        // Erzeuge Dummy-Objekte für Guest und Hotel mithilfe der Builder (minimal)
         Guest dummyGuest = new Guest.GuestBuilder()
                 .withId(1L)
                 .withFirstName("Alice")
@@ -55,13 +54,11 @@ public class HotelRatingTest {
 
     @Test
     public void testBuilder_DefaultComment() {
-        // Erzeuge ein Rating ohne explizite Angabe eines Kommentars.
         HotelRating rating = new HotelRating.Builder()
                 .withId(200L)
                 .withRating(4)
                 .build();
 
-        // Da im Builder der Standardwert "" gesetzt wird, erwarten wir diesen.
         assertEquals("", rating.getGuestComment(), "Default comment should be empty string");
     }
 }

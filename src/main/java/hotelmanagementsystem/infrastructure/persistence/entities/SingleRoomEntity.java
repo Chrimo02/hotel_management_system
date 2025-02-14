@@ -2,7 +2,7 @@ package hotelmanagementsystem.infrastructure.persistence.entities;
 import jakarta.persistence.*;
 
 @Entity
-@DiscriminatorValue("SINGLE") // Der Wert für diese Entität in der Tabelle
+@DiscriminatorValue("SINGLE")
 public class SingleRoomEntity extends RoomEntity {
     public SingleRoomEntity() {
         super();

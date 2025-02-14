@@ -1,6 +1,5 @@
 package hotelmanagementsystem.infrastructure.persistence.entities;
 
-import hotelmanagementsystem.domain.models.HotelLocation;
 import jakarta.persistence.*;
 
 @Entity

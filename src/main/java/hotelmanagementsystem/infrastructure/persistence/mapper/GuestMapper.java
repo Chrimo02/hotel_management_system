@@ -10,10 +10,8 @@ import java.util.List;
 
 @ApplicationScoped
 public class GuestMapper {
-    private final BookingMapper bookingMapper;
     @Inject
-    public GuestMapper(BookingMapper bookingMapper){
-        this.bookingMapper = bookingMapper;
+    public GuestMapper(){
     }
     public GuestEntity guestToGuestEntity(Guest guest){
         GuestEntity guestEntity = new GuestEntity(guest.getFirstName(), guest.getLastName(),guest.getBirthday().getYear(),guest.getBirthday().getMonthValue(),guest.getBirthday().getDayOfMonth(),guest.geteMail(),guest.getPhoneNumber());

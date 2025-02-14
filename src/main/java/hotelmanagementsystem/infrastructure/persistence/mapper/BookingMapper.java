@@ -21,13 +21,11 @@ public class BookingMapper {
 
     private final GuestMapper guestMapper;
     private final RoomMapper roomMapper;
-    private final RoomIdentifierMapper roomIdentifierMapper;
 
     @Inject
-    public BookingMapper(GuestMapper guestMapper, RoomMapper roomMapper, RoomIdentifierMapper roomIdentifierMapper) {
+    public BookingMapper(GuestMapper guestMapper, RoomMapper roomMapper) {
         this.guestMapper = guestMapper;
         this.roomMapper = roomMapper;
-        this.roomIdentifierMapper = roomIdentifierMapper;
     }
 
     public BookingEntity bookingToBookingEntity(Booking booking) {
@@ -117,7 +115,7 @@ public class BookingMapper {
         if (bookingEntity.getHotel() != null) {
             minimalHotel = new Hotel.HotelBuilder()
                     .withId(bookingEntity.getHotel().getId())
-                    .withName(bookingEntity.getHotel().getName()) // falls verfügbar
+                    .withName(bookingEntity.getHotel().getName())
                     .build();
         }
 
@@ -127,7 +125,7 @@ public class BookingMapper {
                 bookingEntity.getCheckInDate(),
                 bookingEntity.getCheckOutDate(),
                 rooms,
-                guests, // No guests
+                guests,
                 bookingEntity.isStatus(),
                 bookingEntity.getCheckInTime(),
                 bookingEntity.getCheckOutTime()

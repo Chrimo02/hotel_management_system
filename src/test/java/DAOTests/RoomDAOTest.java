@@ -26,7 +26,6 @@ public class RoomDAOTest {
     @BeforeEach
     public void setUp() {
         dummyRoomEntity = mock(RoomEntity.class);
-        // Unnötige Stubbing vermeiden: falls getId() verwendet wird, markieren wir es als lenient
         lenient().when(dummyRoomEntity.getId()).thenReturn(10L);
     }
 
@@ -47,7 +46,6 @@ public class RoomDAOTest {
 
     @Test
     public void testUpdate_Success() {
-        // Da merge() einen Wert zurückgibt, stubben wir diesen Rückgabewert
         when(em.merge(dummyRoomEntity)).thenReturn(dummyRoomEntity);
         assertDoesNotThrow(() -> roomDAOImpl.update(dummyRoomEntity));
         verify(em).merge(dummyRoomEntity);
@@ -55,7 +53,6 @@ public class RoomDAOTest {
 
     @Test
     public void testDelete_Success() {
-        // Simuliere, dass em.contains(dummyRoomEntity) true liefert
         when(em.contains(dummyRoomEntity)).thenReturn(true);
         assertDoesNotThrow(() -> roomDAOImpl.delete(dummyRoomEntity));
         verify(em).remove(dummyRoomEntity);

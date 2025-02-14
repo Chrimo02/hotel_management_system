@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import hotelmanagementsystem.infrastructure.api.dto.HotelDTO;
+import hotelmanagementsystem.infrastructure.api.dto.HotelLocationDTO;
 import hotelmanagementsystem.infrastructure.api.dto.HotelRatingDTO;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.Hotel;
 import org.junit.jupiter.api.Test;
@@ -45,15 +46,23 @@ public class HotelDTOTest {
         dto.setName("Sample Hotel");
         dto.setDescription("Sample Description");
         dto.setAverageRating(3.7);
+
         List<Long> roomIds = Arrays.asList(100L, 200L);
         List<Long> bookingIds = Arrays.asList(300L, 400L);
         dto.setRoomIds(roomIds);
         dto.setBookingIds(bookingIds);
+
         List<HotelRatingDTO> ratings = Arrays.asList(
                 createDummyHotelRatingDTO(5, "Excellent", 500L),
                 createDummyHotelRatingDTO(4, "Good", 600L)
         );
         dto.setHotelRatings(ratings);
+
+        HotelLocationDTO locationDTO = new HotelLocationDTO();
+        locationDTO.setAddress("Dummy Address");
+        locationDTO.setCity("Dummy City");
+        locationDTO.setCountry("Dummy Country");
+        dto.setHotelLocation(locationDTO);
 
         Hotel proto = dto.toProtobuf();
         assertEquals(2L, proto.getId());
@@ -62,15 +71,15 @@ public class HotelDTOTest {
         assertEquals(3.7, proto.getAverageRating(), 0.001);
         assertEquals(roomIds, proto.getRoomIdsList());
         assertEquals(bookingIds, proto.getBookingIdsList());
-        // Hier wird der Mapper für Ratings aufgerufen:
+
         List<hotelmanagementsystem.infrastructure.api.grpc.generated.HotelRating> protoRatings = proto.getHotelRatingsList();
         assertEquals(ratings.size(), protoRatings.size());
         for (int i = 0; i < ratings.size(); i++) {
-            // Vergleiche hier beispielsweise nur die starRating und comment (wie in HotelRatingDTO.toProtobuf())
             assertEquals(ratings.get(i).getRating(), protoRatings.get(i).getStarRating());
             assertEquals(ratings.get(i).getComment(), protoRatings.get(i).getComment());
         }
     }
+
 
     private HotelRatingDTO createDummyHotelRatingDTO(int rating, String comment, long guestId) {
         HotelRatingDTO dto = new HotelRatingDTO();

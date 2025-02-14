@@ -11,15 +11,7 @@ public class RoomIdentifierDTO {
         this.floor = floor;
         this.roomNumber = roomNumber;
     }
-    public RoomIdentifierDTO(long id, String building, int floor, String roomNumber) {
-        this.id = id;
-        this.building = building;
-        this.floor = floor;
-        this.roomNumber = roomNumber;
-    }
-    public long getId() {
-        return id;
-    }
+
     public String getBuilding() {
         return building;
     }

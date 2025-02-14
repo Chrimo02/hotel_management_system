@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 
 public class HotelTest {
 
-    // Erzeuge ein Dummy-HotelLocation (sofern vorhanden, nutzen wir den Builder)
     private HotelLocation createDummyLocation() {
         return new HotelLocation.HotelLocationBuilder()
                 .withId(1L)
@@ -22,14 +21,11 @@ public class HotelTest {
                 .build();
     }
 
-    // Dummy-Instanzen für Room, Booking und HotelRating können wir hier als einfache Objekte erstellen
     private Room createDummyRoom() {
-        // Da Room abstrakt ist, verwenden wir hier den Builder aus der abstrakten Klasse, der einen anonymen Typ zurückgibt.
         return new Room.Builder()
                 .withId(10L)
                 .withPricePerNight(100.0)
                 .withRoomIdentifier(new RoomIdentifier("Building A", 1, "101"))
-                // Wir übergeben hier ein Dummy-Hotel, das wir minimal erzeugen
                 .withHotel(new Hotel.HotelBuilder()
                         .withId(999L)
                         .withName("Dummy Hotel")
@@ -40,14 +36,12 @@ public class HotelTest {
     }
 
     private Booking createDummyBooking() {
-        // Erzeuge ein Dummy-Hotel, das für die Buchung benötigt wird.
         Hotel dummyHotel = new Hotel.HotelBuilder()
                 .withId(999L)
                 .withName("Dummy Hotel")
                 .withDescription("Dummy Description")
                 .withLocation(createDummyLocation())
                 .build();
-        // Erzeuge eine Buchung mit gültigen CheckIn- und CheckOut-Daten (z.B. heute und morgen)
         return new Booking(
                 20L,
                 dummyHotel,
@@ -100,7 +94,6 @@ public class HotelTest {
 
     @Test
     public void testHotelBuilder_WithNullLists() {
-        // Falls null übergeben wird, sollte eine leere Liste erzeugt werden (bei Rooms)
         Hotel hotel = new Hotel.HotelBuilder()
                 .withId(2L)
                 .withName("Minimal Hotel")
@@ -113,7 +106,6 @@ public class HotelTest {
                 .build();
 
         assertNotNull(hotel.getRooms(), "Rooms-Liste sollte nicht null sein");
-        // Je nach Implementierung der anderen Listen (Bookings und Ratings) hier ggf. weitere Prüfungen einfügen.
     }
 
     @Test
@@ -142,7 +134,6 @@ public class HotelTest {
 
     @Test
     public void testAddRatingAndAddRoom() {
-        // Erzeuge ein Hotel mit leeren Listen
         Hotel hotel = new Hotel.HotelBuilder()
                 .withId(1L)
                 .withName("Test Hotel")
@@ -154,13 +145,11 @@ public class HotelTest {
                 .withAverageRating(0.0)
                 .build();
 
-        // Füge ein Rating hinzu und überprüfe
         HotelRating rating = createDummyHotelRating();
         hotel.addRating(rating);
         assertEquals(1, hotel.getRatings().size());
         assertTrue(hotel.getRatings().contains(rating));
 
-        // Füge einen Room hinzu und überprüfe
         Room room = createDummyRoom();
         hotel.addRoom(room);
         assertEquals(1, hotel.getRooms().size());

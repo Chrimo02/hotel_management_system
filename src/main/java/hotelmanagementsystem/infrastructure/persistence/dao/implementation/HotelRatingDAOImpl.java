@@ -9,10 +9,6 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class HotelRatingDAOImpl implements HotelRatingDAO {
@@ -41,25 +37,6 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
         } catch (Exception e) {
             e.printStackTrace();
             throw new DataAccessException("Error while finding HotelRating by ID", e);
-        }
-    }
-
-    @Override
-    @Transactional(Transactional.TxType.SUPPORTS)
-    public Map<Long, HotelRatingEntity> findAll() {
-        try {
-            TypedQuery<HotelRatingEntity> query = em.createQuery(
-                    "SELECT r FROM HotelRatingEntity r", HotelRatingEntity.class
-            );
-            List<HotelRatingEntity> resultList = query.getResultList();
-
-            Map<Long, HotelRatingEntity> ratingMap = resultList.stream()
-                    .collect(Collectors.toMap(HotelRatingEntity::getId, Function.identity()));
-
-            return ratingMap;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new DataAccessException("Error while finding all HotelRatings", e);
         }
     }
 

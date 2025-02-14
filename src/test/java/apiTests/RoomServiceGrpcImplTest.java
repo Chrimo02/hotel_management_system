@@ -12,7 +12,6 @@ import hotelmanagementsystem.domain.models.Room;
 import hotelmanagementsystem.domain.models.RoomIdentifier;
 import hotelmanagementsystem.domain.models.SingleRoom;
 import hotelmanagementsystem.domain.services.RoomService;
-import hotelmanagementsystem.infrastructure.api.dto.RoomDTO;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.CreateRoomRequest;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.GetRoomByIdRequest;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.RemoveRoomRequest;
@@ -23,8 +22,6 @@ import hotelmanagementsystem.infrastructure.api.grpc.impl.RoomServiceGrpcImpl;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
-import java.time.LocalDate;
-import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,25 +51,21 @@ class RoomServiceGrpcImplTest {
     @BeforeEach
     void setUp() {
         dummyRoomIdentifier = new RoomIdentifier("Building A", 1, "101");
-        // Erstelle ein Dummy-Hotel mit gültiger ID
         dummyHotel = new Hotel.HotelBuilder()
                 .withId(1L)
                 .withName("Test Hotel")
                 .build();
 
-        // Erstelle ein Dummy-SingleRoom mit gültigem Hotel
         dummySingleRoom = new SingleRoom.Builder(100.0, dummyRoomIdentifier, dummyHotel)
                 .withId(1L)
                 .build();
-        // Erstelle ein Dummy-DoubleRoom mit gültigem Hotel
         dummyDoubleRoom = new DoubleRoom.Builder(150.0, dummyRoomIdentifier, dummyHotel)
                 .withId(2L)
                 .build();
     }
 
     @Test
-    void testCreateRoom_SingleRoom_Success() throws RoomNotFoundException, HotelNotFoundException {
-        // Arrange
+    void testCreateRoom_SingleRoom_Success() throws HotelNotFoundException {
         CreateRoomRequest request = CreateRoomRequest.newBuilder()
                 .setType("SINGLE")
                 .setPricePerNight(100.0)
@@ -86,14 +79,11 @@ class RoomServiceGrpcImplTest {
                 )
                 .build();
 
-        // Erwartung: Der Service wird mit einem SingleRoom arbeiten
         when(roomService.createRoom(eq(100.0), any(RoomIdentifier.class), eq(1L), eq(SingleRoom.class)))
                 .thenReturn(dummySingleRoom);
 
-        // Act
         grpcImpl.createRoom(request, roomResponseObserver);
 
-        // Assert
         ArgumentCaptor<RoomResponse> captor = ArgumentCaptor.forClass(RoomResponse.class);
         verify(roomResponseObserver, times(1)).onNext(captor.capture());
         verify(roomResponseObserver, times(1)).onCompleted();
@@ -106,8 +96,7 @@ class RoomServiceGrpcImplTest {
     }
 
     @Test
-    void testCreateRoom_DoubleRoom_Success() throws RoomNotFoundException, HotelNotFoundException {
-        // Arrange
+    void testCreateRoom_DoubleRoom_Success() throws HotelNotFoundException {
         CreateRoomRequest request = CreateRoomRequest.newBuilder()
                 .setType("DOUBLE")
                 .setPricePerNight(150.0)
@@ -124,10 +113,8 @@ class RoomServiceGrpcImplTest {
         when(roomService.createRoom(eq(150.0), any(RoomIdentifier.class), eq(1L), eq(DoubleRoom.class)))
                 .thenReturn(dummyDoubleRoom);
 
-        // Act
         grpcImpl.createRoom(request, roomResponseObserver);
 
-        // Assert
         ArgumentCaptor<RoomResponse> captor = ArgumentCaptor.forClass(RoomResponse.class);
         verify(roomResponseObserver, times(1)).onNext(captor.capture());
         verify(roomResponseObserver, times(1)).onCompleted();
@@ -141,14 +128,11 @@ class RoomServiceGrpcImplTest {
 
     @Test
     void testGetRoomById_Success() throws RoomNotFoundException {
-        // Arrange
         GetRoomByIdRequest request = GetRoomByIdRequest.newBuilder().setId(1L).build();
         when(roomService.getRoomById(1L)).thenReturn(dummySingleRoom);
 
-        // Act
         grpcImpl.getRoomById(request, roomResponseObserver);
 
-        // Assert
         ArgumentCaptor<RoomResponse> captor = ArgumentCaptor.forClass(RoomResponse.class);
         verify(roomResponseObserver, times(1)).onNext(captor.capture());
         verify(roomResponseObserver, times(1)).onCompleted();
@@ -161,14 +145,11 @@ class RoomServiceGrpcImplTest {
 
     @Test
     void testGetRoomById_NotFound() throws RoomNotFoundException {
-        // Arrange
         GetRoomByIdRequest request = GetRoomByIdRequest.newBuilder().setId(999L).build();
         when(roomService.getRoomById(999L)).thenThrow(new RuntimeException("Room not found"));
 
-        // Act
         grpcImpl.getRoomById(request, roomResponseObserver);
 
-        // Assert
         verify(roomResponseObserver, never()).onNext(any(RoomResponse.class));
         verify(roomResponseObserver, never()).onCompleted();
         ArgumentCaptor<StatusRuntimeException> errorCaptor = ArgumentCaptor.forClass(StatusRuntimeException.class);
@@ -180,26 +161,20 @@ class RoomServiceGrpcImplTest {
 
     @Test
     void testUpdateRoomPrice_Success() throws RoomNotFoundException {
-        // Arrange
         UpdateRoomPriceRequest request = UpdateRoomPriceRequest.newBuilder()
                 .setRoomId(1L)
                 .setNewPricePerNight(120.0)
                 .build();
 
-        // Erstelle ein aktualisiertes Room-Objekt mit dem neuen Preis
         Room updatedRoom = new SingleRoom.Builder(120.0, dummyRoomIdentifier, dummyHotel)
                 .withId(1L)
                 .build();
 
-        // Simuliere, dass der Service updatePricePerNight das aktualisierte Room-Objekt zurückgibt
         when(roomService.updatePricePerNight(1L, 120.0)).thenReturn(updatedRoom);
-        // Simuliere außerdem, dass getRoomById das aktualisierte Room-Objekt zurückgibt
         when(roomService.getRoomById(1L)).thenReturn(updatedRoom);
 
-        // Act
         grpcImpl.updateRoomPrice(request, roomResponseObserver);
 
-        // Assert
         ArgumentCaptor<RoomResponse> captor = ArgumentCaptor.forClass(RoomResponse.class);
         verify(roomResponseObserver, times(1)).onNext(captor.capture());
         verify(roomResponseObserver, times(1)).onCompleted();
@@ -213,14 +188,11 @@ class RoomServiceGrpcImplTest {
 
     @Test
     void testRemoveRoom_Success() throws RoomNotFoundException {
-        // Arrange
         RemoveRoomRequest request = RemoveRoomRequest.newBuilder().setRoomId(1L).build();
         doNothing().when(roomService).removeRoom(1L);
 
-        // Act
         grpcImpl.removeRoom(request, emptyObserver);
 
-        // Assert
         verify(emptyObserver, times(1)).onNext(any(Empty.class));
         verify(emptyObserver, times(1)).onCompleted();
     }

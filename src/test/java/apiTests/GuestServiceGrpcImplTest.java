@@ -7,8 +7,6 @@ import hotelmanagementsystem.domain.exceptions.GuestNotFoundException;
 import hotelmanagementsystem.domain.models.Booking;
 import hotelmanagementsystem.domain.models.Guest;
 import hotelmanagementsystem.domain.services.GuestService;
-import hotelmanagementsystem.infrastructure.api.dto.GuestDTO;
-import hotelmanagementsystem.infrastructure.api.dto.BookingDTO;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.CreateGuestRequest;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.DeleteGuestRequest;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.GetBookingsByGuestIdRequest;
@@ -23,8 +21,6 @@ import hotelmanagementsystem.infrastructure.api.grpc.impl.GuestServiceGrpcImpl;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
-import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,11 +45,9 @@ class GuestServiceGrpcImplTest {
     private StreamObserver<Empty> emptyObserver;
 
     private Guest dummyGuest;
-    private List<Booking> dummyBookings;
 
     @BeforeEach
     void setUp() {
-        // Erstelle ein Dummy-Guest-Objekt
         dummyGuest = new Guest.GuestBuilder()
                 .withId(1L)
                 .withFirstName("John")
@@ -62,12 +56,10 @@ class GuestServiceGrpcImplTest {
                 .withEMail("john.doe@example.com")
                 .withPhoneNumber("1234567890")
                 .build();
-        dummyBookings = Collections.emptyList(); // für diesen Test genügt eine leere Liste
     }
 
     @Test
     void testCreateGuest_Success() {
-        // Arrange
         CreateGuestRequest request = CreateGuestRequest.newBuilder()
                 .setFirstName("John")
                 .setLastName("Doe")
@@ -79,30 +71,24 @@ class GuestServiceGrpcImplTest {
         when(guestService.createGuest("John", "Doe", 1990, 5, 15, "john.doe@example.com", "1234567890"))
                 .thenReturn(dummyGuest);
 
-        // Act
         grpcImpl.createGuest(request, guestResponseObserver);
 
-        // Assert
         ArgumentCaptor<GuestResponse> responseCaptor = ArgumentCaptor.forClass(GuestResponse.class);
         verify(guestResponseObserver, times(1)).onNext(responseCaptor.capture());
         verify(guestResponseObserver, times(1)).onCompleted();
 
         GuestResponse response = responseCaptor.getValue();
         assertNotNull(response);
-        // Prüfe, ob die ID aus dem Dummy-Guest übereinstimmt
         assertEquals(dummyGuest.getId(), response.getGuest().getId());
     }
 
     @Test
     void testGetGuestById_Success() throws Exception {
-        // Arrange
         GetGuestByIdRequest request = GetGuestByIdRequest.newBuilder().setId(1L).build();
         when(guestService.getGuestById(1L)).thenReturn(dummyGuest);
 
-        // Act
         grpcImpl.getGuestById(request, guestResponseObserver);
 
-        // Assert
         ArgumentCaptor<GuestResponse> captor = ArgumentCaptor.forClass(GuestResponse.class);
         verify(guestResponseObserver, times(1)).onNext(captor.capture());
         verify(guestResponseObserver, times(1)).onCompleted();
@@ -114,15 +100,12 @@ class GuestServiceGrpcImplTest {
 
     @Test
     void testGetGuestById_NotFound() throws Exception {
-        // Arrange
         GetGuestByIdRequest request = GetGuestByIdRequest.newBuilder().setId(999L).build();
         when(guestService.getGuestById(999L))
                 .thenThrow(new GuestNotFoundException("Guest not found"));
 
-        // Act
         grpcImpl.getGuestById(request, guestResponseObserver);
 
-        // Assert
         verify(guestResponseObserver, never()).onNext(any());
         verify(guestResponseObserver, never()).onCompleted();
         ArgumentCaptor<StatusRuntimeException> errorCaptor = ArgumentCaptor.forClass(StatusRuntimeException.class);
@@ -135,7 +118,6 @@ class GuestServiceGrpcImplTest {
 
     @Test
     void testUpdateGuestEmail_Success() throws Exception {
-        // Arrange
         UpdateGuestEmailRequest request = UpdateGuestEmailRequest.newBuilder()
                 .setGuestId(1L)
                 .setNewEmail("new.email@example.com")
@@ -152,10 +134,8 @@ class GuestServiceGrpcImplTest {
 
         when(guestService.updateEMail(1L, "new.email@example.com")).thenReturn(updatedGuest);
 
-        // Act
         grpcImpl.updateGuestEmail(request, guestResponseObserver);
 
-        // Assert
         ArgumentCaptor<GuestResponse> captor = ArgumentCaptor.forClass(GuestResponse.class);
         verify(guestResponseObserver, times(1)).onNext(captor.capture());
         verify(guestResponseObserver, times(1)).onCompleted();
@@ -167,7 +147,6 @@ class GuestServiceGrpcImplTest {
 
     @Test
     void testUpdateGuestPhone_Success() throws Exception {
-        // Arrange
         UpdateGuestPhoneRequest request = UpdateGuestPhoneRequest.newBuilder()
                 .setGuestId(1L)
                 .setNewPhone("0987654321")
@@ -184,10 +163,8 @@ class GuestServiceGrpcImplTest {
 
         when(guestService.updatePhone(1L, "0987654321")).thenReturn(updatedGuest);
 
-        // Act
         grpcImpl.updateGuestPhone(request, guestResponseObserver);
 
-        // Assert
         ArgumentCaptor<GuestResponse> captor = ArgumentCaptor.forClass(GuestResponse.class);
         verify(guestResponseObserver, times(1)).onNext(captor.capture());
         verify(guestResponseObserver, times(1)).onCompleted();
@@ -199,7 +176,6 @@ class GuestServiceGrpcImplTest {
 
     @Test
     void testUpdateGuestLastName_Success() throws Exception {
-        // Arrange
         UpdateGuestLastNameRequest request = UpdateGuestLastNameRequest.newBuilder()
                 .setGuestId(1L)
                 .setNewLastName("Smith")
@@ -216,10 +192,8 @@ class GuestServiceGrpcImplTest {
 
         when(guestService.updateLastName(1L, "Smith")).thenReturn(updatedGuest);
 
-        // Act
         grpcImpl.updateGuestLastName(request, guestResponseObserver);
 
-        // Assert
         ArgumentCaptor<GuestResponse> captor = ArgumentCaptor.forClass(GuestResponse.class);
         verify(guestResponseObserver, times(1)).onNext(captor.capture());
         verify(guestResponseObserver, times(1)).onCompleted();
@@ -231,27 +205,21 @@ class GuestServiceGrpcImplTest {
 
     @Test
     void testDeleteGuest_Success() throws Exception {
-        // Arrange
         DeleteGuestRequest request = DeleteGuestRequest.newBuilder().setId(1L).build();
         doNothing().when(guestService).deleteGuest(1L);
 
-        // Act
         grpcImpl.deleteGuest(request, emptyObserver);
 
-        // Assert
         verify(emptyObserver, times(1)).onNext(any(Empty.class));
         verify(emptyObserver, times(1)).onCompleted();
     }
 
     @Test
-    void testGetBookingsByGuestId_Success() throws Exception {
-        // Arrange
+    void testGetBookingsByGuestId_Success() {
         GetBookingsByGuestIdRequest request = GetBookingsByGuestIdRequest.newBuilder().setGuestId(1L).build();
-        // Für diesen Test geben wir eine leere Liste zurück
         when(guestService.getAllBookingsFromGuest(1L)).thenReturn(Collections.emptyList());
 
-        // Act
-        grpcImpl.getBookingsByGuestId(request, new StreamObserver<ListBookingsResponse>() {
+        grpcImpl.getBookingsByGuestId(request, new StreamObserver<>() {
             @Override
             public void onNext(ListBookingsResponse value) {
                 assertNotNull(value);
@@ -263,7 +231,6 @@ class GuestServiceGrpcImplTest {
             }
             @Override
             public void onCompleted() {
-                // Nothing to assert here
             }
         });
     }

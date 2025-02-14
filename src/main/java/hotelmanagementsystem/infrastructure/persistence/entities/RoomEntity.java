@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // oder andere Strategien je nach Bedarf
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "room_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class RoomEntity {
     @Id

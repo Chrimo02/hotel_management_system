@@ -26,10 +26,6 @@ public class TestDataLoader {
     @Inject
     RoomService roomService;
 
-    /**
-     * Diese Methode wird automatisch aufgerufen, wenn Quarkus startet.
-     * Hier erstellen wir 5 Gäste, 3 Hotels und je 2 Räume (Single+Double) pro Hotel.
-     */
     public void loadTestData(@Observes StartupEvent ev) {
         createGuests();
         createHotelsAndRooms();

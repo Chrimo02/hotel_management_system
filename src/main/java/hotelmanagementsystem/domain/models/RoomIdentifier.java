@@ -43,4 +43,8 @@ public class RoomIdentifier {
     public void setRoomNumber(String roomNumber) {
         this.roomNumber = roomNumber;
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }

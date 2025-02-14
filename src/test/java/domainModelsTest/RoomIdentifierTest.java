@@ -18,7 +18,6 @@ public class RoomIdentifierTest {
         assertEquals(building, identifier.getBuilding(), "Building should match");
         assertEquals(floor, identifier.getFloor(), "Floor should match");
         assertEquals(roomNumber, identifier.getRoomNumber(), "Room number should match");
-        // Da die ID nicht im Konstruktor gesetzt wird, erwarten wir den Standardwert (0)
         assertEquals(0L, identifier.getId(), "Default id should be 0");
     }
 
@@ -26,7 +25,6 @@ public class RoomIdentifierTest {
     public void testSetters() {
         RoomIdentifier identifier = new RoomIdentifier("OldBuilding", 1, "101A");
 
-        // Werte aktualisieren
         identifier.setBuilding("NewBuilding");
         identifier.setFloor(5);
         identifier.setRoomNumber("505C");

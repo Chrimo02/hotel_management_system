@@ -37,12 +37,6 @@ class HotelServiceTest {
     private HotelRepository hotelRepository;
 
     @Mock
-    private HotelLocationRepository hotelLocationRepository;
-
-    @Mock
-    private HotelRatingRepository hotelRatingRepository;
-
-    @Mock
     private RoomService roomService;
 
     @Mock

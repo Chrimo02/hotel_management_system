@@ -1,7 +1,6 @@
 package hotelmanagementsystem.infrastructure.api.dto;
 import java.util.List;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.Hotel;
-import hotelmanagementsystem.infrastructure.api.grpc.generated.HotelLocation;
 
 public class HotelDTO {
 

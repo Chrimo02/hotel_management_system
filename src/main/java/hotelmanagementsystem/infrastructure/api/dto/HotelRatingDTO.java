@@ -1,5 +1,4 @@
 package hotelmanagementsystem.infrastructure.api.dto;
-import hotelmanagementsystem.domain.models.Booking;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.*;
 
 public class HotelRatingDTO {

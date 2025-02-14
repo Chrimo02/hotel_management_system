@@ -24,7 +24,6 @@ public class HotelEntity {
     @Column(name = "average_rating")
     private double averageRating;
 
-    // For Rooms and Bookings we keep the bidirectional mapping:
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RoomEntity> rooms;
 

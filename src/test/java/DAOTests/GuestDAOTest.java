@@ -9,7 +9,6 @@ import java.util.List;
 import hotelmanagementsystem.infrastructure.persistence.dao.implementation.GuestDAOImpl;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +34,6 @@ public class GuestDAOTest {
     @BeforeEach
     public void setUp() {
         dummyGuestEntity = new GuestEntity("John", "Doe", 1990, 1, 1, "john@example.com", "123456789");
-        // Wir setzen hier nicht die ID, da sie normalerweise von der DB gesetzt wird.
     }
 
     @Test
@@ -63,7 +61,6 @@ public class GuestDAOTest {
 
     @Test
     public void testDelete_Success() {
-        // Simuliere, dass der EntityManager das Objekt enthält.
         when(em.contains(dummyGuestEntity)).thenReturn(true);
         assertDoesNotThrow(() -> guestDAOImpl.delete(dummyGuestEntity));
         verify(em).remove(dummyGuestEntity);

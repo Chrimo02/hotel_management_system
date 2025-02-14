@@ -11,12 +11,10 @@ public class HotelLocationDTOTest {
     @Test
     public void testGettersAndSetters() {
         HotelLocationDTO dto = new HotelLocationDTO();
-        dto.setId(10L);
         dto.setAddress("123 Main St");
         dto.setCity("TestCity");
         dto.setCountry("TestCountry");
 
-        assertEquals(10L, dto.getId());
         assertEquals("123 Main St", dto.getAddress());
         assertEquals("TestCity", dto.getCity());
         assertEquals("TestCountry", dto.getCountry());

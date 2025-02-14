@@ -41,7 +41,6 @@ public class HotelServiceGrpcImpl extends HotelServiceGrpc.HotelServiceImplBase 
         try {
             hotelmanagementsystem.domain.models.HotelLocation hotelLocation =
                     new hotelmanagementsystem.domain.models.HotelLocation.HotelLocationBuilder()
-                            .withId(request.getLocation().getId())
                             .withAddress(request.getLocation().getAddress())
                             .withCity(request.getLocation().getCity())
                             .withCountry(request.getLocation().getCountry())

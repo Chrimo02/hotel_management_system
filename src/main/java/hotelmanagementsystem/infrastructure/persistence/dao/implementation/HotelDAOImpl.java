@@ -9,7 +9,6 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @ApplicationScoped
 public class HotelDAOImpl implements HotelDAO {

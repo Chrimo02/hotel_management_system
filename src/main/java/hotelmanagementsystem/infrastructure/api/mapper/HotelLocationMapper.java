@@ -5,8 +5,10 @@ import hotelmanagementsystem.infrastructure.api.dto.HotelLocationDTO;
 
 public class HotelLocationMapper {
 
-    // Domain-Model → DTO
     public static HotelLocationDTO toDTO(HotelLocation domainObject) {
+        if (domainObject == null) {
+            return null;
+        }
         HotelLocationDTO dto = new HotelLocationDTO();
         dto.setId(domainObject.getId());
         dto.setAddress(domainObject.getAddress());
@@ -15,8 +17,10 @@ public class HotelLocationMapper {
         return dto;
     }
 
-    // DTO → Domain-Model (unter Verwendung des Builders)
     public static HotelLocation fromDTO(HotelLocationDTO dto) {
+        if (dto == null) {
+            return null;
+        }
         return new HotelLocation.HotelLocationBuilder()
                 .withId(dto.getId())
                 .withAddress(dto.getAddress())

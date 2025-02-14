@@ -2,11 +2,9 @@ package hotelmanagementsystem.infrastructure.api.mapper;
 
 import hotelmanagementsystem.domain.models.Booking;
 import hotelmanagementsystem.domain.models.Hotel;
-import hotelmanagementsystem.domain.models.HotelRating;
 import hotelmanagementsystem.domain.models.Room;
 import hotelmanagementsystem.infrastructure.api.dto.HotelDTO;
 import hotelmanagementsystem.infrastructure.api.dto.HotelRatingDTO;
-import jakarta.inject.Inject;
 
 import java.util.Collections;
 import java.util.List;

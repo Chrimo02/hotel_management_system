@@ -9,7 +9,6 @@ import java.util.List;
 import hotelmanagementsystem.infrastructure.persistence.dao.implementation.BookingDAOImpl;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,10 +38,10 @@ public class BookingDAOTest {
         dummyDate = LocalDate.of(2025, 1, 1);
         dummyBookingEntity = new BookingEntity(
                 1L,
-                null, // Hotel kann null sein für diesen Test
+                null,
                 dummyDate,
                 dummyDate.plusDays(3),
-                Arrays.asList(), // leere Listen für Rooms und Guests
+                Arrays.asList(),
                 Arrays.asList(),
                 true,
                 null,
@@ -52,8 +51,6 @@ public class BookingDAOTest {
 
     @Test
     public void testCreate_Success() {
-        // Kein spezielles Verhalten für persist, da persist() void ist.
-        // Wir gehen davon aus, dass create() das übergebene Objekt zurückliefert.
         BookingEntity result = bookingDAOImpl.create(dummyBookingEntity);
         assertEquals(dummyBookingEntity, result);
         verify(em).persist(dummyBookingEntity);

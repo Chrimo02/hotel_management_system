@@ -77,10 +77,8 @@ class HotelServiceGrpcImplTest {
 
     @Test
     void testCreateHotel_Success() {
-        // Arrange
         hotelmanagementsystem.infrastructure.api.grpc.generated.HotelLocation grpcLocation =
                 hotelmanagementsystem.infrastructure.api.grpc.generated.HotelLocation.newBuilder()
-                        .setId(1L)
                         .setAddress("123 Main St")
                         .setCity("TestCity")
                         .setCountry("TestCountry")
@@ -95,10 +93,8 @@ class HotelServiceGrpcImplTest {
         when(hotelService.createHotel(eq("Test Hotel"), eq("Test Description"), any(HotelLocation.class)))
                 .thenReturn(dummyHotel);
 
-        // Act
         grpcImpl.createHotel(request, hotelResponseObserver);
 
-        // Assert
         ArgumentCaptor<HotelResponse> captor = ArgumentCaptor.forClass(HotelResponse.class);
         verify(hotelResponseObserver, times(1)).onNext(captor.capture());
         verify(hotelResponseObserver, times(1)).onCompleted();
@@ -111,14 +107,11 @@ class HotelServiceGrpcImplTest {
 
     @Test
     void testGetHotelById_Success() throws Exception {
-        // Arrange
         GetHotelByIdRequest request = GetHotelByIdRequest.newBuilder().setId(1L).build();
         when(hotelService.getHotelByHotelId(1L)).thenReturn(dummyHotel);
 
-        // Act
         grpcImpl.getHotelById(request, hotelResponseObserver);
 
-        // Assert
         ArgumentCaptor<HotelResponse> captor = ArgumentCaptor.forClass(HotelResponse.class);
         verify(hotelResponseObserver, times(1)).onNext(captor.capture());
         verify(hotelResponseObserver, times(1)).onCompleted();
@@ -130,20 +123,16 @@ class HotelServiceGrpcImplTest {
 
     @Test
     void testGetHotelById_NotFound() throws Exception {
-        // Arrange
         long invalidHotelId = 999L;
         GetHotelByIdRequest request = GetHotelByIdRequest.newBuilder()
                 .setId(invalidHotelId)
                 .build();
 
-        // Mock Service exception
         when(hotelService.getHotelByHotelId(invalidHotelId))
                 .thenThrow(new HotelNotFoundException("Hotel not found: " + invalidHotelId));
 
-        // Act
         grpcImpl.getHotelById(request, hotelResponseObserver);
 
-        // Assert
         verify(hotelService).getHotelByHotelId(invalidHotelId);
 
         ArgumentCaptor<StatusRuntimeException> errorCaptor = ArgumentCaptor.forClass(StatusRuntimeException.class);
@@ -158,7 +147,6 @@ class HotelServiceGrpcImplTest {
 
     @Test
     void testListHotels_Success() {
-        // Arrange
         ListHotelsRequest request = ListHotelsRequest.newBuilder()
                 .setFilterCity("TestCity")
                 .setMinRating(0.0)
@@ -169,10 +157,8 @@ class HotelServiceGrpcImplTest {
         when(hotelService.listHotelsFilteredAndPaged("TestCity", 0.0, 1, 10))
                 .thenReturn(dummyPagedHotels);
 
-        // Act
         grpcImpl.listHotels(request, listHotelsResponseObserver);
 
-        // Assert
         ArgumentCaptor<ListHotelsResponse> captor = ArgumentCaptor.forClass(ListHotelsResponse.class);
         verify(listHotelsResponseObserver, times(1)).onNext(captor.capture());
         verify(listHotelsResponseObserver, times(1)).onCompleted();
@@ -185,7 +171,6 @@ class HotelServiceGrpcImplTest {
 
     @Test
     void testUpdateHotel_Success() throws Exception {
-        // Arrange
         UpdateHotelRequest request = UpdateHotelRequest.newBuilder()
                 .setId(1L)
                 .setName("Updated Hotel")
@@ -205,10 +190,8 @@ class HotelServiceGrpcImplTest {
 
         when(hotelService.updateHotel(1L, updateMap)).thenReturn(updatedHotel);
 
-        // Act
         grpcImpl.updateHotel(request, hotelResponseObserver);
 
-        // Assert
         ArgumentCaptor<HotelResponse> captor = ArgumentCaptor.forClass(HotelResponse.class);
         verify(hotelResponseObserver, times(1)).onNext(captor.capture());
         verify(hotelResponseObserver, times(1)).onCompleted();
@@ -220,22 +203,17 @@ class HotelServiceGrpcImplTest {
 
     @Test
     void testDeleteHotel_Success() throws Exception {
-        // Arrange
         DeleteHotelRequest request = DeleteHotelRequest.newBuilder().setId(1L).build();
-        // Statt doNothing() stubben wir den Rückgabewert (angenommen, deleteHotel gibt boolean zurück)
         when(hotelService.deleteHotel(1L)).thenReturn(true);
 
-        // Act
         grpcImpl.deleteHotel(request, emptyObserver);
 
-        // Assert
         verify(emptyObserver, times(1)).onNext(any(Empty.class));
         verify(emptyObserver, times(1)).onCompleted();
     }
 
     @Test
     void testRateHotel_Success() throws Exception {
-        // Arrange
         RateHotelRequest request = RateHotelRequest.newBuilder()
                 .setGuestId(1L)
                 .setHotelId(1L)
@@ -245,18 +223,14 @@ class HotelServiceGrpcImplTest {
 
         doNothing().when(hotelService).rateHotel(1L, 1L, 5, "Excellent!");
 
-        // Act
         grpcImpl.rateHotel(request, emptyObserver);
 
-        // Assert
         verify(emptyObserver, times(1)).onNext(any(Empty.class));
         verify(emptyObserver, times(1)).onCompleted();
     }
 
     @Test
     void testFindAvailableRooms_Success() throws Exception {
-        // Arrange
-        // Dummy room – hier verwenden wir als Beispiel ein SingleRoom
         Room dummyRoom = new SingleRoom.Builder(100.0,
                 new hotelmanagementsystem.domain.models.RoomIdentifier("A", 1, "101"),
                 dummyHotel)
@@ -270,20 +244,17 @@ class HotelServiceGrpcImplTest {
                 .setRoomType("SINGLE")
                 .build();
 
-        when(hotelService.findAvailableRooms(1L, hotelmanagementsystem.domain.models.SingleRoom.class))
+        when(hotelService.findAvailableRooms(1L, hotelmanagementsystem.domain.models.SingleRoom.class, LocalDate.of(2025,1,1),LocalDate.of(2025,1,2)))
                 .thenReturn(Collections.singletonList(dummyRoom));
 
-        // Act
         grpcImpl.findAvailableRooms(request, listRoomsResponseObserver);
 
-        // Assert
         ArgumentCaptor<ListRoomsResponse> captor = ArgumentCaptor.forClass(ListRoomsResponse.class);
         verify(listRoomsResponseObserver, times(1)).onNext(captor.capture());
         verify(listRoomsResponseObserver, times(1)).onCompleted();
 
         ListRoomsResponse response = captor.getValue();
         assertNotNull(response);
-        // Wir erwarten genau ein Zimmer – anhand der ID
         assertEquals(1, response.getRoomsCount());
         assertEquals(1L, response.getRooms(0).getId());
     }
