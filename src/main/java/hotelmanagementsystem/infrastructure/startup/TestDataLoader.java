@@ -49,7 +49,8 @@ public class TestDataLoader {
 
 
             // --- Hotel 1 ---
-            HotelLocation loc1 = new HotelLocation.HotelLocationBuilder(0L)
+            HotelLocation loc1 = new HotelLocation.HotelLocationBuilder()
+                    .withId(0L)
                     .withAddress("Sonnenallee 1")
                     .withCity("Sonneberg")
                     .withCountry("Germany")
@@ -93,7 +94,8 @@ public class TestDataLoader {
             );
 
             // --- Hotel 3 ---
-            HotelLocation loc3 = new HotelLocation.HotelLocationBuilder(0L)
+            HotelLocation loc3 = new HotelLocation.HotelLocationBuilder()
+                    .withId(0L)
                     .withAddress("Meeresweg 5")
                     .withCity("Atlantis")
                     .withCountry("Atlantik")

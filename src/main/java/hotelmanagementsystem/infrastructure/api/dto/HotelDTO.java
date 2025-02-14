@@ -1,6 +1,7 @@
 package hotelmanagementsystem.infrastructure.api.dto;
 import java.util.List;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.Hotel;
+import hotelmanagementsystem.infrastructure.api.grpc.generated.HotelLocation;
 
 public class HotelDTO {
 
@@ -8,6 +9,7 @@ public class HotelDTO {
     private String name;
     private String description;
     private double averageRating;
+    private HotelLocationDTO hotelLocation;
     private List<Long> roomIds;
     private List<Long> bookingIds;
     private List<HotelRatingDTO> hotelRatings;
@@ -17,6 +19,14 @@ public class HotelDTO {
     }
     public void setId(long id) {
         this.id = id;
+    }
+
+    public HotelLocationDTO getHotelLocation() {
+        return hotelLocation;
+    }
+
+    public void setHotelLocation(HotelLocationDTO hotelLocation) {
+        this.hotelLocation = hotelLocation;
     }
 
     public String getName() {

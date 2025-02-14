@@ -6,12 +6,14 @@ import hotelmanagementsystem.domain.models.HotelRating;
 import hotelmanagementsystem.domain.models.Room;
 import hotelmanagementsystem.infrastructure.api.dto.HotelDTO;
 import hotelmanagementsystem.infrastructure.api.dto.HotelRatingDTO;
+import jakarta.inject.Inject;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class HotelMapper {
+
 
     public static HotelDTO toDTO(Hotel hotel) {
         if (hotel == null) {
@@ -22,6 +24,7 @@ public class HotelMapper {
         dto.setName(hotel.getName());
         dto.setDescription(hotel.getDescription());
         dto.setAverageRating(hotel.getAverageRating());
+        dto.setHotelLocation(HotelLocationMapper.toDTO(hotel.getLocation()));
 
         if (hotel.getRooms() != null) {
             List<Long> roomIds = hotel.getRooms().stream()

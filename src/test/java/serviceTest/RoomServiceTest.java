@@ -1,24 +1,38 @@
-/*
 package serviceTest;
-import hotelmanagementsystem.domain.exceptions.BookingNotFoundException;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.TreeSet;
+import java.util.List;
+
 import hotelmanagementsystem.domain.exceptions.RoomNotFoundException;
-import hotelmanagementsystem.domain.models.*;
+import hotelmanagementsystem.domain.models.Booking;
+import hotelmanagementsystem.domain.models.Hotel;
+import hotelmanagementsystem.domain.models.Room;
+import hotelmanagementsystem.domain.models.RoomIdentifier;
+import hotelmanagementsystem.domain.models.SingleRoom;
+import hotelmanagementsystem.domain.models.DoubleRoom;
 import hotelmanagementsystem.domain.services.HotelService;
 import hotelmanagementsystem.domain.services.RoomService;
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.RoomIdentifierRepository;
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.RoomRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
-import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+@ExtendWith(MockitoExtension.class)
 public class RoomServiceTest {
+
+    @InjectMocks
+    private RoomService roomService;
+
     @Mock
     private RoomRepository roomRepository;
 
@@ -28,128 +42,187 @@ public class RoomServiceTest {
     @Mock
     private RoomIdentifierRepository roomIdentifierRepository;
 
-    @InjectMocks
-    private RoomService roomService;
-
-    private Room testRoom;
-    private Hotel testHotel;
+    private Hotel dummyHotel;
+    private RoomIdentifier dummyIdentifier;
+    private Room dummyRoom;
+    private Booking dummyBooking;
 
     @BeforeEach
-    void setUp() {
-        // **Initialize Mockito Mocks**
-        MockitoAnnotations.openMocks(this);
-
-
-
-        // Initialize the test room
-        testRoom = new SingleRoom.Builder(100.0, new RoomIdentifier("Building A", 1, "101"), testHotel)
+    public void setUp() {
+        dummyIdentifier = new RoomIdentifier("Test Building", 1, "101");
+        dummyHotel = new Hotel.HotelBuilder()
                 .withId(1L)
-                .build();
-        List<Room> rooms = new ArrayList<>();
-        rooms.add(testRoom);
-        // Initialize the test hotel and rooms list
-        testHotel = new Hotel.HotelBuilder()
-                .withId(1L)
-                .withRoomsList(rooms)
                 .withName("Test Hotel")
+                .withDescription("Desc")
+                .withLocation(null)
+                .withRoomsList(new ArrayList<>())
                 .build();
-
-        // **Mock behavior for RoomRepository and HotelService**
-        when(roomRepository.findRoomById(1L)).thenReturn(testRoom);
-        when(hotelService.getHotelByHotelId(1L)).thenReturn(testHotel);
+        // Erzeuge einen SingleRoom als Dummy
+        dummyRoom = new SingleRoom.Builder(100.0, dummyIdentifier, dummyHotel)
+                .withId(10L)
+                .build();
+        // Erzeuge eine Dummy-Buchung (Status false, d.h. nicht aktiv)
+        dummyBooking = new Booking(1L, dummyHotel,
+                LocalDate.now().plusDays(2), LocalDate.now().plusDays(5),
+                Collections.singletonList(dummyRoom), new ArrayList<>(), false, null, null);
     }
+
     @Test
-    void testGetRoomById() throws RoomNotFoundException {
-        // Mock the repository response to return the test room when queried by ID
-        when(roomRepository.findRoomById(1L)).thenReturn(testRoom);
+    public void testGetRoomById_Success() throws RoomNotFoundException {
+        when(roomRepository.findRoomById(10L)).thenReturn(dummyRoom);
+        Room result = roomService.getRoomById(10L);
+        assertEquals(dummyRoom, result);
+        verify(roomRepository).findRoomById(10L);
+    }
 
-        // Call the actual method to retrieve the room by ID
-        Room result = roomService.getRoomById(1L);
+    @Test
+    public void testGetRoomById_NotFound() {
+        when(roomRepository.findRoomById(20L)).thenReturn(null);
+        assertThrows(RoomNotFoundException.class, () -> roomService.getRoomById(20L));
+        verify(roomRepository).findRoomById(20L);
+    }
 
-        // Assertions
+    @Test
+    public void testBookRooms_Success() {
+        // Stelle sicher, dass die Buchungsliste leer ist
+        dummyRoom.setBookings(new TreeSet<>());
+        roomService.bookRooms(dummyBooking);
+        assertTrue(dummyRoom.getBookings().contains(dummyBooking));
+        verify(roomRepository).updateRoom(dummyRoom);
+    }
+
+    @Test
+    public void testCancelRoom_Success() throws RoomNotFoundException, Exception {
+        // Füge dummyBooking der Buchungsliste hinzu
+        dummyRoom.setBookings(new TreeSet<>(Arrays.asList(dummyBooking)));
+        when(roomRepository.findRoomById(10L)).thenReturn(dummyRoom);
+        roomService.cancelRoom(10L, dummyBooking);
+        assertFalse(dummyRoom.getBookings().contains(dummyBooking));
+        verify(roomRepository).updateRoom(dummyRoom);
+    }
+
+    @Test
+    public void testCancelRoom_BookingNotFound() {
+        // Setze eine leere Buchungsliste – somit ist die Buchung nicht vorhanden.
+        dummyRoom.setBookings(new TreeSet<>());
+        when(roomRepository.findRoomById(10L)).thenReturn(dummyRoom);
+
+        // Es wird keine Exception geworfen, wenn die Buchung nicht vorhanden ist.
+        assertDoesNotThrow(() -> roomService.cancelRoom(10L, dummyBooking));
+
+        // Bestätige, dass die Buchungsliste weiterhin leer ist.
+        assertFalse(dummyRoom.getBookings().contains(dummyBooking));
+    }
+
+
+    @Test
+    public void testIsAvailable_NoOverlap() {
+        dummyRoom.setBookings(new TreeSet<>());
+        boolean available = roomService.isAvailable(dummyRoom, LocalDate.now().plusDays(1), LocalDate.now().plusDays(3));
+        assertTrue(available);
+    }
+
+    @Test
+    public void testIsAvailable_WithOverlap() {
+        dummyRoom.setBookings(new TreeSet<>(Arrays.asList(dummyBooking)));
+        boolean available = roomService.isAvailable(dummyRoom, LocalDate.now().plusDays(3), LocalDate.now().plusDays(6));
+        assertFalse(available);
+    }
+
+    @Test
+    public void testCreateRoom_SingleRoom() throws Exception {
+        when(hotelService.getHotelByHotelId(1L)).thenReturn(dummyHotel);
+        when(roomRepository.saveRoom(any(Room.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        RoomIdentifier identifier = new RoomIdentifier("New Building", 2, "202");
+        Room createdRoom = roomService.createRoom(200.0, identifier, 1L, SingleRoom.class);
+        assertNotNull(createdRoom);
+        verify(roomRepository).saveRoom(any(Room.class));
+        verify(roomIdentifierRepository).saveRoomIdentifier(identifier);
+    }
+
+    @Test
+    public void testCreateRoom_DoubleRoom() throws Exception {
+        when(hotelService.getHotelByHotelId(1L)).thenReturn(dummyHotel);
+        when(roomRepository.saveRoom(any(Room.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        RoomIdentifier identifier = new RoomIdentifier("Another Building", 3, "303");
+        Room createdRoom = roomService.createRoom(250.0, identifier, 1L, DoubleRoom.class);
+        assertNotNull(createdRoom);
+        verify(roomRepository).saveRoom(any(Room.class));
+        verify(roomIdentifierRepository).saveRoomIdentifier(identifier);
+    }
+
+    @Test
+    public void testRemoveRoom_NoActiveBookings() throws RoomNotFoundException {
+        dummyRoom.setBookings(new TreeSet<>());
+        when(roomRepository.findRoomById(10L)).thenReturn(dummyRoom);
+        assertDoesNotThrow(() -> roomService.removeRoom(10L));
+        verify(roomRepository).removeRoom(10L);
+    }
+
+    @Test
+    public void testRemoveRoom_WithActiveBookings() {
+        // Setze den Buchungsstatus direkt (dummyBooking ist kein Mock)
+        dummyBooking.setStatus(true);
+        dummyRoom.setBookings(new TreeSet<>(Arrays.asList(dummyBooking)));
+        when(roomRepository.findRoomById(10L)).thenReturn(dummyRoom);
+        Exception ex = assertThrows(RuntimeException.class, () -> roomService.removeRoom(10L));
+        assertTrue(ex.getMessage().contains("Cannot remove room with active bookings"));
+    }
+
+    @Test
+    public void testUpdatePricePerNight_Success() throws RoomNotFoundException {
+        when(roomRepository.findRoomById(10L)).thenReturn(dummyRoom);
+        dummyRoom.setPricePerNight(100.0);
+        Room updatedRoom = roomService.updatePricePerNight(10L, 150.0);
+        assertEquals(150.0, updatedRoom.getPricePerNight(), 0.001);
+        verify(roomRepository).updateRoom(dummyRoom);
+    }
+
+    @Test
+    public void testUpdatePricePerNight_RoomNotFound() {
+        when(roomRepository.findRoomById(20L)).thenReturn(null);
+        assertThrows(RoomNotFoundException.class, () -> roomService.updatePricePerNight(20L, 150.0));
+    }
+
+    @Test
+    public void testUpdateRoomIdentifier_Success() throws RoomNotFoundException {
+        when(roomRepository.findRoomById(10L)).thenReturn(dummyRoom);
+        RoomIdentifier newIdentifier = new RoomIdentifier("Updated Building", 4, "404");
+        Room updatedRoom = roomService.updateRoomIdentifier(10L, newIdentifier);
+        assertEquals(newIdentifier, updatedRoom.getRoomIdentifier());
+        verify(roomIdentifierRepository).saveRoomIdentifier(newIdentifier);
+        verify(roomRepository).updateRoom(dummyRoom);
+    }
+
+    @Test
+    public void testUpdateRoomIdentifier_RoomNotFound() {
+        when(roomRepository.findRoomById(20L)).thenReturn(null);
+        RoomIdentifier newIdentifier = new RoomIdentifier("Updated Building", 4, "404");
+        assertThrows(RoomNotFoundException.class, () -> roomService.updateRoomIdentifier(20L, newIdentifier));
+    }
+
+    @Test
+    public void testFindAvailableRooms_Success() throws Exception {
+        // Verwende dummyRoom als verfügbaren Raum (Buchungsliste leer)
+        dummyRoom.setBookings(new TreeSet<>());
+        List<Room> roomList = Arrays.asList(dummyRoom);
+        Hotel hotelWithRoom = new Hotel.HotelBuilder()
+                .withId(1L)
+                .withName("Test Hotel")
+                .withDescription("Desc")
+                .withLocation(null)
+                .withRoomsList(roomList)
+                .build();
+        when(hotelService.getHotelByHotelId(1L)).thenReturn(hotelWithRoom);
+
+        // Da dummyRoom keine Buchungen hat, liefert isAvailable automatisch true
+        List<Room> result = roomService.findAvailableRooms(
+                1L,
+                Collections.singletonList(dummyRoom.getClass()),
+                LocalDate.now().plusDays(1),
+                LocalDate.now().plusDays(3)
+        );
         assertNotNull(result);
-        assertEquals(testRoom, result);
+        assertTrue(result.contains(dummyRoom));
     }
-
-    @Test
-    void testBookRooms() {
-        Booking booking = new Booking(1L, testHotel, LocalDate.now(), LocalDate.now().plusDays(2), List.of(testRoom), List.of(), true, null, null);
-
-        roomService.bookRooms(booking);
-
-        verify(roomRepository, times(1)).updateRoom(testRoom);
-        assertTrue(testRoom.getBookings().contains(booking));
-    }
-    @Test
-    void testAddBooking() {
-        // Create a new booking
-        Booking booking = new Booking(1L, testHotel, LocalDate.now(), LocalDate.now().plusDays(2), List.of(testRoom), List.of(), true, null, null);
-
-        // Use a TreeSet to store bookings
-        Set<Booking> treeSetBookings = new TreeSet<>();
-        testRoom.setBookings(treeSetBookings);
-
-        // Add the booking to the TreeSet
-        testRoom.getBookings().add(booking);
-
-        // Verify that the booking is added
-        assertTrue(testRoom.getBookings().contains(booking));
-        assertEquals(1, testRoom.getBookings().size());
-        assertEquals(booking, testRoom.getBookings().iterator().next()); // Check if the booking is the first element
-    }
-    @Test
-    void testDeleteFromTreeSet() throws RoomNotFoundException, BookingNotFoundException {
-        Booking booking = new Booking(1L, testHotel, LocalDate.now(), LocalDate.now().plusDays(2), List.of(testRoom), List.of(), true, null, null);
-
-        // Use a TreeSet to store bookings
-        Set<Booking> treeSetBookings = new TreeSet<>();
-        treeSetBookings.add(booking);
-        testRoom.setBookings(treeSetBookings);
-
-        when(roomRepository.findRoomById(1L)).thenReturn(testRoom);
-
-        roomService.cancelRoom(1L, LocalDate.now(), LocalDate.now().plusDays(2));
-
-        verify(roomRepository, times(1)).updateRoom(testRoom);
-        assertFalse(testRoom.getBookings().contains(booking));
-    }
-    @Test
-    void testCreateRoom() {
-        RoomIdentifier roomIdentifier = new RoomIdentifier("BuildingA", 1, "101A");
-
-        when(hotelService.getHotelByHotelId(1L)).thenReturn(testHotel);
-
-        roomService.createRoom(200.0, roomIdentifier, 1L, SingleRoom.class);
-
-        verify(roomRepository, times(1)).saveRoom(any(SingleRoom.class));
-        verify(roomIdentifierRepository, times(1)).saveRoomIdentifier(roomIdentifier);
-    }
-    @Test
-    void testFindAvailableRooms() {
-        // Initialize room list in the test hotel to prevent NullPointerException
-        testHotel.setRoom(new ArrayList<>());
-        testHotel.getRooms().add(testRoom);
-
-        // Create a booking that covers a certain date range
-        Booking booking = new Booking(1L, testHotel, LocalDate.now(), LocalDate.now().plusDays(2), List.of(testRoom), List.of(), true, null, null);
-
-        // Set bookings on the test room
-        testRoom.setBookings(new HashSet<>(List.of(booking)));
-
-        // Mock HotelService response to return testHotel
-        when(hotelService.getHotelByHotelId(1L)).thenReturn(testHotel);
-
-        // Call method under test for a date range that does not overlap with the existing booking
-        List<Room> availableRooms = roomService.findAvailableRooms(1L, List.of(SingleRoom.class), LocalDate.now().plusDays(3), LocalDate.now().plusDays(4));
-
-        // Assertions
-        assertNotNull(availableRooms);
-        assertFalse(availableRooms.isEmpty()); // Expect at least one available room
-        assertTrue(availableRooms.contains(testRoom)); // Expect the testRoom to be included
-    }
-
 }
-
- */
-
-
