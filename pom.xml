@@ -13,8 +13,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>22</maven.compiler.source>
-        <maven.compiler.target>22</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
 
         <!-- Let Quarkus manage the Hibernate versions; do not override them explicitly. -->
         <protobuf.version>4.27.4</protobuf.version>
@@ -88,6 +88,18 @@
             <artifactId>quarkus-arc</artifactId>
         </dependency>
 
+        <!-- Docker
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-container-image-docker</artifactId>
+        </dependency>
+-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-container-image-jib</artifactId>
+        </dependency>
+
+
         <!-- Testing -->
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -148,13 +160,13 @@
             </extension>
         </extensions>
         <plugins>
-            <!-- Compile with Java 22 (make sure your JDK is set up for that) -->
+            <!-- Compile with Java 21 (make sure your JDK is set up for that) -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
-                    <source>22</source>
-                    <target>22</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
 

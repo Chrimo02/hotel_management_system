@@ -1,157 +1,106 @@
 package repositoriesTest;
-/*
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.Collections;
+import java.util.List;
 
 import hotelmanagementsystem.domain.models.Booking;
 import hotelmanagementsystem.domain.models.Guest;
 import hotelmanagementsystem.infrastructure.persistence.dao.interfaces.GuestDAO;
-import hotelmanagementsystem.infrastructure.persistence.entities.BookingEntity;
 import hotelmanagementsystem.infrastructure.persistence.entities.GuestEntity;
+import hotelmanagementsystem.infrastructure.persistence.entities.BookingEntity;
 import hotelmanagementsystem.infrastructure.persistence.mapper.BookingMapper;
 import hotelmanagementsystem.infrastructure.persistence.mapper.GuestMapper;
 import hotelmanagementsystem.infrastructure.persistence.repositories.adapters.GuestDatabaseAdapter;
+import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.GuestRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import org.mockito.*;
 
 class GuestRepoTest {
 
     @Mock
     private GuestDAO guestDAO;
-
     @Mock
     private BookingMapper bookingMapper;
-
     @Mock
     private GuestMapper guestMapper;
 
     @InjectMocks
-    private GuestDatabaseAdapter guestDatabaseAdapter;
+    private GuestDatabaseAdapter adapter;
+
+    private Guest dummyGuest;
+    private GuestEntity dummyGuestEntity;
+    private Booking dummyBooking;
+    private BookingEntity dummyBookingEntity;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
+        dummyGuest = new Guest.GuestBuilder()
+                .withId(1L)
+                .withFirstName("Alice")
+                .withLastName("Smith")
+                .withBirthday(1990, 1, 1)
+                .withEMail("alice@example.com")
+                .withPhoneNumber("123456789")
+                .build();
+        dummyGuestEntity = new GuestEntity("Alice", "Smith", 1990, 1, 1, "alice@example.com", "123456789");
+        dummyGuestEntity.setId(dummyGuest.getId());
+
+        dummyBooking = mock(Booking.class);
+        dummyBookingEntity = mock(BookingEntity.class);
     }
 
     @Test
-    void testCreateGuest() {
-        Guest guest = new Guest.GuestBuilder().withId(1L).withFirstName("John").build();
-        GuestEntity guestEntity = new GuestEntity();
-        when(guestMapper.guestToGuestEntity(guest)).thenReturn(guestEntity);
+    public void testCreateGuest() {
+        when(guestMapper.guestToGuestEntity(dummyGuest)).thenReturn(dummyGuestEntity);
+        when(guestDAO.create(dummyGuestEntity)).thenReturn(dummyGuestEntity);
+        when(guestMapper.guestEntityToGuest(dummyGuestEntity)).thenReturn(dummyGuest);
 
-        guestDatabaseAdapter.createGuest(guest);
-
-        verify(guestDAO, times(1)).create(guestEntity);
+        Guest result = adapter.createGuest(dummyGuest);
+        assertNotNull(result);
+        assertEquals(dummyGuest.getId(), result.getId());
     }
 
     @Test
-    void testUpdateEmail() {
-        Guest guest = new Guest.GuestBuilder().withId(1L).withEMail("newemail@example.com").build();
-        GuestEntity guestEntity = new GuestEntity();
-        when(guestDAO.read(guest.getId())).thenReturn(guestEntity);
+    public void testUpdateGuest() {
+        when(guestDAO.read(dummyGuest.getId())).thenReturn(dummyGuestEntity);
+        when(guestDAO.update(dummyGuestEntity)).thenReturn(dummyGuestEntity);
+        when(guestMapper.guestEntityToGuest(dummyGuestEntity)).thenReturn(dummyGuest);
 
-        guestDatabaseAdapter.updateGuest(guest);
-
-        assertEquals("newemail@example.com", guestEntity.geteMail());
-        verify(guestDAO, times(1)).update(guestEntity);
+        dummyGuest.seteMail("newalice@example.com");
+        Guest updated = adapter.updateGuest(dummyGuest);
+        assertNotNull(updated);
+        assertEquals(dummyGuest.geteMail(), updated.geteMail());
     }
 
     @Test
-    void testUpdatePhone() {
-        Guest guest = new Guest.GuestBuilder().withId(1L).withPhoneNumber("1234567890").build();
-        GuestEntity guestEntity = new GuestEntity();
-        when(guestDAO.read(guest.getId())).thenReturn(guestEntity);
-
-        guestDatabaseAdapter.updateGuest(guest);
-
-        assertEquals("1234567890", guestEntity.getPhoneNumber());
-        verify(guestDAO, times(1)).update(guestEntity);
+    public void testDeleteGuest() {
+        when(guestMapper.guestToGuestEntity(dummyGuest)).thenReturn(dummyGuestEntity);
+        adapter.deleteGuest(dummyGuest);
+        verify(guestDAO, times(1)).delete(dummyGuestEntity);
     }
 
     @Test
-    void testUpdateLastName() {
-        Guest guest = new Guest.GuestBuilder().withId(1L).withLastName("Doe").build();
-        GuestEntity guestEntity = new GuestEntity();
-        when(guestDAO.read(guest.getId())).thenReturn(guestEntity);
-
-        guestDatabaseAdapter.updateGuest(guest);
-
-        assertEquals("Doe", guestEntity.getLastName());
-        verify(guestDAO, times(1)).update(guestEntity);
+    public void testGetGuestById() {
+        when(guestDAO.read(dummyGuest.getId())).thenReturn(dummyGuestEntity);
+        when(guestMapper.guestEntityToGuest(dummyGuestEntity)).thenReturn(dummyGuest);
+        Guest result = adapter.getGuestById(dummyGuest.getId());
+        assertNotNull(result);
+        assertEquals(dummyGuest.getId(), result.getId());
     }
 
     @Test
-    void testUpdateTitle() {
-        Guest guest = new Guest.GuestBuilder().withId(1L).withTitle("Dr.").build();
-        GuestEntity guestEntity = new GuestEntity();
-        when(guestDAO.read(guest.getId())).thenReturn(guestEntity);
-
-        guestDatabaseAdapter.updateGuest(guest);
-
-        assertEquals("Dr.", guestEntity.getTitle());
-        verify(guestDAO, times(1)).update(guestEntity);
-    }
-
-    @Test
-    void testDeleteGuest() {
-        Guest guest = new Guest.GuestBuilder().withId(1L).build();
-        GuestEntity guestEntity = new GuestEntity();
-        when(guestMapper.guestToGuestEntity(guest)).thenReturn(guestEntity);
-
-        guestDatabaseAdapter.deleteGuest(guest);
-
-        verify(guestDAO, times(1)).delete(guestEntity);
-    }
-
-    @Test
-    void testGetGuestById() {
-        long id = 1L;
-        GuestEntity guestEntity = new GuestEntity();
-        guestEntity.setId(id);
-        guestEntity.setFirstName("John");
-        guestEntity.setLastName("Doe");
-        guestEntity.setTitle("Mr.");
-        guestEntity.seteMail("john.doe@example.com");
-        guestEntity.setPhoneNumber("1234567890");
-        guestEntity.setBirthday(LocalDate.of(1990, 1, 1));
-        when(guestDAO.read(id)).thenReturn(guestEntity);
-
-        Guest guest = guestDatabaseAdapter.getGuestById(id);
-
-        assertNotNull(guest);
-        assertEquals(id, guest.getId());
-        assertEquals("John", guest.getFirstName());
-        assertEquals("Doe", guest.getLastName());
-        assertEquals("Mr.", guest.getTitle());
-        assertEquals("john.doe@example.com", guest.geteMail());
-        assertEquals("1234567890", guest.getPhoneNumber());
-    }
-
-    @Test
-    void testGetBookingsByGuestId() {
-        long guestId = 1L;
-        BookingEntity bookingEntity = mock(BookingEntity.class); // Mock BookingEntity
-        Booking booking = mock(Booking.class); // Mock Booking
-        when(guestDAO.findBookingsByGuestId(guestId)).thenReturn(List.of(bookingEntity));
-        when(bookingMapper.bookingEntityToBooking(bookingEntity)).thenReturn(booking);
-
-        List<Booking> bookings = guestDatabaseAdapter.getBookingsByGuestId(guestId);
-
+    public void testGetBookingsByGuestId() {
+        List<BookingEntity> bookingEntities = Collections.singletonList(dummyBookingEntity);
+        when(guestDAO.findBookingsByGuestId(dummyGuest.getId())).thenReturn(bookingEntities);
+        when(bookingMapper.bookingEntityToBooking(dummyBookingEntity)).thenReturn(dummyBooking);
+        List<Booking> bookings = adapter.getBookingsByGuestId(dummyGuest.getId());
         assertNotNull(bookings);
         assertEquals(1, bookings.size());
-        assertEquals(booking, bookings.get(0));
+        assertEquals(dummyBooking, bookings.get(0));
     }
-
-
-
 }
-
-
- */

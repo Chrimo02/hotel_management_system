@@ -1,88 +1,77 @@
 package domainModelsTest;
 
-
-import hotelmanagementsystem.domain.models.Booking;
-import hotelmanagementsystem.domain.models.Guest;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import hotelmanagementsystem.domain.models.Guest;
+import org.junit.jupiter.api.Test;
 
 public class GuestTest {
 
-    private Guest guest;
-
-    @Mock
-    private Booking mockBooking1;
-
-    @Mock
-    private Booking mockBooking2;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        guest = new Guest.GuestBuilder()
+    @Test
+    public void testGuestBuilder_AllFieldsSet() {
+        Guest guest = new Guest.GuestBuilder()
                 .withId(1L)
                 .withFirstName("John")
                 .withLastName("Doe")
                 .withBirthday(1990, 5, 20)
-                .withEMail("john.doe@example.com")
+                .withEMail("john@example.com")
                 .withPhoneNumber("1234567890")
                 .build();
+
+        assertEquals(1L, guest.getId(), "ID should be 1L");
+        assertEquals("John", guest.getFirstName(), "FirstName should be 'John'");
+        assertEquals("Doe", guest.getLastName(), "LastName should be 'Doe'");
+        assertEquals(LocalDate.of(1990, 5, 20), guest.getBirthday(), "Birthday should be 1990-05-20");
+        assertEquals("john@example.com", guest.geteMail(), "E-Mail should be 'john@example.com'");
+        assertEquals("1234567890", guest.getPhoneNumber(), "PhoneNumber should be '1234567890'");
     }
 
     @Test
-    public void testGuestBuilder_CreatesGuestWithCorrectAttributes() {
-        assertEquals(1L, guest.getId());
-        assertEquals("John", guest.getFirstName());
-        assertEquals("Doe", guest.getLastName());
-        assertEquals(LocalDate.of(1990, 5, 20), guest.getBirthday());
-        assertEquals("john.doe@example.com", guest.geteMail());
-        assertEquals("1234567890", guest.getPhoneNumber());
-    }
-
-    @Test
-    public void testSetEmail_UpdatesEmailCorrectly() {
-        guest.seteMail("new.email@example.com");
-        assertEquals("new.email@example.com", guest.geteMail());
-    }
-
-    @Test
-    public void testSetPhoneNumber_UpdatesPhoneNumberCorrectly() {
-        guest.setPhoneNumber("0987654321");
-        assertEquals("0987654321", guest.getPhoneNumber());
-    }
-
-    @Test
-    public void testSetLastName_UpdatesLastNameCorrectly() {
-        guest.setLastName("Smith");
-        assertEquals("Smith", guest.getLastName());
-    }
-
-    @Test
-    public void testGuestBuilder_WithOptionalFieldsAndMockedBookings() {
-        Guest guestWithBookings = new Guest.GuestBuilder()
-                .withId(2L)
-                .withFirstName("Jane")
+    public void testSetEmail() {
+        Guest guest = new Guest.GuestBuilder()
+                .withFirstName("Alice")
+                .withEMail("alice@example.com")
                 .build();
-        assertEquals(2L, guestWithBookings.getId());
-        assertEquals("Jane", guestWithBookings.getFirstName());
+        assertEquals("alice@example.com", guest.geteMail());
+        guest.seteMail("newalice@example.com");
+        assertEquals("newalice@example.com", guest.geteMail());
     }
 
     @Test
-    public void testBuilder_WhenCreatingMinimalGuest_OptionalFieldsRemainNull() {
-        Guest minimalGuest = new Guest.GuestBuilder()
+    public void testSetPhoneNumber() {
+        Guest guest = new Guest.GuestBuilder()
+                .withFirstName("Bob")
+                .withPhoneNumber("111222333")
+                .build();
+        assertEquals("111222333", guest.getPhoneNumber());
+        guest.setPhoneNumber("444555666");
+        assertEquals("444555666", guest.getPhoneNumber());
+    }
+
+    @Test
+    public void testSetLastName() {
+        Guest guest = new Guest.GuestBuilder()
+                .withFirstName("Charlie")
+                .withLastName("Smith")
+                .build();
+        assertEquals("Smith", guest.getLastName());
+        guest.setLastName("Johnson");
+        assertEquals("Johnson", guest.getLastName());
+    }
+
+    @Test
+    public void testGuestBuilder_Minimal() {
+        Guest guest = new Guest.GuestBuilder()
                 .withFirstName("Minimal")
                 .build();
-
-        assertEquals("Minimal", minimalGuest.getFirstName());
-        assertNull(minimalGuest.getLastName());
-        assertNull(minimalGuest.getBirthday());
-        assertNull(minimalGuest.geteMail());
-        assertNull(minimalGuest.getPhoneNumber());
+        assertEquals("Minimal", guest.getFirstName());
+        assertNull(guest.getLastName(), "LastName should be null");
+        assertNull(guest.getBirthday(), "Birthday should be null");
+        assertNull(guest.geteMail(), "E-Mail should be null");
+        assertNull(guest.getPhoneNumber(), "PhoneNumber should be null");
     }
 }
+
+

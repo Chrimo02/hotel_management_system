@@ -2,17 +2,9 @@ package hotelmanagementsystem.infrastructure.api.dto;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.HotelLocation;
 public class HotelLocationDTO {
 
-    private long id;
     private String address;
     private String city;
     private String country;
-
-    public long getId() {
-        return id;
-    }
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getAddress() {
         return address;
@@ -37,7 +29,6 @@ public class HotelLocationDTO {
 
     public HotelLocation toProtobuf() {
         return HotelLocation.newBuilder()
-                .setId(this.id)
                 .setAddress(this.address != null ? this.address : "")
                 .setCity(this.city != null ? this.city : "")
                 .setCountry(this.country != null ? this.country : "")

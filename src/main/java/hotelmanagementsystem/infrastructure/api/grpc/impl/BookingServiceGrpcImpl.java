@@ -10,7 +10,6 @@ import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import io.quarkus.grpc.GrpcService;
 import io.smallrye.common.annotation.Blocking;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -124,13 +123,10 @@ public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImp
     }
 
     private Class<? extends hotelmanagementsystem.domain.models.Room> parseRoomType(String typeName) {
-        switch (typeName.toUpperCase()) {
-            case "SINGLE":
-                return hotelmanagementsystem.domain.models.SingleRoom.class;
-            case "DOUBLE":
-                return hotelmanagementsystem.domain.models.DoubleRoom.class;
-            default:
-                throw new IllegalArgumentException("Unbekannter Raumtyp: " + typeName);
-        }
+        return switch (typeName.toUpperCase()) {
+            case "SINGLE" -> hotelmanagementsystem.domain.models.SingleRoom.class;
+            case "DOUBLE" -> hotelmanagementsystem.domain.models.DoubleRoom.class;
+            default -> throw new IllegalArgumentException("Unbekannter Raumtyp: " + typeName);
+        };
     }
 }

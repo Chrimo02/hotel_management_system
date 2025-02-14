@@ -4,13 +4,14 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public abstract class Room {
-    private long id;
+    private final long id;
     private double pricePerNight;
     private RoomIdentifier roomIdentifier;
     private Hotel hotel;
-    private Set<Booking> bookings = new TreeSet<>(); // TreeSet für sortierte Buchungen
-    protected Room() {}
-    protected Room(double pricePerNight, RoomIdentifier roomIdentifier, Hotel hotel) {
+    private Set<Booking> bookings = new TreeSet<>();
+
+    protected Room(long id, double pricePerNight, RoomIdentifier roomIdentifier, Hotel hotel) {
+        this.id = id;
         this.pricePerNight = pricePerNight;
         this.roomIdentifier = roomIdentifier;
         this.hotel = hotel;
@@ -52,9 +53,6 @@ public abstract class Room {
         this.hotel = hotel;
     }
 
-    // ----------------------
-    // Builder for Room class
-    // ----------------------
     public static class Builder {
         private long id;
         private double pricePerNight;
@@ -83,7 +81,6 @@ public abstract class Room {
 
         public Room build() {
             return new Room(id, pricePerNight, roomIdentifier, hotel) {
-                // Optional: Hier kannst du einen bestimmten Raumtyp zurückgeben, z. B. SingleRoom oder DoubleRoom
             };
         }
     }

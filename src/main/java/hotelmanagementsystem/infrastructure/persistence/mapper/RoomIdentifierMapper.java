@@ -10,11 +10,26 @@ public class RoomIdentifierMapper {
     @Inject
     public RoomIdentifierMapper(){};
     public RoomIdentifierEntity domainToEntity(RoomIdentifier roomIdentifier) {
-        return new RoomIdentifierEntity(roomIdentifier.getBuilding(), roomIdentifier.getFloor(), roomIdentifier.getRoomNumber());
+        if (roomIdentifier == null) return null;
+        RoomIdentifierEntity entity = new RoomIdentifierEntity(
+                roomIdentifier.getBuilding(),
+                roomIdentifier.getFloor(),
+                roomIdentifier.getRoomNumber()
+        );
+        if (roomIdentifier.getId() > 0){
+            entity.setId(roomIdentifier.getId());
+        }
+        return entity;
     }
     public RoomIdentifier entityToDomain(RoomIdentifierEntity roomIdentifierEntity) {
-        return new RoomIdentifier(roomIdentifierEntity.getBuilding(),
+        if (roomIdentifierEntity == null) return null;
+        RoomIdentifier roomIdentifier = new RoomIdentifier(
+                roomIdentifierEntity.getBuilding(),
                 roomIdentifierEntity.getFloor(),
-                roomIdentifierEntity.getRoomNumber());
+                roomIdentifierEntity.getRoomNumber()
+        );
+        roomIdentifier.setId(roomIdentifierEntity.getId());
+
+        return roomIdentifier;
     }
 }

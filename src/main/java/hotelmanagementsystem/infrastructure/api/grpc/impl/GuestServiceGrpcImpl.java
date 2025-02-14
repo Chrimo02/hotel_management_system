@@ -1,6 +1,5 @@
 package hotelmanagementsystem.infrastructure.api.grpc.impl;
 
-import hotelmanagementsystem.domain.exceptions.BookingNotFoundException;
 import hotelmanagementsystem.domain.exceptions.GuestNotFoundException;
 import hotelmanagementsystem.domain.models.Booking;
 import hotelmanagementsystem.domain.models.Guest;
@@ -14,14 +13,12 @@ import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import io.quarkus.grpc.GrpcService;
 import io.smallrye.common.annotation.Blocking;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 @GrpcService
 @Singleton
 @Blocking
@@ -35,7 +32,6 @@ public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
     }
     @Override
     public void createGuest(CreateGuestRequest request, StreamObserver<GuestResponse> responseObserver) {
-
         try{
             Guest guest = guestService.createGuest(
                     request.getFirstName(),
@@ -55,10 +51,7 @@ public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
         } catch (Exception e){
             responseObserver.onError(Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException());
         }
-
     }
-
-
 
     @Override
     public void getGuestById(GetGuestByIdRequest request, StreamObserver<GuestResponse> responseObserver) {

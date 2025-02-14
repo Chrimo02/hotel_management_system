@@ -6,14 +6,14 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class Booking implements Comparable<Booking> {
-    private final long id; //final
+    private final long id;
     private final Hotel hotel;
-    private LocalDate checkInDate;
-    private LocalDate checkOutDate; //final oder nicht? Verlängerung?
-    private double totalPrice;
+    private final LocalDate checkInDate;
+    private final LocalDate checkOutDate;
+    private final double totalPrice;
     private List<Room> rooms;
-    private List<Guest> guests;
-    private boolean status; // shows true if the booking is confirmed and active or false if the booking was canceled --> true after initializing
+    private final List<Guest> guests;
+    private boolean status;
     private LocalDateTime checkInTime;
     private LocalDateTime checkOutTime;
 
@@ -96,11 +96,11 @@ public class Booking implements Comparable<Booking> {
     }
 
     public boolean isCheckedIn() {
-        return checkInTime != null; // Checked in if checkInTime is not null
+        return checkInTime != null;
     }
 
     public boolean isCheckedOut() {
-        return checkOutTime != null; // Checked out if checkOutTime is not null
+        return checkOutTime != null;
     }
 
     public void setRooms(List<Room> rooms) {

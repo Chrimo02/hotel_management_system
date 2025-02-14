@@ -17,7 +17,6 @@ import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.
 import hotelmanagementsystem.domain.models.Hotel;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.TypedQuery;
 
 import java.time.LocalDate;
 import java.util.List;

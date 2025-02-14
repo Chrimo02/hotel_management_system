@@ -24,15 +24,12 @@ public class HotelEntity {
     @Column(name = "average_rating")
     private double averageRating;
 
-    // For Rooms and Bookings we keep the bidirectional mapping:
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RoomEntity> rooms;
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BookingEntity> bookings;
 
-    // Ratings are mapped unidirectionally.
-    // JPA will write the hotel's id into the hotel_id column of hotel_ratings.
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id")
     private List<HotelRatingEntity> ratings;

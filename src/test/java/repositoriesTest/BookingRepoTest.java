@@ -1,5 +1,15 @@
 package repositoriesTest;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import hotelmanagementsystem.domain.models.Booking;
 import hotelmanagementsystem.domain.models.Guest;
 import hotelmanagementsystem.domain.models.Hotel;
@@ -17,178 +27,147 @@ import hotelmanagementsystem.infrastructure.persistence.repositories.adapters.Bo
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BookingRepoTest {
 
     @Mock
-    private BookingDAO mockBookingDAO;
-
+    private BookingDAO bookingDAO;
     @Mock
-    private RoomMapper mockRoomMapper;
-
+    private RoomMapper roomMapper;
     @Mock
-    private GuestMapper mockGuestMapper;
-
+    private GuestMapper guestMapper;
     @Mock
-    private HotelMapper mockHotelMapper;
-
+    private HotelMapper hotelMapper;
     @Mock
-    private BookingMapper mockBookingMapper;
+    private BookingMapper bookingMapper;
 
-    private BookingDatabaseAdapter bookingAdapter;
+    @InjectMocks
+    private BookingDatabaseAdapter adapter;
+
+    private Hotel dummyHotel;
+    private Room dummyRoom;
+    private Guest dummyGuest;
+    private Booking dummyBooking;
+
+    private HotelEntity dummyHotelEntity;
+    private RoomEntity dummyRoomEntity;
+    private GuestEntity dummyGuestEntity;
+    private BookingEntity dummyBookingEntity;
 
     @BeforeEach
-    void setUp() {
-        bookingAdapter = new BookingDatabaseAdapter(mockBookingDAO, mockRoomMapper, mockGuestMapper, mockHotelMapper, mockBookingMapper);
-    }
+    public void setUp() {
+        dummyHotel = new Hotel.HotelBuilder()
+                .withId(1L)
+                .withName("Test Hotel")
+                .build();
 
-    @Test
-    void testCreateBooking_Success() {
-        Hotel hotel = mock(Hotel.class);
-        LocalDate checkInDate = LocalDate.of(2024, 1, 1);
-        LocalDate checkOutDate = LocalDate.of(2024, 1, 10);
-        List<Room> rooms = mock(List.class);
-        List<Guest> guests = mock(List.class);
+        dummyRoom = mock(Room.class);
+        lenient().when(dummyRoom.getId()).thenReturn(10L);
 
-        HotelEntity hotelEntity = mock(HotelEntity.class);
-        List<RoomEntity> roomEntities = mock(List.class);
-        List<GuestEntity> guestEntities = mock(List.class);
-        BookingEntity bookingEntity = mock(BookingEntity.class);
-        Booking expectedBooking = mock(Booking.class);
+        dummyGuest = new Guest.GuestBuilder()
+                .withId(20L)
+                .withFirstName("Alice")
+                .withLastName("Smith")
+                .withBirthday(1990, 1, 1)
+                .withEMail("alice@example.com")
+                .withPhoneNumber("123456789")
+                .build();
 
-        when(mockHotelMapper.mapDomainHotelToHotelEntity(hotel)).thenReturn(hotelEntity);
-        when(mockRoomMapper.toEntityList(rooms)).thenReturn(roomEntities);
-        when(mockGuestMapper.guestsToGuestEntities(guests)).thenReturn(guestEntities);
-        when(mockBookingDAO.create(any(BookingEntity.class))).thenReturn(bookingEntity);
-        when(mockBookingMapper.bookingEntityToBooking(bookingEntity)).thenReturn(expectedBooking);
-
-        Booking result = bookingAdapter.createBooking(hotel, checkInDate, checkOutDate, rooms, guests);
-
-        assertNotNull(result);
-        assertEquals(expectedBooking, result);
-        verify(mockBookingDAO).create(any(BookingEntity.class));
-    }
-
-    @Test
-    void testUpdateBooking_Success() {
-        Booking booking = mock(Booking.class);
-        BookingEntity bookingEntity = mock(BookingEntity.class);
-
-        when(mockBookingDAO.read(booking.getId())).thenReturn(bookingEntity);
-
-        bookingAdapter.updateBooking(booking);
-
-        verify(bookingEntity).setStatus(booking.getStatus());
-        verify(bookingEntity).setCheckInTime(booking.getCheckInTime());
-        verify(bookingEntity).setCheckOutTime(booking.getCheckOutTime());
-        verify(mockBookingDAO).update(bookingEntity);
-    }
-
-    @Test
-    void testGetBookingById_Success() {
-        long bookingId = 10L;
-
-        // Mock BookingEntity and its dependencies
-        BookingEntity bookingEntity = mock(BookingEntity.class);
-        HotelEntity mockHotelEntity = mock(HotelEntity.class);
-        RoomEntity mockRoomEntity = mock(RoomEntity.class);
-        GuestEntity mockGuestEntity = mock(GuestEntity.class);
-
-        // Create lists for rooms and guests
-        List<RoomEntity> roomEntities = List.of(mockRoomEntity);
-        List<GuestEntity> guestEntities = List.of(mockGuestEntity);
-
-        // Define behaviors for BookingEntity getters to return valid, non-null data
-        when(mockBookingDAO.read(bookingId)).thenReturn(bookingEntity);
-        when(bookingEntity.getId()).thenReturn(bookingId);
-        when(bookingEntity.getCheckInDate()).thenReturn(LocalDate.of(2025, 3, 1));    // Valid check-in date
-        when(bookingEntity.getCheckOutDate()).thenReturn(LocalDate.of(2025, 3, 5));   // Valid check-out date
-        when(bookingEntity.getHotel()).thenReturn(mockHotelEntity);
-        when(bookingEntity.getRooms()).thenReturn(roomEntities);
-        when(bookingEntity.getGuests()).thenReturn(guestEntities);
-        when(bookingEntity.isStatus()).thenReturn(true);
-        when(bookingEntity.getCheckInTime()).thenReturn(null);
-        when(bookingEntity.getCheckOutTime()).thenReturn(null);
-
-        // Mock mappers to return valid domain objects
-        Hotel mockHotel = mock(Hotel.class);
-        List<Room> rooms = List.of(mock(Room.class));
-        List<Guest> guests = List.of(mock(Guest.class));
-
-        when(mockHotelMapper.mapHotelEntityToDomainHotel(mockHotelEntity)).thenReturn(mockHotel);
-        when(mockRoomMapper.toDomainList(roomEntities)).thenReturn(rooms);
-        when(mockGuestMapper.guestEntitiesToGuests(guestEntities)).thenReturn(guests);
-
-        // Run the method under test
-        Booking result = bookingAdapter.getBookingById(bookingId);
-
-        // Create the expected Booking object with the same data
-        Booking expectedBooking = new Booking(
-                bookingId,
-                mockHotel,
-                LocalDate.of(2025, 3, 1),
-                LocalDate.of(2025, 3, 5),
-                rooms,
-                guests,
+        dummyBooking = new Booking(
+                100L,
+                dummyHotel,
+                LocalDate.of(2025, 12, 1),
+                LocalDate.of(2025, 12, 5),
+                Collections.singletonList(dummyRoom),
+                Collections.singletonList(dummyGuest),
                 true,
-                null,
-                null
+                LocalDateTime.of(2025, 12, 1, 15, 0),
+                LocalDateTime.of(2025, 12, 5, 11, 0)
         );
 
-        // Assertions to verify that the result matches the expected Booking
-        assertNotNull(result, "The returned Booking should not be null");
-        assertEquals(expectedBooking.getId(), result.getId(), "Booking IDs should match");
-        assertEquals(expectedBooking.getCheckInDate(), result.getCheckInDate(), "Check-in dates should match");
-        assertEquals(expectedBooking.getCheckOutDate(), result.getCheckOutDate(), "Check-out dates should match");
-        assertEquals(expectedBooking.getHotel(), result.getHotel(), "Hotels should match");
-        assertEquals(expectedBooking.getRooms(), result.getRooms(), "Rooms should match");
-        assertEquals(expectedBooking.getGuests(), result.getGuests(), "Guests should match");
-        assertEquals(expectedBooking.getStatus(), result.getStatus(), "Statuses should match");
-        assertEquals(expectedBooking.getCheckInTime(), result.getCheckInTime(), "Check-in times should match");
-        assertEquals(expectedBooking.getCheckOutTime(), result.getCheckOutTime(), "Check-out times should match");
+        dummyHotelEntity = new HotelEntity.HotelBuilder()
+                .withId(dummyHotel.getId())
+                .withName(dummyHotel.getName())
+                .build();
 
-        // Verify that the mocked methods were called as expected
-        verify(mockBookingDAO).read(bookingId);
-        verify(mockRoomMapper).toDomainList(roomEntities);
-        verify(mockGuestMapper).guestEntitiesToGuests(guestEntities);
-        verify(mockHotelMapper).mapHotelEntityToDomainHotel(mockHotelEntity);
-    }
+        dummyRoomEntity = mock(RoomEntity.class);
+        lenient().when(dummyRoomEntity.getId()).thenReturn(10L);
 
+        dummyGuestEntity = new GuestEntity("Alice", "Smith", 1990, 1, 1, "alice@example.com", "123456789");
+        dummyGuestEntity.setId(dummyGuest.getId());
 
-
-
-    @Test
-    void testCreateBooking_ThrowsException() {
-        Hotel hotel = mock(Hotel.class);
-        LocalDate checkInDate = LocalDate.of(2024, 1, 1);
-        LocalDate checkOutDate = LocalDate.of(2024, 1, 10);
-        List<Room> rooms = mock(List.class);
-        List<Guest> guests = mock(List.class);
-
-        when(mockBookingDAO.create(any(BookingEntity.class))).thenThrow(new RuntimeException("Simulated DAO error"));
-
-        assertThrows(RuntimeException.class, () -> bookingAdapter.createBooking(hotel, checkInDate, checkOutDate, rooms, guests));
-
-        verify(mockBookingDAO).create(any(BookingEntity.class));
+        dummyBookingEntity = mock(BookingEntity.class);
+        lenient().when(dummyBookingEntity.getId()).thenReturn(100L);
     }
 
     @Test
-    void testUpdateBooking_ThrowsException() {
-        Booking booking = mock(Booking.class);
+    void testCreateBooking() {
+        when(roomMapper.toEntityList(any())).thenReturn(Collections.singletonList(dummyRoomEntity));
+        when(guestMapper.guestsToGuestEntities(any())).thenReturn(Collections.singletonList(dummyGuestEntity));
+        when(hotelMapper.mapDomainHotelToHotelEntity(any())).thenReturn(dummyHotelEntity);
+        when(bookingDAO.create(any())).thenReturn(dummyBookingEntity);
+        when(bookingMapper.bookingEntityToBooking(any())).thenReturn(dummyBooking);
 
-        when(mockBookingDAO.read(booking.getId())).thenThrow(new RuntimeException("Simulated DAO error"));
+        Booking result = adapter.createBooking(
+                dummyHotel,
+                dummyBooking.getCheckInDate(),
+                dummyBooking.getCheckOutDate(),
+                dummyBooking.getRooms(),
+                dummyBooking.getGuests()
+        );
 
-        assertThrows(RuntimeException.class, () -> bookingAdapter.updateBooking(booking));
+        assertNotNull(result);
+        assertEquals(100L, result.getId());
+        verify(bookingDAO).create(any());
+    }
 
-        verify(mockBookingDAO).read(booking.getId());
+    @Test
+    void testUpdateBooking() {
+        when(bookingDAO.read(100L)).thenReturn(dummyBookingEntity);
+
+        adapter.updateBooking(dummyBooking);
+
+        verify(bookingDAO).update(dummyBookingEntity);
+        verify(dummyBookingEntity).setRooms(any());
+        verify(dummyBookingEntity).setStatus(true);
+        verify(dummyBookingEntity).setCheckInTime(dummyBooking.getCheckInTime());
+        verify(dummyBookingEntity).setCheckOutTime(dummyBooking.getCheckOutTime());
+    }
+
+    @Test
+    void testGetBookingById() {
+        when(bookingDAO.read(100L)).thenReturn(dummyBookingEntity);
+        when(dummyBookingEntity.getHotel()).thenReturn(dummyHotelEntity);
+        when(dummyBookingEntity.getRooms()).thenReturn(Collections.singletonList(dummyRoomEntity));
+        when(dummyBookingEntity.getGuests()).thenReturn(Collections.singletonList(dummyGuestEntity));
+        when(dummyBookingEntity.getCheckInDate()).thenReturn(dummyBooking.getCheckInDate());
+        when(dummyBookingEntity.getCheckOutDate()).thenReturn(dummyBooking.getCheckOutDate());
+
+        when(roomMapper.toDomainList(any())).thenReturn(Collections.singletonList(dummyRoom));
+        when(guestMapper.guestEntitiesToGuests(any())).thenReturn(Collections.singletonList(dummyGuest));
+        when(hotelMapper.mapHotelEntityToDomainHotel(any())).thenReturn(dummyHotel);
+
+        Booking result = adapter.getBookingById(100L);
+
+        assertNotNull(result);
+        assertEquals(100L, result.getId());
+        assertEquals(1, result.getRooms().size());
+    }
+
+    @Test
+    void testFindBookingsByCheckInDate() {
+        LocalDate targetDate = LocalDate.of(2025, 12, 1);
+        when(bookingDAO.findBookingsByCheckInDate(targetDate))
+                .thenReturn(Collections.singletonList(dummyBookingEntity));
+        when(bookingMapper.bookingEntityToBooking(dummyBookingEntity))
+                .thenReturn(dummyBooking);
+
+        List<Booking> results = adapter.findBookingsByCheckInDate(targetDate);
+
+        assertEquals(1, results.size());
+        assertEquals(100L, results.get(0).getId());
     }
 }

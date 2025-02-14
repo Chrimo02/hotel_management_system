@@ -19,11 +19,6 @@ public class HotelRatingMapper {
     public HotelRatingMapper(GuestMapper guestMapper) {
         this.guestMapper = guestMapper;
     }
-
-    /**
-     * Maps a HotelRatingEntity (from the DB) to a domain HotelRating.
-     * Note that we ignore the hotel reference.
-     */
     public HotelRating mapToDomain(HotelRatingEntity entity) {
         if (entity == null) {
             return null;
@@ -33,7 +28,6 @@ public class HotelRatingMapper {
 
         return new HotelRating.Builder()
                 .withId(entity.getId())
-                // We set hotel to null – ratings will be accessed only via a Hotel.
                 .withHotel(null)
                 .withGuest(domainGuest)
                 .withRating(entity.getStarRating())
@@ -41,11 +35,6 @@ public class HotelRatingMapper {
                 .build();
     }
 
-    /**
-     * Maps a domain HotelRating to a HotelRatingEntity.
-     * The hotel is not set here because it will be stored
-     * only as part of the parent HotelEntity.
-     */
     public HotelRatingEntity mapToEntity(HotelRating rating) {
         if (rating == null) {
             return null;

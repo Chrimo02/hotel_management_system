@@ -28,7 +28,7 @@ public class GuestEntity {
         this.eMail = eMail;
         this.phoneNumber = phoneNumber;
     }
-    public GuestEntity(){};
+    public GuestEntity(){}
 
     public long getId() {
         return id;

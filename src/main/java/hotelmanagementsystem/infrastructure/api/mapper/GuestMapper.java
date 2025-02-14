@@ -16,7 +16,7 @@ public class GuestMapper {
     }
 
     public static Guest toDomain(GuestDTO dto){
-        Guest guest = new Guest.GuestBuilder()
+        return new Guest.GuestBuilder()
                 .withId(dto.getId())
                 .withFirstName(dto.getFirstName())
                 .withLastName(dto.getLastName())
@@ -24,6 +24,5 @@ public class GuestMapper {
                 .withEMail(dto.geteMail())
                 .withPhoneNumber(dto.getPhoneNumber())
                 .build();
-        return guest;
     }
 }

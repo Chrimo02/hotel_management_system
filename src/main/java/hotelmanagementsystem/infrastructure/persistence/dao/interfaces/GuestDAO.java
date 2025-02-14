@@ -1,7 +1,5 @@
 package hotelmanagementsystem.infrastructure.persistence.dao.interfaces;
-import hotelmanagementsystem.domain.models.Guest;
 import hotelmanagementsystem.infrastructure.persistence.entities.GuestEntity;
-import jakarta.persistence.EntityManager;
 import hotelmanagementsystem.infrastructure.persistence.entities.BookingEntity;
 
 import java.util.List;

@@ -23,9 +23,9 @@ public class BookingEntity {
 
     @ManyToMany
     @JoinTable(
-            name = "booking_guest", // Name der Zwischentabelle
-            joinColumns = @JoinColumn(name = "booking_id"), // FK zur Booking-Tabelle
-            inverseJoinColumns = @JoinColumn(name = "guest_id") // FK zur Guest-Tabelle
+            name = "booking_guest",
+            joinColumns = @JoinColumn(name = "booking_id"),
+            inverseJoinColumns = @JoinColumn(name = "guest_id")
     )
     private List<GuestEntity> guests;
 

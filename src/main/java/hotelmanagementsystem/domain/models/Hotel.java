@@ -14,7 +14,7 @@ public class Hotel {
 
     private List<Room> rooms;
     private List<Booking> bookings;
-    private List<HotelRating> ratings;
+    private final List<HotelRating> ratings;
 
     private Hotel(HotelBuilder hotelBuilder) {
         this.id = hotelBuilder.id;

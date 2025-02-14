@@ -1,7 +1,6 @@
 package hotelmanagementsystem.infrastructure.persistence.repositories.adapters;
 
 import hotelmanagementsystem.domain.models.HotelLocation;
-import hotelmanagementsystem.infrastructure.persistence.dao.interfaces.HotelDAO;
 import hotelmanagementsystem.infrastructure.persistence.dao.interfaces.HotelLocationDAO;
 import hotelmanagementsystem.infrastructure.persistence.entities.HotelLocationEntity;
 import hotelmanagementsystem.infrastructure.persistence.mapper.HotelLocationMapper;
@@ -9,17 +8,13 @@ import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-import java.util.List;
-
 @ApplicationScoped
 public class HotelLocationDatabaseAdapter implements HotelLocationRepository {
     private final HotelLocationDAO hotelLocationDAO;
-    private final HotelDAO hotelDAO;
     private final HotelLocationMapper hotelLocationMapper;
     @Inject
-    public HotelLocationDatabaseAdapter(HotelLocationDAO hotelLocationDAO, HotelDAO hotelDAO, HotelLocationMapper hotelLocationMapper) {
+    public HotelLocationDatabaseAdapter(HotelLocationDAO hotelLocationDAO, HotelLocationMapper hotelLocationMapper) {
         this.hotelLocationDAO = hotelLocationDAO;
-        this.hotelDAO = hotelDAO;
         this.hotelLocationMapper = hotelLocationMapper;
     }
 

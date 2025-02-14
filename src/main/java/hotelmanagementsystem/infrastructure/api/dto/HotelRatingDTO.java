@@ -1,5 +1,4 @@
 package hotelmanagementsystem.infrastructure.api.dto;
-import hotelmanagementsystem.domain.models.Booking;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.*;
 
 public class HotelRatingDTO {
@@ -8,8 +7,6 @@ public class HotelRatingDTO {
     private int rating;
     private String comment;
     private long guestId;
-
-    // --- Getter & Setter ---
 
     public long getId() {
         return id;
@@ -39,7 +36,6 @@ public class HotelRatingDTO {
         this.guestId = guestId;
     }
 
-    // --- Konvertierung DTO -> gRPC (Protobuf) ---
     public HotelRating toProtobuf() {
         return HotelRating.newBuilder()
                 .setStarRating(this.getRating())

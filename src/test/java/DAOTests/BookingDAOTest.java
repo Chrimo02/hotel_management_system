@@ -1,117 +1,88 @@
-/*
 package DAOTests;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import hotelmanagementsystem.infrastructure.persistence.dao.implementation.BookingDAOImpl;
-import hotelmanagementsystem.infrastructure.persistence.dao.implementation.DataAccessException;
-import hotelmanagementsystem.infrastructure.persistence.entities.BookingEntity;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.lenient;
+import hotelmanagementsystem.infrastructure.persistence.entities.BookingEntity;
 
 @ExtendWith(MockitoExtension.class)
-class BookingDAOTest {
+public class BookingDAOTest {
 
-    @Spy
-    private BookingDAOImpl bookingDAO;
-
-    @Mock
-    private EntityManager mockEntityManager;
+    @InjectMocks
+    private BookingDAOImpl bookingDAOImpl;
 
     @Mock
-    private EntityTransaction mockTransaction;
+    private EntityManager em;
+
+    @Mock
+    private TypedQuery<BookingEntity> typedQuery;
+
+    private BookingEntity dummyBookingEntity;
+
+    private LocalDate dummyDate;
 
     @BeforeEach
-    void setUp() {
-        lenient().doReturn(mockEntityManager).when(bookingDAO).entityManager();
-        lenient().when(mockEntityManager.getTransaction()).thenReturn(mockTransaction);
-        lenient().when(mockTransaction.isActive()).thenReturn(true);
+    public void setUp() {
+        dummyDate = LocalDate.of(2025, 1, 1);
+        dummyBookingEntity = new BookingEntity(
+                1L,
+                null,
+                dummyDate,
+                dummyDate.plusDays(3),
+                Arrays.asList(),
+                Arrays.asList(),
+                true,
+                null,
+                null
+        );
     }
 
     @Test
-    void testCreate_Success() {
-        BookingEntity booking = new BookingEntity();
-
-        // Normal case
-        bookingDAO.create(booking);
-
-        verify(mockTransaction).begin();
-        verify(mockEntityManager).persist(booking);
-        verify(mockTransaction).commit();
-        verify(mockEntityManager).close();
+    public void testCreate_Success() {
+        BookingEntity result = bookingDAOImpl.create(dummyBookingEntity);
+        assertEquals(dummyBookingEntity, result);
+        verify(em).persist(dummyBookingEntity);
     }
 
     @Test
-    void testCreate_Exception() {
-        BookingEntity booking = new BookingEntity();
-        doThrow(new RuntimeException("Simulated persist error"))
-                .when(mockEntityManager).persist(any(BookingEntity.class));
-
-        assertThrows(DataAccessException.class, () -> bookingDAO.create(booking));
-
-        verify(mockTransaction).begin();
-        verify(mockTransaction).rollback();
-        verify(mockEntityManager).close();
+    public void testRead_Success() {
+        when(em.find(BookingEntity.class, 1L)).thenReturn(dummyBookingEntity);
+        BookingEntity result = bookingDAOImpl.read(1L);
+        assertEquals(dummyBookingEntity, result);
+        verify(em).find(BookingEntity.class, 1L);
     }
 
     @Test
-    void testRead_Success() {
-        long bookingId = 10L;
-        BookingEntity dummy = new BookingEntity();
+    public void testUpdate_Success() {
+        when(em.merge(dummyBookingEntity)).thenReturn(dummyBookingEntity);
+        assertDoesNotThrow(() -> bookingDAOImpl.update(dummyBookingEntity));
+        verify(em).merge(dummyBookingEntity);
+    }
 
-        when(mockEntityManager.find(BookingEntity.class, bookingId)).thenReturn(dummy);
+    @Test
+    public void testFindBookingsByCheckInDate_Success() {
+        LocalDate targetDate = dummyDate;
+        when(em.createQuery(anyString(), eq(BookingEntity.class))).thenReturn(typedQuery);
+        when(typedQuery.setParameter("checkInDate", targetDate)).thenReturn(typedQuery);
+        when(typedQuery.getResultList()).thenReturn(Arrays.asList(dummyBookingEntity));
 
-        BookingEntity result = bookingDAO.read(bookingId);
-
+        List<BookingEntity> result = bookingDAOImpl.findBookingsByCheckInDate(targetDate);
         assertNotNull(result);
-        verify(mockEntityManager).find(BookingEntity.class, bookingId);
-        verify(mockEntityManager).close();
-    }
-
-    @Test
-    void testRead_Exception() {
-        long bookingId = 999L;
-
-        when(mockEntityManager.find(any(Class.class), eq(bookingId)))
-                .thenThrow(new RuntimeException("Simulated find error"));
-
-        assertThrows(DataAccessException.class, () -> bookingDAO.read(bookingId));
-        verify(mockEntityManager).close();
-    }
-
-    @Test
-    void testUpdate_Success() {
-        BookingEntity booking = new BookingEntity();
-
-        bookingDAO.update(booking);
-
-        verify(mockTransaction).begin();
-        verify(mockEntityManager).merge(booking);
-        verify(mockTransaction).commit();
-        verify(mockEntityManager).close();
-    }
-
-    @Test
-    void testUpdate_Exception() {
-        BookingEntity booking = new BookingEntity();
-        doThrow(new RuntimeException("Simulated merge error"))
-                .when(mockEntityManager).merge(any(BookingEntity.class));
-
-        assertThrows(DataAccessException.class, () -> bookingDAO.update(booking));
-
-        verify(mockTransaction).begin();
-        verify(mockTransaction).rollback();
-        verify(mockEntityManager).close();
+        assertEquals(1, result.size());
+        assertEquals(dummyBookingEntity, result.get(0));
+        verify(typedQuery).setParameter("checkInDate", targetDate);
+        verify(typedQuery).getResultList();
     }
 }
-
-
- */

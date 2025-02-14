@@ -16,7 +16,7 @@ public class HotelLocationMapper {
     }
 
     public HotelLocation mapToDomain(HotelLocationEntity hotelLocationEntity) {
-        return new HotelLocation.HotelLocationBuilder(hotelLocationEntity.getId())
+        return new HotelLocation.HotelLocationBuilder()
                 .withCity(hotelLocationEntity.getCity())
                 .withAddress(hotelLocationEntity.getAddress())
                 .withCountry(hotelLocationEntity.getCountry())

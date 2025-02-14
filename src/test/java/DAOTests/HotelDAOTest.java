@@ -1,181 +1,127 @@
-/*
 package DAOTests;
 
-import hotelmanagementsystem.infrastructure.persistence.dao.implementation.DataAccessException;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.Arrays;
+import java.util.List;
+
 import hotelmanagementsystem.infrastructure.persistence.dao.implementation.HotelDAOImpl;
-import hotelmanagementsystem.infrastructure.persistence.entities.HotelEntity;
-import hotelmanagementsystem.infrastructure.persistence.entities.HotelLocationEntity;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.PersistenceException;
 import jakarta.persistence.TypedQuery;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-
+import hotelmanagementsystem.infrastructure.persistence.entities.HotelEntity;
 
 @ExtendWith(MockitoExtension.class)
-class HotelDAOTest {
+public class HotelDAOTest {
 
-
-    @Spy
-    private HotelDAOImpl hotelDAO;
-
-    @Mock
-    private EntityManager mockEntityManager;
+    @InjectMocks
+    private HotelDAOImpl hotelDAOImpl;
 
     @Mock
-    private EntityTransaction mockTransaction;
+    private EntityManager em;
 
-    // Optional, falls du Abfragen via TypedQuery nutzt
     @Mock
-    private TypedQuery<HotelEntity> mockTypedQuery;
+    private TypedQuery<Long> countQuery;
 
-    private HotelEntity mockHotelEntity;
+    @Mock
+    private TypedQuery<HotelEntity> hotelTypedQuery;
+
+    private HotelEntity dummyHotelEntity;
 
     @BeforeEach
-    void setUp() {
-        // Lenient-Stubbings, damit Mockito nicht bei jedem Test aufruft "meckert".
-        lenient().doReturn(mockEntityManager).when(hotelDAO).entityManager();
-        lenient().when(mockEntityManager.getTransaction()).thenReturn(mockTransaction);
-        lenient().when(mockTransaction.isActive()).thenReturn(true);
-
-        // Beispiel-HotelEntity (so wie in deinem alten Code)
-        HotelLocationEntity location = new HotelLocationEntity.HotelLocationBuilder()
-                .withAddress("Test Address")
-                .withCity("Test City")
-                .withCountry("Test Country")
-                .build();
-
-        mockHotelEntity = new HotelEntity.HotelBuilder()
+    public void setUp() {
+        dummyHotelEntity = new HotelEntity.HotelBuilder()
                 .withId(1L)
                 .withName("Test Hotel")
-                .withDescription("A nice test hotel")
-                .withLocation(location)
-                .withRooms(List.of())
-                .withBookings(List.of())
-                .withRatings(List .of())
+                .withDescription("Test Description")
                 .build();
     }
 
     @Test
-    void testCreateHotel_Success() {
-        // Kein Fehler simulieren -> normaler Durchlauf
-        assertDoesNotThrow(() -> hotelDAO.createHotel(mockHotelEntity));
-
-        // Überprüfen, dass Transaktion gestartet, persist aufgerufen, committet und geschlossen wurde
-        verify(mockTransaction).begin();
-        verify(mockEntityManager).persist(mockHotelEntity);
-        verify(mockTransaction).commit();
-        verify(mockEntityManager).close();
+    public void testCreateHotel_Success() {
+        HotelEntity result = hotelDAOImpl.createHotel(dummyHotelEntity);
+        assertEquals(dummyHotelEntity, result);
+        verify(em).persist(dummyHotelEntity);
     }
 
     @Test
-    void testCreateHotel_ExceptionRollback() {
-        // Wir simulieren, dass persist eine Exception wirft
-        doThrow(new RuntimeException("Persistence error"))
-                .when(mockEntityManager).persist(any(HotelEntity.class));
-
-        DataAccessException exception =
-                assertThrows(DataAccessException.class, () -> hotelDAO.createHotel(mockHotelEntity));
-
-        assertTrue(exception.getMessage().contains("Error while creating hotel entity"));
-        // Rollback wird erwartet
-        verify(mockTransaction).begin();
-        verify(mockTransaction).rollback();
-        verify(mockEntityManager).close();
+    public void testFindById_Found() {
+        when(em.find(HotelEntity.class, 1L)).thenReturn(dummyHotelEntity);
+        HotelEntity result = hotelDAOImpl.findById(1L);
+        assertNotNull(result);
+        assertEquals(dummyHotelEntity, result);
+        verify(em).find(HotelEntity.class, 1L);
     }
 
     @Test
-    void testFindById_Success() {
-        when(mockEntityManager.find(HotelEntity.class, 1L)).thenReturn(mockHotelEntity);
-
-        Optional<HotelEntity> result = hotelDAO.findById(1L);
-
-        assertTrue(result.isPresent());
-        assertEquals(1L, result.get().getId());
-        assertEquals("Test Hotel", result.get().getName());
-
-        verify(mockEntityManager).find(HotelEntity.class, 1L);
-        verify(mockEntityManager).close();
+    public void testFindById_NotFound() {
+        when(em.find(HotelEntity.class, 2L)).thenReturn(null);
+        HotelEntity result = hotelDAOImpl.findById(2L);
+        assertNull(result);
+        verify(em).find(HotelEntity.class, 2L);
     }
 
     @Test
-    void testFindById_NotFound() {
-        when(mockEntityManager.find(HotelEntity.class, 2L)).thenReturn(null);
-        Optional<HotelEntity> result = hotelDAO.findById(2L);
-        assertTrue(result.isEmpty());
-        verify(mockEntityManager).find(HotelEntity.class, 2L);
-        verify(mockEntityManager).close();
+    public void testUpdateHotel_Success() {
+        when(em.merge(dummyHotelEntity)).thenReturn(dummyHotelEntity);
+        HotelEntity result = hotelDAOImpl.updateHotel(dummyHotelEntity);
+        assertEquals(dummyHotelEntity, result);
+        verify(em).merge(dummyHotelEntity);
     }
 
     @Test
-    void testUpdateHotel_Success() {
-        assertDoesNotThrow(() -> hotelDAO.updateHotel(mockHotelEntity));
-        verify(mockTransaction).begin();
-        verify(mockEntityManager).merge(mockHotelEntity);
-        verify(mockTransaction).commit();
-        verify(mockEntityManager).close();
+    public void testDeleteById_Success() {
+        when(em.find(HotelEntity.class, 1L)).thenReturn(dummyHotelEntity);
+        assertDoesNotThrow(() -> hotelDAOImpl.deleteById(1L));
+        verify(em).find(HotelEntity.class, 1L);
+        verify(em).remove(dummyHotelEntity);
     }
 
     @Test
-    void testUpdateHotel_ExceptionRollback() {
-        doThrow(new RuntimeException("Update error"))
-                .when(mockEntityManager).merge(any(HotelEntity.class));
-
-        DataAccessException exception =
-                assertThrows(DataAccessException.class, () -> hotelDAO.updateHotel(mockHotelEntity));
-
-        assertTrue(exception.getMessage().contains("Error updating Hotel"));
-        verify(mockTransaction).begin();
-        verify(mockTransaction).rollback();
-        verify(mockEntityManager).close();
+    public void testDeleteById_NotFound() {
+        when(em.find(HotelEntity.class, 2L)).thenReturn(null);
+        assertDoesNotThrow(() -> hotelDAOImpl.deleteById(2L));
+        verify(em).find(HotelEntity.class, 2L);
+        verify(em, never()).remove(any());
     }
 
     @Test
-    void testDeleteById_Success() {
-        when(mockEntityManager.find(HotelEntity.class, 1L)).thenReturn(mockHotelEntity);
-        assertDoesNotThrow(() -> hotelDAO.deleteById(1L));
-        verify(mockTransaction).begin();
-        verify(mockEntityManager).find(HotelEntity.class, 1L);
-        verify(mockEntityManager).remove(mockHotelEntity);
-        verify(mockTransaction).commit();
-        verify(mockEntityManager).close();
+    public void testCountByFilter_Success() {
+        String city = "TestCity";
+        double minRating = 3.5;
+        when(em.createQuery(anyString(), eq(Long.class))).thenReturn(countQuery);
+        when(countQuery.setParameter(eq("city"), any())).thenReturn(countQuery);
+        when(countQuery.setParameter(eq("minRating"), eq(minRating))).thenReturn(countQuery);
+        when(countQuery.getSingleResult()).thenReturn(5L);
+
+        long count = hotelDAOImpl.countByFilter(city, minRating);
+        assertEquals(5L, count);
+        verify(countQuery).setParameter(eq("city"), any());
+        verify(countQuery).setParameter("minRating", minRating);
+        verify(countQuery).getSingleResult();
     }
 
     @Test
-    void testDeleteById_NotFound() {
-        when(mockEntityManager.find(HotelEntity.class, 2L)).thenReturn(null);
-        assertDoesNotThrow(() -> hotelDAO.deleteById(2L));
-        verify(mockTransaction).begin();
-        verify(mockEntityManager).find(HotelEntity.class, 2L);
-        verify(mockTransaction).commit();
-        verify(mockEntityManager).close();
-    }
+    public void testFindByFilter_Success() {
+        String city = "TestCity";
+        double minRating = 4.0;
+        int offset = 0;
+        int limit = 10;
+        List<HotelEntity> entities = Arrays.asList(dummyHotelEntity);
+        when(em.createQuery(anyString(), eq(HotelEntity.class))).thenReturn(hotelTypedQuery);
+        when(hotelTypedQuery.setParameter(eq("city"), any())).thenReturn(hotelTypedQuery);
+        when(hotelTypedQuery.setParameter("minRating", minRating)).thenReturn(hotelTypedQuery);
+        when(hotelTypedQuery.setFirstResult(offset)).thenReturn(hotelTypedQuery);
+        when(hotelTypedQuery.setMaxResults(limit)).thenReturn(hotelTypedQuery);
+        when(hotelTypedQuery.getResultList()).thenReturn(entities);
 
-    @Test
-    void testDeleteById_ExceptionRollback() {
-        when(mockEntityManager.find(HotelEntity.class, 1L)).thenReturn(mockHotelEntity);
-        doThrow(new RuntimeException("Delete error")).when(mockEntityManager).remove(mockHotelEntity);
-
-        DataAccessException exception =
-                assertThrows(DataAccessException.class, () -> hotelDAO.deleteById(1L));
-
-        assertTrue(exception.getMessage().contains("Error deleting Hotel"));
-        verify(mockTransaction).begin();
-        verify(mockTransaction).rollback();
-        verify(mockEntityManager).close();
+        List<HotelEntity> result = hotelDAOImpl.findByFilter(city, minRating, offset, limit);
+        assertEquals(entities, result);
+        verify(hotelTypedQuery).getResultList();
     }
 }
-
-
- */

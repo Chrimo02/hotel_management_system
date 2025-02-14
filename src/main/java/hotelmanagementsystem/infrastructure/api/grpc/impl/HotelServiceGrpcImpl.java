@@ -40,7 +40,7 @@ public class HotelServiceGrpcImpl extends HotelServiceGrpc.HotelServiceImplBase 
     public void createHotel(CreateHotelRequest request, StreamObserver<HotelResponse> responseObserver) {
         try {
             hotelmanagementsystem.domain.models.HotelLocation hotelLocation =
-                    new hotelmanagementsystem.domain.models.HotelLocation.HotelLocationBuilder(request.getLocation().getId())
+                    new hotelmanagementsystem.domain.models.HotelLocation.HotelLocationBuilder()
                             .withAddress(request.getLocation().getAddress())
                             .withCity(request.getLocation().getCity())
                             .withCountry(request.getLocation().getCountry())
@@ -99,13 +99,13 @@ public class HotelServiceGrpcImpl extends HotelServiceGrpc.HotelServiceImplBase 
 
             PagedHotels result = hotelService.listHotelsFilteredAndPaged(city, minRating, pageNumber, pageSize);
 
-            List<hotelmanagementsystem.infrastructure.api.grpc.generated.Hotel> protoHotels = result.getHotels().stream()
+            List<hotelmanagementsystem.infrastructure.api.grpc.generated.Hotel> protoHotels = result.hotels().stream()
                     .map(h -> HotelMapper.toDTO(h).toProtobuf())
                     .collect(Collectors.toList());
 
             ListHotelsResponse response = ListHotelsResponse.newBuilder()
                     .addAllHotels(protoHotels)
-                    .setTotalCount(result.getTotalCount())
+                    .setTotalCount(result.totalCount())
                     .setPageNumber(pageNumber)
                     .setPageSize(pageSize)
                     .build();
@@ -127,10 +127,10 @@ public class HotelServiceGrpcImpl extends HotelServiceGrpc.HotelServiceImplBase 
             String newName = request.getName();
             String newDescription = request.getDescription();
 
-            if (newName != null && !newName.isBlank()) {
+            if (!newName.isBlank()) {
                 updateMap.put("name", newName);
             }
-            if (newDescription != null && !newDescription.isBlank()) {
+            if (!newDescription.isBlank()) {
                 updateMap.put("description", newDescription);
             }
 
@@ -182,11 +182,7 @@ public class HotelServiceGrpcImpl extends HotelServiceGrpc.HotelServiceImplBase 
             );
             responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
-        } catch (HotelNotFoundException e) {
-            responseObserver.onError(
-                    Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException()
-            );
-        } catch (GuestNotFoundException e) {
+        } catch (HotelNotFoundException | GuestNotFoundException e) {
             responseObserver.onError(
                     Status.NOT_FOUND.withDescription(e.getMessage()).asRuntimeException()
             );
@@ -203,7 +199,7 @@ public class HotelServiceGrpcImpl extends HotelServiceGrpc.HotelServiceImplBase 
             LocalDate checkIn = LocalDate.parse(request.getCheckInDate());
             LocalDate checkOut = LocalDate.parse(request.getCheckOutDate());
             Class<? extends Room> roomClass = parseRoomType(request.getRoomType());
-            List<Room> availableRooms = hotelService.findAvailableRooms(request.getHotelId(), roomClass);
+            List<Room> availableRooms = hotelService.findAvailableRooms(request.getHotelId(), roomClass, checkIn, checkOut);
 
             List<hotelmanagementsystem.infrastructure.api.grpc.generated.Room> roomProtos = availableRooms.stream()
                     .map(RoomMapper::toDTO)
@@ -231,13 +227,10 @@ public class HotelServiceGrpcImpl extends HotelServiceGrpc.HotelServiceImplBase 
         if (typeName == null || typeName.isBlank()) {
             return null;
         }
-        switch (typeName.toUpperCase()) {
-            case "SINGLE":
-                return hotelmanagementsystem.domain.models.SingleRoom.class;
-            case "DOUBLE":
-                return hotelmanagementsystem.domain.models.DoubleRoom.class;
-            default:
-                throw new IllegalArgumentException("Unknown room type: " + typeName);
-        }
+        return switch (typeName.toUpperCase()) {
+            case "SINGLE" -> hotelmanagementsystem.domain.models.SingleRoom.class;
+            case "DOUBLE" -> hotelmanagementsystem.domain.models.DoubleRoom.class;
+            default -> throw new IllegalArgumentException("Unknown room type: " + typeName);
+        };
     }
 }

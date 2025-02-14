@@ -3,9 +3,6 @@ package hotelmanagementsystem.infrastructure.persistence.repositories.interfaces
 import hotelmanagementsystem.domain.models.Hotel;
 import hotelmanagementsystem.domain.models.PagedHotels;
 
-import java.util.Optional;
-import java.util.List;
-
 public interface HotelRepository {
 
     Hotel findById(Long id);

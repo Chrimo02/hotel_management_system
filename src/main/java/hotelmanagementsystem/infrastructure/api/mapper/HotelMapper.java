@@ -2,7 +2,6 @@ package hotelmanagementsystem.infrastructure.api.mapper;
 
 import hotelmanagementsystem.domain.models.Booking;
 import hotelmanagementsystem.domain.models.Hotel;
-import hotelmanagementsystem.domain.models.HotelRating;
 import hotelmanagementsystem.domain.models.Room;
 import hotelmanagementsystem.infrastructure.api.dto.HotelDTO;
 import hotelmanagementsystem.infrastructure.api.dto.HotelRatingDTO;
@@ -22,6 +21,7 @@ public class HotelMapper {
         dto.setName(hotel.getName());
         dto.setDescription(hotel.getDescription());
         dto.setAverageRating(hotel.getAverageRating());
+        dto.setHotelLocation(HotelLocationMapper.toDTO(hotel.getLocation()));
 
         if (hotel.getRooms() != null) {
             List<Long> roomIds = hotel.getRooms().stream()
@@ -52,7 +52,6 @@ public class HotelMapper {
         return dto;
     }
 
-
     public static Hotel toDomain(HotelDTO dto,
                                  List<Room> rooms,
                                  List<Booking> bookings) {
@@ -60,16 +59,14 @@ public class HotelMapper {
             return null;
         }
 
-        Hotel hotel = new Hotel.HotelBuilder()
+        return new Hotel.HotelBuilder()
                 .withId(dto.getId())
                 .withName(dto.getName())
                 .withDescription(dto.getDescription())
+                .withLocation(HotelLocationMapper.fromDTO(dto.getHotelLocation()))
                 .withRoomsList(rooms)
                 .withBookingList(bookings)
                 .withAverageRating(dto.getAverageRating())
                 .build();
-
-
-        return hotel;
     }
 }

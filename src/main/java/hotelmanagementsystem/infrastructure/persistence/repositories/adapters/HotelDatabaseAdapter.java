@@ -10,7 +10,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -63,15 +62,9 @@ public class HotelDatabaseAdapter implements HotelRepository {
     @Override
     public Hotel update(Hotel hotel) {
         try {
-            // Aus dem Domain-Hotel ein HotelEntity bauen
             HotelEntity hotelEntity = hotelMapper.mapDomainHotelToHotelEntity(hotel);
-
-            // Dann DAO-Ebene aufrufen
             HotelEntity updated = hotelDAO.updateHotel(hotelEntity);
-
-            // Rückübersetzen in Domain
             return hotelMapper.mapHotelEntityToDomainHotel(updated);
-            //return hotelMapper.mapHotelEntityToDomainHotel(hotelDAO.updateHotel(hotelMapper.mapDomainHotelToHotelEntity(hotel)));
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Error updating Hotel", e);

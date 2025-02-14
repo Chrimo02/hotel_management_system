@@ -8,6 +8,7 @@ public class HotelDTO {
     private String name;
     private String description;
     private double averageRating;
+    private HotelLocationDTO hotelLocation;
     private List<Long> roomIds;
     private List<Long> bookingIds;
     private List<HotelRatingDTO> hotelRatings;
@@ -17,6 +18,14 @@ public class HotelDTO {
     }
     public void setId(long id) {
         this.id = id;
+    }
+
+    public HotelLocationDTO getHotelLocation() {
+        return hotelLocation;
+    }
+
+    public void setHotelLocation(HotelLocationDTO hotelLocation) {
+        this.hotelLocation = hotelLocation;
     }
 
     public String getName() {
@@ -68,6 +77,7 @@ public class HotelDTO {
                 .setName(this.name)
                 .setDescription(this.description)
                 .setAverageRating(this.averageRating)
+                .setLocation(this.hotelLocation.toProtobuf())
                 .addAllRoomIds(this.roomIds != null ? this.roomIds : List.of())
                 .addAllBookingIds(this.bookingIds != null ? this.bookingIds : List.of())
                 .addAllHotelRatings(hotelRatings.stream().map(HotelRatingDTO::toProtobuf).toList())

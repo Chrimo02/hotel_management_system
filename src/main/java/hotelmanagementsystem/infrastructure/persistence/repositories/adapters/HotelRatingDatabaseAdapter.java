@@ -8,7 +8,6 @@ import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
-import java.util.Collections;
 import java.util.List;
 
 @ApplicationScoped
@@ -33,7 +32,6 @@ public class HotelRatingDatabaseAdapter implements HotelRatingRepository {
                 return hotelRatingMapper.mapToDomain(optCreated);
             } else {
                 hotelRatingDAO.updateRating(ratingEntity);
-                // Re-fetch from DB
                 HotelRatingEntity updatedEntity = hotelRatingDAO.findById(rating.getId());
                 return hotelRatingMapper.mapToDomain(updatedEntity);
             }

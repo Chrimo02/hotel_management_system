@@ -6,7 +6,6 @@ import hotelmanagementsystem.infrastructure.api.dto.HotelRatingDTO;
 
 public class HotelRatingMapper {
 
-
     public static HotelRatingDTO toDTO(HotelRating hotelRating) {
         if (hotelRating == null) {
             return null;
@@ -18,7 +17,6 @@ public class HotelRatingMapper {
         dto.setGuestId(hotelRating.getGuest() != null ? hotelRating.getGuest().getId() : 0L);
         return dto;
     }
-
 
     public static HotelRating toDomain(HotelRatingDTO dto, Guest guest) {
         if (dto == null) {

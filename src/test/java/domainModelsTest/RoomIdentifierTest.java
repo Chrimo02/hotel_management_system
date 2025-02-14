@@ -1,48 +1,36 @@
 package domainModelsTest;
-import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 import hotelmanagementsystem.domain.models.RoomIdentifier;
+import org.junit.jupiter.api.Test;
+
 public class RoomIdentifierTest {
-    @Test
-    void testRoomIdentifierConstructorAndGetters() {
-        RoomIdentifier roomIdentifier = new RoomIdentifier("BuildingA", 2, "102B");
 
-        assertEquals("BuildingA", roomIdentifier.getBuilding());
-        assertEquals(2, roomIdentifier.getFloor());
-        assertEquals("102B", roomIdentifier.getRoomNumber());
+    @Test
+    public void testConstructorAndGetters() {
+        String building = "BuildingA";
+        int floor = 3;
+        String roomNumber = "305B";
+
+        RoomIdentifier identifier = new RoomIdentifier(building, floor, roomNumber);
+
+        assertEquals(building, identifier.getBuilding(), "Building should match");
+        assertEquals(floor, identifier.getFloor(), "Floor should match");
+        assertEquals(roomNumber, identifier.getRoomNumber(), "Room number should match");
+        assertEquals(0L, identifier.getId(), "Default id should be 0");
     }
 
     @Test
-    void testRoomIdentifierWithIdConstructor() {
-        RoomIdentifier roomIdentifier = new RoomIdentifier(1L, "BuildingB", 3, "103C");
+    public void testSetters() {
+        RoomIdentifier identifier = new RoomIdentifier("OldBuilding", 1, "101A");
 
-        assertEquals(1L, roomIdentifier.getId());
-        assertEquals("BuildingB", roomIdentifier.getBuilding());
-        assertEquals(3, roomIdentifier.getFloor());
-        assertEquals("103C", roomIdentifier.getRoomNumber());
-    }
+        identifier.setBuilding("NewBuilding");
+        identifier.setFloor(5);
+        identifier.setRoomNumber("505C");
 
-    @Test
-    void testSetBuilding() {
-        RoomIdentifier roomIdentifier = new RoomIdentifier("BuildingA", 1, "101A");
-        roomIdentifier.setBuilding("BuildingX");
-
-        assertEquals("BuildingX", roomIdentifier.getBuilding());
-    }
-
-    @Test
-    void testSetFloor() {
-        RoomIdentifier roomIdentifier = new RoomIdentifier("BuildingA", 1, "101A");
-        roomIdentifier.setFloor(5);
-
-        assertEquals(5, roomIdentifier.getFloor());
-    }
-
-    @Test
-    void testSetRoomNumber() {
-        RoomIdentifier roomIdentifier = new RoomIdentifier("BuildingA", 1, "101A");
-        roomIdentifier.setRoomNumber("105X");
-
-        assertEquals("105X", roomIdentifier.getRoomNumber());
+        assertEquals("NewBuilding", identifier.getBuilding(), "Building should be updated");
+        assertEquals(5, identifier.getFloor(), "Floor should be updated");
+        assertEquals("505C", identifier.getRoomNumber(), "Room number should be updated");
     }
 }

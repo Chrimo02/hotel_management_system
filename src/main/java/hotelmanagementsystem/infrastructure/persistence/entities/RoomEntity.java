@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // oder andere Strategien je nach Bedarf
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "room_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class RoomEntity {
     @Id
@@ -13,7 +13,8 @@ public abstract class RoomEntity {
     private long id;
 
     private double pricePerNight;
-    @OneToOne(mappedBy = "room", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "room_identifier_id")
     private RoomIdentifierEntity roomIdentifier;
     @ManyToOne
     @JoinColumn(name = "hotel_id")

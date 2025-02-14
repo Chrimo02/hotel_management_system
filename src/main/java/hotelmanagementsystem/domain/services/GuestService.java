@@ -12,12 +12,10 @@ import java.util.List;
 @ApplicationScoped
 public class GuestService {
     private final GuestRepository guestRepository;
-    private final HotelService hotelService;
 
     @Inject
-    public GuestService(GuestRepository guestRepository, HotelService hotelService){
+    public GuestService(GuestRepository guestRepository){
         this.guestRepository = guestRepository;
-        this.hotelService = hotelService;
     }
     public Guest createGuest(String firstName, String lastName, int year,int month, int day, String eMail, String phoneNumber){
         Guest guest = new Guest.GuestBuilder()
