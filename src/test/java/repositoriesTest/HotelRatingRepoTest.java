@@ -59,7 +59,6 @@ class HotelRatingRepoTest {
 
     @Test
     public void testSave_NewRating() {
-        // Simuliere, dass rating.getId() == null
         HotelRating newRating = new HotelRating.Builder()
                 .withRating(4)
                 .withComment("Good")
@@ -81,7 +80,6 @@ class HotelRatingRepoTest {
 
     @Test
     public void testSave_UpdateRating() {
-        // Simuliere, dass rating.getId() != null
         when(hotelRatingMapper.mapToEntity(dummyRating)).thenReturn(dummyRatingEntity);
         doNothing().when(hotelRatingDAO).updateRating(dummyRatingEntity);
         when(hotelRatingDAO.findById(dummyRating.getId())).thenReturn(dummyRatingEntity);
@@ -103,7 +101,6 @@ class HotelRatingRepoTest {
 
     @Test
     public void testDelete() {
-        // Bei delete wird einfach hotelRatingDAO.deleteById aufgerufen, sofern id nicht null
         dummyRating = new HotelRating.Builder()
                 .withId(10L)
                 .withRating(5)

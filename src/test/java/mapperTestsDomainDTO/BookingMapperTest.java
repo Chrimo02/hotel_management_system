@@ -71,7 +71,6 @@ public class BookingMapperTest {
 
     @Test
     public void testToDomain() {
-        // Erzeuge ein Dummy DTO mit 2 Nächten (10.01.2026 bis 12.01.2026), sodass der TotalPrice 500.0 beträgt:
         BookingDTO dto = new BookingDTO();
         dto.setId(200L);
         dto.setHotelId(2L);
@@ -88,7 +87,6 @@ public class BookingMapperTest {
         dto.setCheckInTime(checkInTime);
         dto.setCheckOutTime(checkOutTime);
 
-        // Erzeuge Dummy-Domain-Objekte, die für das Mapping benötigt werden
         Hotel dummyHotel = new Hotel.HotelBuilder()
                 .withId(2L)
                 .withName("Hotel Two")
@@ -125,8 +123,6 @@ public class BookingMapperTest {
         assertEquals(checkIn, booking.getCheckInDate());
         assertEquals(checkOut, booking.getCheckOutDate());
         assertTrue(booking.getStatus());
-        // TotalPrice wird in der Booking-Klasse automatisch berechnet:
-        // (120.0 + 130.0) * 2 Nächte = 250.0 * 2 = 500.0
         assertEquals(500.0, booking.getTotalPrice(), 0.001);
         assertEquals(checkInTime, booking.getCheckInTime());
         assertEquals(checkOutTime, booking.getCheckOutTime());

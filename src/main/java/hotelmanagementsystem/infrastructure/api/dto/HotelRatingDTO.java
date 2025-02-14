@@ -8,8 +8,6 @@ public class HotelRatingDTO {
     private String comment;
     private long guestId;
 
-    // --- Getter & Setter ---
-
     public long getId() {
         return id;
     }
@@ -38,7 +36,6 @@ public class HotelRatingDTO {
         this.guestId = guestId;
     }
 
-    // --- Konvertierung DTO -> gRPC (Protobuf) ---
     public HotelRating toProtobuf() {
         return HotelRating.newBuilder()
                 .setStarRating(this.getRating())

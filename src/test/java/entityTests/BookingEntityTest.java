@@ -13,7 +13,6 @@ public class BookingEntityTest {
 
     @Test
     public void testFullConstructorAndGetters() {
-        // Dummy-Objekte für Abhängigkeiten
         HotelEntity dummyHotel = new HotelEntity.HotelBuilder()
                 .withId(1L)
                 .withName("Dummy Hotel")
@@ -54,7 +53,6 @@ public class BookingEntityTest {
 
         BookingEntity booking = new BookingEntity(dummyHotel, checkIn, checkOut, rooms, guests);
 
-        // Standardmäßig wird status true gesetzt, checkInTime und checkOutTime bleiben null.
         assertTrue(booking.isStatus());
         assertNull(booking.getCheckInTime());
         assertNull(booking.getCheckOutTime());
@@ -73,7 +71,6 @@ public class BookingEntityTest {
 
         BookingEntity booking = new BookingEntity(dummyHotel, checkIn, checkOut, rooms, guests);
 
-        // Setze neue Werte
         booking.setStatus(false);
         LocalDateTime now = LocalDateTime.now();
         booking.setCheckInTime(now);

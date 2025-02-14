@@ -19,7 +19,6 @@ public class RoomDTOTest {
     @Test
     public void testGettersAndSetters() {
         RoomIdentifierDTO identifierDTO = new RoomIdentifierDTO("BuildingA", 1, "101A");
-        // Erstelle zwei BookingDTOs (ohne Pflichtfelder zu setzen – hier testen wir nur Getter/Setter)
         List<BookingDTO> bookings = Arrays.asList(new BookingDTO(), new BookingDTO());
         RoomDTO dto = new RoomDTO(10L, 150.0, identifierDTO, 1L, bookings, "SingleRoom");
 
@@ -33,10 +32,8 @@ public class RoomDTOTest {
 
     @Test
     public void testToProtobuf() {
-        // Arrange
         RoomIdentifierDTO identifierDTO = new RoomIdentifierDTO("BuildingB", 2, "202B");
 
-        // Erstelle zwei BookingDTOs mit gültigen (nicht-null) Werten für die Pflichtfelder:
         BookingDTO bookingDTO1 = new BookingDTO();
         bookingDTO1.setId(100L);
         bookingDTO1.setGuestIds(Collections.emptyList());
@@ -58,17 +55,12 @@ public class RoomDTOTest {
         List<BookingDTO> bookingDTOs = Arrays.asList(bookingDTO1, bookingDTO2);
         RoomDTO dto = new RoomDTO(20L, 200.0, identifierDTO, 2L, bookingDTOs, "DoubleRoom");
 
-        // Act
         Room proto = dto.toProtobuf();
 
-        // Assert
         assertEquals(20L, proto.getId());
         assertEquals(200.0, proto.getPricePerNight(), 0.001);
-        // Überprüfe, ob RoomIdentifier korrekt übertragen wird
         assertEquals(identifierDTO.toProtobuf(), proto.getRoomIdentifier());
         assertEquals(2L, proto.getHotelId());
-        // Da in unseren BookingDTOs keine Guest- oder Room-IDs gesetzt sind,
-        // prüfen wir hier lediglich, dass die Liste nicht null ist.
         assertNotNull(proto.getBookingsList());
         assertEquals("DoubleRoom", proto.getType());
     }

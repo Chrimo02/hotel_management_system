@@ -10,7 +10,6 @@ public class HotelLocationMapper {
             return null;
         }
         HotelLocationDTO dto = new HotelLocationDTO();
-        dto.setId(domainObject.getId());
         dto.setAddress(domainObject.getAddress());
         dto.setCity(domainObject.getCity());
         dto.setCountry(domainObject.getCountry());
@@ -22,7 +21,6 @@ public class HotelLocationMapper {
             return null;
         }
         return new HotelLocation.HotelLocationBuilder()
-                .withId(dto.getId())
                 .withAddress(dto.getAddress())
                 .withCity(dto.getCity())
                 .withCountry(dto.getCountry())

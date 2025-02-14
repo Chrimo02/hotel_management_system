@@ -50,7 +50,6 @@ class GuestRepoTest {
         dummyGuestEntity = new GuestEntity("Alice", "Smith", 1990, 1, 1, "alice@example.com", "123456789");
         dummyGuestEntity.setId(dummyGuest.getId());
 
-        // Für getBookingsByGuestId
         dummyBooking = mock(Booking.class);
         dummyBookingEntity = mock(BookingEntity.class);
     }
@@ -69,22 +68,18 @@ class GuestRepoTest {
     @Test
     public void testUpdateGuest() {
         when(guestDAO.read(dummyGuest.getId())).thenReturn(dummyGuestEntity);
-        // Simuliere, dass beim Update das GuestEntity zurückgegeben wird
         when(guestDAO.update(dummyGuestEntity)).thenReturn(dummyGuestEntity);
         when(guestMapper.guestEntityToGuest(dummyGuestEntity)).thenReturn(dummyGuest);
 
-        // Ändere ein Feld
         dummyGuest.seteMail("newalice@example.com");
         Guest updated = adapter.updateGuest(dummyGuest);
         assertNotNull(updated);
-        // Da wir den Mapper stubben, erwarten wir den gleichen Dummy
         assertEquals(dummyGuest.geteMail(), updated.geteMail());
     }
 
     @Test
     public void testDeleteGuest() {
         when(guestMapper.guestToGuestEntity(dummyGuest)).thenReturn(dummyGuestEntity);
-        // Kein Rückgabewert beim Delete
         adapter.deleteGuest(dummyGuest);
         verify(guestDAO, times(1)).delete(dummyGuestEntity);
     }

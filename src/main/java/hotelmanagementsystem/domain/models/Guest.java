@@ -2,10 +2,10 @@ package hotelmanagementsystem.domain.models;
 import java.time.LocalDate;
 
 public class Guest {
-    private long id;
-    private String firstName;
+    private final long id;
+    private final String firstName;
     private String lastName;
-    private LocalDate birthday;
+    private final LocalDate birthday;
     private String eMail;
     private String phoneNumber;
 
@@ -66,7 +66,7 @@ public class Guest {
         String eMail;
         String phoneNumber;
 
-        public GuestBuilder(){};
+        public GuestBuilder(){}
         public GuestBuilder withFirstName(String firstName){
             this.firstName = firstName;
             return this;

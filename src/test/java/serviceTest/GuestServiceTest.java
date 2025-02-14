@@ -3,16 +3,12 @@ package serviceTest;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import hotelmanagementsystem.domain.exceptions.GuestNotFoundException;
-import hotelmanagementsystem.domain.models.Booking;
 import hotelmanagementsystem.domain.models.Guest;
 import hotelmanagementsystem.domain.services.GuestService;
-import hotelmanagementsystem.domain.services.HotelService;
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.GuestRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,9 +24,6 @@ public class GuestServiceTest {
 
     @Mock
     private GuestRepository guestRepository;
-
-    @Mock
-    private HotelService hotelService; // wird hier eventuell nicht genutzt
 
     private Guest dummyGuest;
 
@@ -97,7 +90,7 @@ public class GuestServiceTest {
     }
 
     @Test
-    public void testDeleteGuest() throws GuestNotFoundException {
+    public void testDeleteGuest() {
         when(guestRepository.getGuestById(1L)).thenReturn(dummyGuest);
         doNothing().when(guestRepository).deleteGuest(dummyGuest);
         assertDoesNotThrow(() -> guestService.deleteGuest(1L));

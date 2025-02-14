@@ -1,8 +1,6 @@
 package integrationTests;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mockStatic;
-
 import hotelmanagementsystem.infrastructure.api.grpc.generated.*;
 import io.grpc.StatusRuntimeException;
 import io.quarkus.grpc.GrpcClient;
@@ -13,18 +11,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * An example integration test that covers basic flows across:
- *   - GuestService
- *   - HotelService
- *   - RoomService
- *   - BookingService
- */
 @QuarkusTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class HotelmanagementIT {
 
-    // Grpc clients are injected by Quarkus
     @GrpcClient
     GuestServiceGrpc.GuestServiceBlockingStub guestStub;
 
@@ -37,16 +27,13 @@ public class HotelmanagementIT {
     @GrpcClient
     BookingServiceGrpc.BookingServiceBlockingStub bookingStub;
 
-    // Keep track of created entity IDs for use in subsequent tests
-    private static long guestId;      // Gast, der eine Buchung bekommt
+    private static long guestId;
     private static long guestIdNoBooking;
     private static long hotelId;
     private static long roomId;
     private static long bookingId;
 
-    // -------------------------
     //  GUEST SERVICE TESTS
-    // -------------------------
 
     @Test
     @Order(1)
@@ -144,16 +131,12 @@ public class HotelmanagementIT {
         assertEquals("Dowson", response.getGuest().getLastName());
     }
 
-    // -------------------------
     //  HOTEL SERVICE TESTS
-    // -------------------------
 
     @Test
     @Order(7)
     public void testCreateHotel() {
         HotelLocation location = HotelLocation.newBuilder()
-                // If your domain expects an "id", you can set zero or leave it
-                .setId(0)
                 .setAddress("Test Street 123")
                 .setCity("TestCity")
                 .setCountry("TestCountry")
@@ -194,7 +177,6 @@ public class HotelmanagementIT {
     @Order(9)
     public void testListHotels() {
         ListHotelsRequest request = ListHotelsRequest.newBuilder()
-                // Filter by city if you want, e.g. "TestCity"
                 .setFilterCity("TestCity")
                 .setMinRating(0.0)
                 .setPageNumber(1)
@@ -229,29 +211,22 @@ public class HotelmanagementIT {
     @Test
     @Order(11)
     public void testRateHotel() {
-        // Rate the hotel as the newly created guest
         RateHotelRequest request = RateHotelRequest.newBuilder()
                 .setHotelId(hotelId)
                 .setGuestId(guestId)
                 .setRating(5)
                 .setComment("Excellent stay!")
                 .build();
-        // The service returns an Empty on success
         hotelStub.rateHotel(request);
 
-        // We won't assert a lot here except no error was thrown
-        // (You could re-fetch the hotel to ensure rating was recorded)
         HotelResponse afterRating = hotelStub.getHotelById(
                 GetHotelByIdRequest.newBuilder().setId(hotelId).build()
         );
         assertNotNull(afterRating);
         assertTrue(afterRating.hasHotel());
-        // Possibly check averageRating or rating list if your domain sets that
     }
 
-    // -------------------------
     //  ROOM SERVICE TESTS
-    // -------------------------
 
     @Test
     @Order(12)
@@ -311,10 +286,9 @@ public class HotelmanagementIT {
     @Test
     @Order(15)
     public void testFindAvailableRooms() {
-        // Provide some checkInDate and checkOutDate
         FindAvailableRoomsRequest request = FindAvailableRoomsRequest.newBuilder()
                 .setHotelId(hotelId)
-                .setRoomType("SINGLE")          // or "" for all
+                .setRoomType("SINGLE")
                 .setCheckInDate("2025-03-01")
                 .setCheckOutDate("2025-03-05")
                 .build();
@@ -328,14 +302,11 @@ public class HotelmanagementIT {
         assertTrue(foundOurRoom);
     }
 
-    // -------------------------
     //  BOOKING SERVICE TESTS
-    // -------------------------
 
     @Test
     @Order(16)
     public void testCreateBooking() {
-        // For demonstration, let's pass in 1 guest and 1 room type
         List<String> roomTypes = new ArrayList<>();
         roomTypes.add("SINGLE");
 
@@ -438,9 +409,7 @@ public class HotelmanagementIT {
     }
 
 
-    // -------------------------
     //  CLEANUP TESTS
-    // -------------------------
 
     @Test
     @Order(22)
@@ -450,9 +419,7 @@ public class HotelmanagementIT {
                 .build();
 
         roomStub.removeRoom(request);
-        // Expect no exception
 
-        // Optional: confirm it was removed
         GetRoomByIdRequest getReq = GetRoomByIdRequest.newBuilder()
                 .setId(roomId)
                 .build();
@@ -468,8 +435,6 @@ public class HotelmanagementIT {
                 .setId(guestId)
                 .build();
 
-        // Wir erwarten, dass das Backend hier eine Exception wirft,
-        // weil ein Gast mit aktiver Buchung nicht gelöscht werden kann.
         assertThrows(StatusRuntimeException.class, () -> {
             guestStub.deleteGuest(request);
         });
@@ -477,19 +442,15 @@ public class HotelmanagementIT {
     @Test
     @Order(24)
     public void testDeleteSecondGuest_ShouldSucceed() {
-        // Dieser zweite Gast hat keine Buchung -> sollte klappen.
         DeleteGuestRequest request = DeleteGuestRequest.newBuilder()
                 .setId(guestIdNoBooking)
                 .build();
 
-        // Erwartet, dass KEINE Exception fliegt
         assertDoesNotThrow(() -> guestStub.deleteGuest(request));
 
-        // ggf. nochmal checken, ob er weg ist:
         GetGuestByIdRequest getReq = GetGuestByIdRequest.newBuilder()
                 .setId(guestIdNoBooking)
                 .build();
-        // Hier sollte eine NOT_FOUND-Exception kommen, da der Gast weg ist
         assertThrows(StatusRuntimeException.class, () -> {
             guestStub.getGuestById(getReq);
         });
@@ -503,7 +464,6 @@ public class HotelmanagementIT {
                 .build();
 
         hotelStub.deleteHotel(request);
-        // Confirm it was deleted
         GetHotelByIdRequest getReq = GetHotelByIdRequest.newBuilder()
                 .setId(hotelId)
                 .build();

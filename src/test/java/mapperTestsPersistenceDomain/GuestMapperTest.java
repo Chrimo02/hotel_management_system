@@ -13,9 +13,7 @@ import org.junit.jupiter.api.Test;
 
 public class GuestMapperTest {
 
-    // Wir verwenden hier eine einfache Instanz des GuestMapper – der Konstruktor benötigt ein BookingMapper, den wir
-    // für diesen Test als null übergeben können, da er in unseren Methoden nicht verwendet wird.
-    private GuestMapper guestMapper = new GuestMapper(null);
+    private GuestMapper guestMapper = new GuestMapper();
 
     @Test
     public void testGuestToGuestEntity() {

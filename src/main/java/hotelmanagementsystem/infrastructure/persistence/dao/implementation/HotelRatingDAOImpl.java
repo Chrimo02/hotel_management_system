@@ -61,9 +61,7 @@ public class HotelRatingDAOImpl implements HotelRatingDAO {
                 query.setParameter("starRating", starRating);
             }
 
-
             List<HotelRatingEntity> resultList = query.getResultList();
-
             return resultList;
         } catch (Exception e) {
             e.printStackTrace();

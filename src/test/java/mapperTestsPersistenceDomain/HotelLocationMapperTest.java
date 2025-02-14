@@ -33,8 +33,6 @@ public class HotelLocationMapperTest {
                 .withCity("SampleCity")
                 .withCountry("SampleCountry")
                 .build();
-        // Setze eine ID, damit der Builder im Domain-Objekt genutzt wird
-        // (Der Konstruktor des Domain-Objekts erwartet in der Builder-Instanz einen Wert)
         HotelLocation location = mapper.mapToDomain(entity);
         assertNotNull(location);
         assertEquals(entity.getAddress(), location.getAddress());

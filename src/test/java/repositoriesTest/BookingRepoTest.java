@@ -47,13 +47,11 @@ class BookingRepoTest {
     @InjectMocks
     private BookingDatabaseAdapter adapter;
 
-    // Domain objects
     private Hotel dummyHotel;
     private Room dummyRoom;
     private Guest dummyGuest;
     private Booking dummyBooking;
 
-    // Entity objects
     private HotelEntity dummyHotelEntity;
     private RoomEntity dummyRoomEntity;
     private GuestEntity dummyGuestEntity;
@@ -61,7 +59,6 @@ class BookingRepoTest {
 
     @BeforeEach
     public void setUp() {
-        // Initialize domain objects
         dummyHotel = new Hotel.HotelBuilder()
                 .withId(1L)
                 .withName("Test Hotel")
@@ -91,7 +88,6 @@ class BookingRepoTest {
                 LocalDateTime.of(2025, 12, 5, 11, 0)
         );
 
-        // Initialize entity objects
         dummyHotelEntity = new HotelEntity.HotelBuilder()
                 .withId(dummyHotel.getId())
                 .withName(dummyHotel.getName())
@@ -103,14 +99,12 @@ class BookingRepoTest {
         dummyGuestEntity = new GuestEntity("Alice", "Smith", 1990, 1, 1, "alice@example.com", "123456789");
         dummyGuestEntity.setId(dummyGuest.getId());
 
-        // Create basic BookingEntity mock
         dummyBookingEntity = mock(BookingEntity.class);
         lenient().when(dummyBookingEntity.getId()).thenReturn(100L);
     }
 
     @Test
     void testCreateBooking() {
-        // Configure specific stubs needed for this test
         when(roomMapper.toEntityList(any())).thenReturn(Collections.singletonList(dummyRoomEntity));
         when(guestMapper.guestsToGuestEntities(any())).thenReturn(Collections.singletonList(dummyGuestEntity));
         when(hotelMapper.mapDomainHotelToHotelEntity(any())).thenReturn(dummyHotelEntity);
@@ -132,12 +126,10 @@ class BookingRepoTest {
 
     @Test
     void testUpdateBooking() {
-        // Only stub what's actually used in the update flow
         when(bookingDAO.read(100L)).thenReturn(dummyBookingEntity);
 
         adapter.updateBooking(dummyBooking);
 
-        // Verify the essential interactions
         verify(bookingDAO).update(dummyBookingEntity);
         verify(dummyBookingEntity).setRooms(any());
         verify(dummyBookingEntity).setStatus(true);
@@ -147,7 +139,6 @@ class BookingRepoTest {
 
     @Test
     void testGetBookingById() {
-        // Configure specific stubs needed for this test
         when(bookingDAO.read(100L)).thenReturn(dummyBookingEntity);
         when(dummyBookingEntity.getHotel()).thenReturn(dummyHotelEntity);
         when(dummyBookingEntity.getRooms()).thenReturn(Collections.singletonList(dummyRoomEntity));
@@ -168,17 +159,14 @@ class BookingRepoTest {
 
     @Test
     void testFindBookingsByCheckInDate() {
-        // Arrange
         LocalDate targetDate = LocalDate.of(2025, 12, 1);
         when(bookingDAO.findBookingsByCheckInDate(targetDate))
                 .thenReturn(Collections.singletonList(dummyBookingEntity));
         when(bookingMapper.bookingEntityToBooking(dummyBookingEntity))
                 .thenReturn(dummyBooking);
 
-        // Act
         List<Booking> results = adapter.findBookingsByCheckInDate(targetDate);
 
-        // Assert
         assertEquals(1, results.size());
         assertEquals(100L, results.get(0).getId());
     }

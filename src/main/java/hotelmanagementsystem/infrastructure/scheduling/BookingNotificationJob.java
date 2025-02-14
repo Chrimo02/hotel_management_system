@@ -26,8 +26,7 @@ public class BookingNotificationJob {
      * Sie sucht nach Buchungen, die in genau 7 Tagen beginnen,
      * und sendet eine E-Mail-Benachrichtigung an die entsprechenden Gäste.
      */
-    @Scheduled(cron = "0 0 0 * * ?") // Täglich um Mitternacht
-    //@Scheduled(cron = "0 * * * * ?") // Jede Minute -> nur zum test
+    @Scheduled(cron = "0 0 0 * * ?")
     public void sendReminderForUpcomingBookings() {
         LocalDate targetDate = LocalDate.now().plusDays(7);
 

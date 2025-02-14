@@ -3,8 +3,6 @@ package hotelmanagementsystem.infrastructure.persistence.dao.interfaces;
 import hotelmanagementsystem.infrastructure.persistence.entities.HotelRatingEntity;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Map;
 
 
 public interface HotelRatingDAO {

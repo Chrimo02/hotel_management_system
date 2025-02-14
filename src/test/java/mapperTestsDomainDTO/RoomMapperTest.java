@@ -36,7 +36,6 @@ public class RoomMapperTest {
         SingleRoom room = new SingleRoom.Builder(150.0, dummyRoomIdentifier, dummyHotel)
                 .withId(10L)
                 .build();
-        // Setze leere Bookings
         room.setBookings(new HashSet<>());
 
         RoomDTO dto = RoomMapper.toDTO(room);
@@ -46,19 +45,15 @@ public class RoomMapperTest {
         assertEquals(dummyRoomIdentifier.getBuilding(), dto.getRoomIdentifierDTO().getBuilding());
         assertEquals(dummyHotel.getId(), dto.getHotelId());
         assertTrue(dto.getBookingDTOs().isEmpty());
-        // Der Typ basiert auf getSimpleName() der Klasse
         assertEquals("SingleRoom", dto.getType());
     }
 
     @Test
     public void testToDomain_SingleRoom() {
-        // Erzeuge RoomIdentifierDTO
         hotelmanagementsystem.infrastructure.api.dto.RoomIdentifierDTO identifierDTO =
                 new hotelmanagementsystem.infrastructure.api.dto.RoomIdentifierDTO("BuildingY", 2, "202Y");
-        // Erzeuge ein RoomDTO
         RoomDTO dto = new RoomDTO(20L, 200.0, identifierDTO, 1L, Arrays.asList(), "SingleRoom");
 
-        // Erzeuge leere Bookings-Menge
         Set<Booking> bookings = new HashSet<>();
         Room room = RoomMapper.toDomain(dto, dummyHotel, bookings);
         assertNotNull(room);

@@ -86,48 +86,28 @@ class RoomRepoTest {
 
     @Test
     public void testRemoveRoom() {
-        // Erzeuge ein Mock für das RoomEntity
         RoomEntity dummyRoomEntity = mock(RoomEntity.class);
 
-        // Stub: roomDAO.read(10L) soll unser dummyRoomEntity liefern
         when(roomDAO.read(10L)).thenReturn(dummyRoomEntity);
 
-        // Erstelle ein modifizierbares HotelEntity, das den Room enthält
-        // Wir verwenden hier eine ArrayList, damit das Entfernen funktioniert.
         HotelEntity hotelEntity = new HotelEntity.HotelBuilder()
                 .withId(1L)
                 .withName("Test Hotel")
                 .withRooms(new ArrayList<>(Collections.singletonList(dummyRoomEntity)))
                 .build();
 
-        // Stub: dummyRoomEntity.getHotel() gibt das hotelEntity zurück
         when(dummyRoomEntity.getHotel()).thenReturn(hotelEntity);
-
-        // Stub: hotelDAO.findById(1L) gibt das hotelEntity zurück
         when(hotelDAO.findById(1L)).thenReturn(hotelEntity);
-
-        // Stub: hotelDAO.updateHotel(...) gibt das hotelEntity zurück (wichtig für den Update-Aufruf)
         when(hotelDAO.updateHotel(any(HotelEntity.class))).thenReturn(hotelEntity);
 
-        // Act & Assert: Es sollte keine Exception geworfen werden
         assertDoesNotThrow(() -> adapter.removeRoom(10L));
-
-        // Verifiziere, dass updateHotel() genau einmal aufgerufen wurde.
         verify(hotelDAO, times(1)).updateHotel(any(HotelEntity.class));
-
-        // Zusätzlich: Überprüfe, dass dummyRoomEntity aus der Hotel-List entfernt wurde.
         assertFalse(hotelEntity.getRooms().contains(dummyRoomEntity));
     }
-
-
-
-
-
 
     @Test
     public void testUpdateRoom() {
         when(roomDAO.read(dummyRoom.getId())).thenReturn(dummyRoomEntity);
-        // Simuliere, dass der Mapper die Änderungen zurückliefert
         doNothing().when(roomDAO).update(dummyRoomEntity);
         adapter.updateRoom(dummyRoom);
         verify(roomDAO, times(1)).update(dummyRoomEntity);

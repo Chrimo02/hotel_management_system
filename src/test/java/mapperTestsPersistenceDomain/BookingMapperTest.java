@@ -39,38 +39,31 @@ public class BookingMapperTest {
     @Mock
     private RoomMapper roomMapper;
 
-    @Mock
-    private RoomIdentifierMapper roomIdentifierMapper; // Wird hier zwar injiziert, aber nicht explizit genutzt
 
     private BookingMapper bookingMapper;
 
-    // Dummy-Domain-Objekte
     private Hotel dummyHotel;
     private Room dummyRoom;
     private Guest dummyGuest;
     private Booking dummyBooking;
 
-    // Dummy-Entity-Objekte, die von den gemockten Mappern zurückgeliefert werden sollen
     private GuestEntity dummyGuestEntity;
     private RoomEntity dummyRoomEntity;
 
     @BeforeEach
     public void setUp() {
-        bookingMapper = new BookingMapper(guestMapper, roomMapper, roomIdentifierMapper);
+        bookingMapper = new BookingMapper(guestMapper, roomMapper);
 
-        // Dummy Hotel
         dummyHotel = new Hotel.HotelBuilder()
                 .withId(1L)
                 .withName("Test Hotel")
                 .build();
 
-        // Dummy Room (Domain) – ein SingleRoom mit korrektem RoomIdentifier
         RoomIdentifier roomId = new RoomIdentifier("Building1", 1, "101");
         dummyRoom = new SingleRoom.Builder(100.0, roomId, dummyHotel)
                 .withId(10L)
                 .build();
 
-        // Dummy Guest (Domain)
         dummyGuest = new Guest.GuestBuilder()
                 .withId(20L)
                 .withFirstName("John")
@@ -80,7 +73,6 @@ public class BookingMapperTest {
                 .withPhoneNumber("123456")
                 .build();
 
-        // Dummy Booking (Domain) mit gültigen CheckIn/Out-Daten
         dummyBooking = new Booking(
                 100L,
                 dummyHotel,
@@ -93,12 +85,9 @@ public class BookingMapperTest {
                 null
         );
 
-        // Dummy Entity-Objekte:
-        // Erstelle ein GuestEntity (real)
         dummyGuestEntity = new GuestEntity("John", "Doe", 1990, 1, 1, "john@example.com", "123456");
         dummyGuestEntity.setId(20L);
 
-        // Erstelle ein konkretes SingleRoomEntity als Dummy
         RoomIdentifierEntity riEntity = new RoomIdentifierEntity("Building1", 1, "101");
         HotelEntity dummyHotelEntity = new HotelEntity.HotelBuilder()
                 .withId(1L)
@@ -109,7 +98,6 @@ public class BookingMapperTest {
 
     @Test
     public void testBookingToBookingEntity() {
-        // Stub dependencies
         when(guestMapper.guestsToGuestEntities(dummyBooking.getGuests()))
                 .thenReturn(Collections.singletonList(dummyGuestEntity));
         when(roomMapper.toEntityList(dummyBooking.getRooms()))
@@ -121,19 +109,15 @@ public class BookingMapperTest {
         assertEquals(dummyBooking.getCheckInDate(), entity.getCheckInDate());
         assertEquals(dummyBooking.getCheckOutDate(), entity.getCheckOutDate());
         assertEquals(dummyBooking.getStatus(), entity.isStatus());
-        // Überprüfe, dass die Listen gemappt wurden
         assertEquals(1, entity.getGuests().size());
         assertEquals(1, entity.getRooms().size());
     }
 
     @Test
     public void testBookingEntityToBooking() {
-        // Stub dependencies
         when(roomMapper.toMinimalDomain(any(RoomEntity.class))).thenReturn(dummyRoom);
-        // Hier: Stub für guestEntitiesToGuests anpassen, damit eine Liste mit 1 Element zurückgegeben wird
         when(guestMapper.guestEntitiesToGuests(anyList())).thenReturn(Collections.singletonList(dummyGuest));
 
-        // Erzeuge ein BookingEntity
         HotelEntity hotelEntity = new HotelEntity.HotelBuilder()
                 .withId(1L)
                 .withName("Test Hotel")
@@ -156,7 +140,6 @@ public class BookingMapperTest {
         assertEquals(entity.getCheckInDate(), booking.getCheckInDate());
         assertEquals(entity.getCheckOutDate(), booking.getCheckOutDate());
         assertTrue(booking.getStatus());
-        // Überprüfe, dass die Listen gemappt wurden
         assertEquals(1, booking.getRooms().size(), "Die Room-Liste sollte genau 1 Element enthalten");
         assertEquals(1, booking.getGuests().size(), "Die Guest-Liste sollte genau 1 Element enthalten");
     }

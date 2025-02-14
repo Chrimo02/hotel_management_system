@@ -5,10 +5,8 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
-import hotelmanagementsystem.domain.exceptions.GuestNotFoundException;
 import hotelmanagementsystem.domain.exceptions.HotelNotFoundException;
 import hotelmanagementsystem.domain.models.Booking;
 import hotelmanagementsystem.domain.models.Guest;
@@ -17,7 +15,6 @@ import hotelmanagementsystem.domain.models.HotelLocation;
 import hotelmanagementsystem.domain.models.HotelRating;
 import hotelmanagementsystem.domain.models.PagedHotels;
 import hotelmanagementsystem.domain.models.Room;
-import hotelmanagementsystem.domain.models.SingleRoom;
 import hotelmanagementsystem.domain.services.GuestService;
 import hotelmanagementsystem.domain.services.HotelService;
 import hotelmanagementsystem.domain.services.RoomService;
@@ -88,7 +85,6 @@ class HotelServiceTest {
 
     @Test
     void testCreateHotel_Success() throws Exception {
-        // Stub: Valid inputs
         when(hotelRepository.createHotel(any(Hotel.class))).thenReturn(testHotel);
 
         Hotel created = hotelService.createHotel("TestHotel", "TestDescription", testLocation);
@@ -100,7 +96,6 @@ class HotelServiceTest {
 
     @Test
     void testCreateHotel_InvalidInput() {
-        // Da die Validierung nur auf null prüft, erwarten wir eine Exception, wenn der Name null ist.
         Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> hotelService.createHotel(null, "TestDescription", testLocation));
         assertTrue(exception.getMessage().contains("Hotel name must not be empty"));
@@ -109,7 +104,6 @@ class HotelServiceTest {
     @Test
     void testDeleteHotel_Success() throws Exception {
         when(hotelRepository.findById(1L)).thenReturn(testHotel);
-        // Da deleteById eine void-Methode ist, genügt doNothing()
         doNothing().when(hotelRepository).deleteById(1L);
 
         boolean result = hotelService.deleteHotel(1L);
@@ -128,7 +122,6 @@ class HotelServiceTest {
 
     @Test
     void testUpdateHotel_Success() throws Exception {
-        // Setup: Hotel mit altem Namen und Description
         Hotel hotelToUpdate = new Hotel.HotelBuilder()
                 .withId(1L)
                 .withName("OldName")
@@ -141,7 +134,6 @@ class HotelServiceTest {
                 .build();
 
         when(hotelRepository.findById(1L)).thenReturn(hotelToUpdate);
-        // Falls update() nicht void ist, stubbieren wir es so:
         when(hotelRepository.update(any(Hotel.class))).thenReturn(null);
 
         Map<String, String> updates = new HashMap<>();
@@ -157,7 +149,6 @@ class HotelServiceTest {
 
     @Test
     void testListHotelsFilteredAndPaged() {
-        // Erstelle Dummy-Daten
         List<Hotel> hotelList = Collections.singletonList(testHotel);
         PagedHotels pagedHotels = new PagedHotels(hotelList, 1);
 
@@ -167,8 +158,8 @@ class HotelServiceTest {
         PagedHotels result = hotelService.listHotelsFilteredAndPaged("TestCity", 3.0, 1, 10);
 
         assertNotNull(result);
-        assertEquals(1, result.getHotels().size());
-        assertEquals(1, result.getTotalCount());
+        assertEquals(1, result.hotels().size());
+        assertEquals(1, result.totalCount());
     }
 
     @Test
@@ -192,7 +183,6 @@ class HotelServiceTest {
 
     @Test
     void testRateHotel_Success() throws Exception {
-        // Setup: Hotel ohne Ratings
         Hotel hotelForRating = new Hotel.HotelBuilder()
                 .withId(1L)
                 .withName("TestHotel")
@@ -210,7 +200,6 @@ class HotelServiceTest {
 
         hotelService.rateHotel(100L, 1L, 5, "Excellent");
 
-        // Prüfe: Das Rating wurde hinzugefügt und averageRating neu berechnet
         assertFalse(hotelForRating.getRatings().isEmpty());
         assertEquals(5.0, hotelForRating.getAverageRating());
         verify(hotelRepository, times(1)).update(hotelForRating);
@@ -218,36 +207,43 @@ class HotelServiceTest {
 
     @Test
     void testFindAvailableRooms() throws Exception {
-        // Setup: Erstelle Hotel mit einem verfügbaren Raum
         Room availableRoom = mock(Room.class);
-        // Entferne das unnötige Stubbing von getPricePerNight()
-        when(roomService.isAvailable(eq(availableRoom), any(LocalDate.class), any(LocalDate.class)))
-                .thenReturn(true);
-        List<Room> rooms = Collections.singletonList(availableRoom);
+        when(availableRoom.getId()).thenReturn(10L);
 
-        Hotel hotelWithRoom = new Hotel.HotelBuilder()
+        Hotel testHotel = new Hotel.HotelBuilder()
                 .withId(1L)
                 .withName("TestHotel")
-                .withDescription("Desc")
-                .withLocation(testLocation)
-                .withRoomsList(rooms)
-                .withBookingList(new ArrayList<>())
-                .withRatingMap(new ArrayList<>())
+                .withDescription("TestDescription")
+                .withLocation(new HotelLocation.HotelLocationBuilder()
+                        .withAddress("Test Street")
+                        .withCity("TestCity")
+                        .withCountry("TestCountry")
+                        .build())
+                .withRoomsList(Collections.singletonList(availableRoom))
+                .withBookingList(Collections.emptyList())
+                .withRatingMap(Collections.emptyList())
                 .withAverageRating(0.0)
                 .build();
 
-        when(hotelRepository.findById(1L)).thenReturn(hotelWithRoom);
+        when(hotelRepository.findById(1L)).thenReturn(testHotel);
 
-        List<Room> result = hotelService.findAvailableRooms(1L, null);
+        LocalDate checkIn = LocalDate.of(2025, 1, 1);
+        LocalDate checkOut = LocalDate.of(2025, 1, 2);
 
-        assertNotNull(result);
-        assertEquals(1, result.size());
+        when(roomService.isAvailable(availableRoom, checkIn, checkOut)).thenReturn(true);
+
+        List<Room> result = hotelService.findAvailableRooms(1L, null, checkIn, checkOut);
+
+        assertNotNull(result, "Die Rückgabeliste darf nicht null sein");
+        assertEquals(1, result.size(), "Es sollte genau ein Raum verfügbar sein");
+        assertEquals(10L, result.get(0).getId(), "Der verfügbare Raum sollte die ID 10 haben");
     }
+
+
 
 
     @Test
     void testFilterHotelRatings() throws Exception {
-        // Setup: Hotel mit zwei Ratings, eines mit Kommentar, eines ohne
         HotelRating rating1 = new HotelRating.Builder()
                 .withId(10L)
                 .withRating(4)
@@ -283,7 +279,6 @@ class HotelServiceTest {
 
         List<HotelRating> filtered = hotelService.filterHotelRatings(1L, 4, true);
 
-        // Nur rating1 hat einen Kommentar
         assertEquals(1, filtered.size());
         assertEquals("Good", filtered.get(0).getGuestComment());
     }

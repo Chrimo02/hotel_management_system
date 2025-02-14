@@ -3,15 +3,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 import hotelmanagementsystem.domain.models.Hotel;
 import hotelmanagementsystem.infrastructure.persistence.dao.interfaces.HotelDAO;
 import hotelmanagementsystem.infrastructure.persistence.entities.HotelEntity;
 import hotelmanagementsystem.infrastructure.persistence.mapper.HotelMapper;
 import hotelmanagementsystem.infrastructure.persistence.repositories.adapters.HotelDatabaseAdapter;
-import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.HotelRepository;
 import hotelmanagementsystem.domain.models.PagedHotels;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -87,8 +84,8 @@ class HotelRepoTest {
 
         PagedHotels paged = adapter.findPagedByFilter(city, minRating, pageNumber, pageSize);
         assertNotNull(paged);
-        assertEquals(1, paged.getHotels().size());
-        assertEquals(1, paged.getTotalCount());
+        assertEquals(1, paged.hotels().size());
+        assertEquals(1, paged.totalCount());
     }
 
     @Test
@@ -104,7 +101,6 @@ class HotelRepoTest {
 
     @Test
     public void testDeleteById() {
-        // Kein Rückgabewert, aber prüfen, ob hotelDAO.deleteById aufgerufen wird.
         doNothing().when(hotelDAO).deleteById(1L);
         assertDoesNotThrow(() -> adapter.deleteById(1L));
         verify(hotelDAO, times(1)).deleteById(1L);

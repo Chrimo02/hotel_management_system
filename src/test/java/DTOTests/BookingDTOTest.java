@@ -59,7 +59,6 @@ public class BookingDTOTest {
         dto.setCheckOutDate(checkOut);
         dto.setStatus(false);
         dto.setTotalPrice(300.0);
-        // Keine CheckIn/Out-Zeiten setzen
         dto.setCheckInTime(null);
         dto.setCheckOutTime(null);
 
@@ -72,7 +71,6 @@ public class BookingDTOTest {
         assertEquals(checkOut.toString(), proto.getCheckOutDate());
         assertEquals(BookingStatus.CANCELED, proto.getStatus());
         assertEquals(300.0, proto.getTotalPrice(), 0.001);
-        // Da checkInTime/checkOutTime null sind, sollten wir leere Strings erhalten
         assertEquals("", proto.getCheckInTime());
         assertEquals("", proto.getCheckOutTime());
     }

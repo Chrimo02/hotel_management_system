@@ -30,8 +30,6 @@ public class HotelEntity {
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BookingEntity> bookings;
 
-    // Ratings are mapped unidirectionally.
-    // JPA will write the hotel's id into the hotel_id column of hotel_ratings.
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "hotel_id")
     private List<HotelRatingEntity> ratings;

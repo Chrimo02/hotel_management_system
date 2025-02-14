@@ -6,9 +6,9 @@ public class SingleRoom extends Room {
     }
     public static class Builder {
         private long id;
-        private double pricePerNight;
-        private RoomIdentifier roomIdentifier;
-        private Hotel hotel;
+        private final double pricePerNight;
+        private final RoomIdentifier roomIdentifier;
+        private final Hotel hotel;
 
         public Builder(double pricePerNight, RoomIdentifier roomIdentifier, Hotel hotel) {
             this.pricePerNight = pricePerNight;

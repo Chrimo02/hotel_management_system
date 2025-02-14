@@ -57,11 +57,9 @@ public class RoomServiceTest {
                 .withLocation(null)
                 .withRoomsList(new ArrayList<>())
                 .build();
-        // Erzeuge einen SingleRoom als Dummy
         dummyRoom = new SingleRoom.Builder(100.0, dummyIdentifier, dummyHotel)
                 .withId(10L)
                 .build();
-        // Erzeuge eine Dummy-Buchung (Status false, d.h. nicht aktiv)
         dummyBooking = new Booking(1L, dummyHotel,
                 LocalDate.now().plusDays(2), LocalDate.now().plusDays(5),
                 Collections.singletonList(dummyRoom), new ArrayList<>(), false, null, null);
@@ -84,7 +82,6 @@ public class RoomServiceTest {
 
     @Test
     public void testBookRooms_Success() {
-        // Stelle sicher, dass die Buchungsliste leer ist
         dummyRoom.setBookings(new TreeSet<>());
         roomService.bookRooms(dummyBooking);
         assertTrue(dummyRoom.getBookings().contains(dummyBooking));
@@ -93,7 +90,6 @@ public class RoomServiceTest {
 
     @Test
     public void testCancelRoom_Success() throws RoomNotFoundException, Exception {
-        // Füge dummyBooking der Buchungsliste hinzu
         dummyRoom.setBookings(new TreeSet<>(Arrays.asList(dummyBooking)));
         when(roomRepository.findRoomById(10L)).thenReturn(dummyRoom);
         roomService.cancelRoom(10L, dummyBooking);
@@ -103,14 +99,11 @@ public class RoomServiceTest {
 
     @Test
     public void testCancelRoom_BookingNotFound() {
-        // Setze eine leere Buchungsliste – somit ist die Buchung nicht vorhanden.
         dummyRoom.setBookings(new TreeSet<>());
         when(roomRepository.findRoomById(10L)).thenReturn(dummyRoom);
 
-        // Es wird keine Exception geworfen, wenn die Buchung nicht vorhanden ist.
         assertDoesNotThrow(() -> roomService.cancelRoom(10L, dummyBooking));
 
-        // Bestätige, dass die Buchungsliste weiterhin leer ist.
         assertFalse(dummyRoom.getBookings().contains(dummyBooking));
     }
 
@@ -152,7 +145,7 @@ public class RoomServiceTest {
     }
 
     @Test
-    public void testRemoveRoom_NoActiveBookings() throws RoomNotFoundException {
+    public void testRemoveRoom_NoActiveBookings() {
         dummyRoom.setBookings(new TreeSet<>());
         when(roomRepository.findRoomById(10L)).thenReturn(dummyRoom);
         assertDoesNotThrow(() -> roomService.removeRoom(10L));
@@ -161,7 +154,6 @@ public class RoomServiceTest {
 
     @Test
     public void testRemoveRoom_WithActiveBookings() {
-        // Setze den Buchungsstatus direkt (dummyBooking ist kein Mock)
         dummyBooking.setStatus(true);
         dummyRoom.setBookings(new TreeSet<>(Arrays.asList(dummyBooking)));
         when(roomRepository.findRoomById(10L)).thenReturn(dummyRoom);
@@ -203,7 +195,6 @@ public class RoomServiceTest {
 
     @Test
     public void testFindAvailableRooms_Success() throws Exception {
-        // Verwende dummyRoom als verfügbaren Raum (Buchungsliste leer)
         dummyRoom.setBookings(new TreeSet<>());
         List<Room> roomList = Arrays.asList(dummyRoom);
         Hotel hotelWithRoom = new Hotel.HotelBuilder()
@@ -215,7 +206,6 @@ public class RoomServiceTest {
                 .build();
         when(hotelService.getHotelByHotelId(1L)).thenReturn(hotelWithRoom);
 
-        // Da dummyRoom keine Buchungen hat, liefert isAvailable automatisch true
         List<Room> result = roomService.findAvailableRooms(
                 1L,
                 Collections.singletonList(dummyRoom.getClass()),

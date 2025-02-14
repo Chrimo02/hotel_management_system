@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 public class RoomDTO {
     private long id;
     private double pricePerNight;
-    private RoomIdentifierDTO roomIdentifier;
+    private final RoomIdentifierDTO roomIdentifier;
     private long hotelId;
-    private List<BookingDTO> bookings;
+    private final List<BookingDTO> bookings;
     private String type;
 
     public RoomDTO(long id, double pricePerNight, RoomIdentifierDTO roomIdentifier, long hotelId, List<BookingDTO> bookings, String type) {

@@ -25,7 +25,6 @@ public class HotelMapperTest {
 
     @Test
     public void testToDTO_AllFields() {
-        // Erzeuge Dummy-Hotel
         Hotel hotel = new Hotel.HotelBuilder()
                 .withId(1L)
                 .withName("Test Hotel")
@@ -45,7 +44,6 @@ public class HotelMapperTest {
         assertEquals("Test Hotel", dto.getName());
         assertEquals("A great hotel", dto.getDescription());
         assertEquals(4.5, dto.getAverageRating(), 0.001);
-        // Da Rooms und Bookings leer sind
         assertTrue(dto.getRoomIds().isEmpty());
         assertTrue(dto.getBookingIds().isEmpty());
         List<HotelRatingDTO> ratings = dto.getHotelRatings();
@@ -65,7 +63,6 @@ public class HotelMapperTest {
         dto.setAverageRating(3.7);
         dto.setRoomIds(Arrays.asList(100L, 101L));
         dto.setBookingIds(Arrays.asList(200L, 201L));
-        // Ratings hier setzen wir als leere Liste
         dto.setHotelRatings(Collections.emptyList());
 
         List<Room> rooms = Collections.emptyList();

@@ -2,11 +2,11 @@ package hotelmanagementsystem.domain.models;
 
 public class HotelRating {
 
-    private Long id;
-    private Hotel hotel;  // Optionally unused in your business logic.
-    private Guest guest;
-    private int rating;
-    private String commentRating;
+    private final Long id;
+    private final Hotel hotel;
+    private final Guest guest;
+    private final int rating;
+    private final String commentRating;
 
     private HotelRating(Builder builder) {
         this.id = builder.id;

@@ -129,7 +129,6 @@ public class BookingServiceTest {
 
     @Test
     public void testGuestCheckIn_TooEarly() {
-        // Buchung, bei der heute noch mehr als 1 Tag vor CheckIn ist
         Booking bookingForCheckIn = new Booking(5L, dummyHotel, LocalDate.now().plusDays(3), LocalDate.now().plusDays(5), dummyRooms, dummyGuests, true, null, null);
         when(bookingRepository.getBookingById(5L)).thenReturn(bookingForCheckIn);
         Exception ex = assertThrows(IllegalStateException.class, () -> bookingService.guestCheckIn(5L));
@@ -138,7 +137,6 @@ public class BookingServiceTest {
 
     @Test
     public void testGuestCheckOut_Success() throws BookingNotFoundException {
-        // Buchung mit CheckInTime gesetzt
         Booking bookingForCheckOut = new Booking(6L, dummyHotel, LocalDate.now().minusDays(1), LocalDate.now().plusDays(1), dummyRooms, dummyGuests, true, LocalDateTime.now().minusHours(1), null);
         when(bookingRepository.getBookingById(6L)).thenReturn(bookingForCheckOut);
         assertDoesNotThrow(() -> bookingService.guestCheckOut(6L));

@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 public class HotelMapper {
 
-
     public static HotelDTO toDTO(Hotel hotel) {
         if (hotel == null) {
             return null;
@@ -53,7 +52,6 @@ public class HotelMapper {
         return dto;
     }
 
-
     public static Hotel toDomain(HotelDTO dto,
                                  List<Room> rooms,
                                  List<Booking> bookings) {
@@ -61,7 +59,7 @@ public class HotelMapper {
             return null;
         }
 
-        Hotel hotel = new Hotel.HotelBuilder()
+        return new Hotel.HotelBuilder()
                 .withId(dto.getId())
                 .withName(dto.getName())
                 .withDescription(dto.getDescription())
@@ -70,8 +68,5 @@ public class HotelMapper {
                 .withBookingList(bookings)
                 .withAverageRating(dto.getAverageRating())
                 .build();
-
-
-        return hotel;
     }
 }

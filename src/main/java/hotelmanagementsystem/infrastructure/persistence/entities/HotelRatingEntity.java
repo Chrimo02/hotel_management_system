@@ -19,13 +19,9 @@ public class HotelRatingEntity {
     @Column(name = "comment_rating")
     private String commentRating;
 
-    // Dieser Wert wird automatisch befüllt, wenn das Rating
-    // der Liste im übergeordneten HotelEntity hinzugefügt wird.
     @Column(name = "hotel_id", insertable = false, updatable = false)
     private Long hotelId;
 
-    // Änderung: Statt @OneToOne jetzt @ManyToOne,
-    // damit ein Gast mehrere Bewertungen abgeben kann.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "guest_id", nullable = false)
     private GuestEntity guest;

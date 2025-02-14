@@ -13,7 +13,8 @@ public abstract class RoomEntity {
     private long id;
 
     private double pricePerNight;
-    @OneToOne(mappedBy = "room", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "room_identifier_id")
     private RoomIdentifierEntity roomIdentifier;
     @ManyToOne
     @JoinColumn(name = "hotel_id")

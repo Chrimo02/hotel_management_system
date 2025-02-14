@@ -23,6 +23,7 @@ import hotelmanagementsystem.infrastructure.api.grpc.impl.HotelServiceGrpcImpl;
 import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
+
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
@@ -166,7 +167,7 @@ class HotelServiceGrpcImplTest {
         ListHotelsResponse response = captor.getValue();
         assertNotNull(response);
         assertEquals(1, response.getHotelsCount());
-        assertEquals(dummyPagedHotels.getTotalCount(), response.getTotalCount());
+        assertEquals(dummyPagedHotels.totalCount(), response.getTotalCount());
     }
 
     @Test

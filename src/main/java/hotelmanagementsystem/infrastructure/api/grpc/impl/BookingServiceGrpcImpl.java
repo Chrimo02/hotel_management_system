@@ -123,13 +123,10 @@ public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImp
     }
 
     private Class<? extends hotelmanagementsystem.domain.models.Room> parseRoomType(String typeName) {
-        switch (typeName.toUpperCase()) {
-            case "SINGLE":
-                return hotelmanagementsystem.domain.models.SingleRoom.class;
-            case "DOUBLE":
-                return hotelmanagementsystem.domain.models.DoubleRoom.class;
-            default:
-                throw new IllegalArgumentException("Unbekannter Raumtyp: " + typeName);
-        }
+        return switch (typeName.toUpperCase()) {
+            case "SINGLE" -> hotelmanagementsystem.domain.models.SingleRoom.class;
+            case "DOUBLE" -> hotelmanagementsystem.domain.models.DoubleRoom.class;
+            default -> throw new IllegalArgumentException("Unbekannter Raumtyp: " + typeName);
+        };
     }
 }

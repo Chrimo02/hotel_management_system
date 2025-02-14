@@ -12,7 +12,6 @@ public class HotelRatingEntityTest {
 
     @Test
     public void testHotelRatingBuilderAndGetters() {
-        // Erstelle einen Dummy GuestEntity
         GuestEntity guest = new GuestEntity("John", "Doe", 1990, 1, 1, "john@example.com", "123456789");
         HotelRatingEntity rating = new HotelRatingEntity.Builder()
                 .withId(1L)

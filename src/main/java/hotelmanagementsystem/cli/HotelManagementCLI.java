@@ -3,6 +3,8 @@ package hotelmanagementsystem.cli;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.quarkus.runtime.Quarkus;
+import io.quarkus.runtime.QuarkusApplication;
 import io.quarkus.runtime.annotations.QuarkusMain;
 
 import java.util.ArrayList;
@@ -18,7 +20,8 @@ public class HotelManagementCLI implements QuarkusApplication {
     private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_CYAN = "\u001B[36m";
 
-    public static void main(String[] args) {
+    @Override
+    public int run(String... args) throws Exception {
         ManagedChannel channel = ManagedChannelBuilder
                 .forAddress("localhost", 8080)
                 .usePlaintext()
@@ -346,7 +349,9 @@ public class HotelManagementCLI implements QuarkusApplication {
         if (pageNumberString.isEmpty()) pageNumberString ="1";
         int pageNumber = Integer.parseInt(pageNumberString);
         System.out.print("Page Size: ");
-        int pageSize = Integer.parseInt(scanner.nextLine());
+        String pageSizeString = scanner.nextLine();
+        if (pageSizeString.isEmpty()) pageSizeString = "10";
+        int pageSize = Integer.parseInt(pageSizeString);
 
         ListHotelsRequest request = ListHotelsRequest.newBuilder()
                 .setFilterCity(filterCity)

@@ -15,7 +15,7 @@ import java.util.List;
 public class BookingDAOImpl implements BookingDAO {
 
     @Inject
-    EntityManager em;  // In Quarkus per @Inject statt selbst gebautes JpaUtil
+    EntityManager em;
 
     @Override
     @Transactional

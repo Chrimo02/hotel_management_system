@@ -1,6 +1,5 @@
 package hotelmanagementsystem.infrastructure.api.grpc.impl;
 
-import hotelmanagementsystem.domain.exceptions.BookingNotFoundException;
 import hotelmanagementsystem.domain.exceptions.GuestNotFoundException;
 import hotelmanagementsystem.domain.models.Booking;
 import hotelmanagementsystem.domain.models.Guest;
@@ -33,7 +32,6 @@ public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
     }
     @Override
     public void createGuest(CreateGuestRequest request, StreamObserver<GuestResponse> responseObserver) {
-
         try{
             Guest guest = guestService.createGuest(
                     request.getFirstName(),
@@ -53,10 +51,7 @@ public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
         } catch (Exception e){
             responseObserver.onError(Status.INTERNAL.withDescription(e.getMessage()).asRuntimeException());
         }
-
     }
-
-
 
     @Override
     public void getGuestById(GetGuestByIdRequest request, StreamObserver<GuestResponse> responseObserver) {

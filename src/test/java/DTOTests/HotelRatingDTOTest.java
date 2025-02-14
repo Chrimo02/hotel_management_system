@@ -27,11 +27,10 @@ public class HotelRatingDTOTest {
         HotelRatingDTO dto = new HotelRatingDTO();
         dto.setRating(4);
         dto.setComment("Good");
-        dto.setGuestId(300L);  // Wird im Protobuf nicht verwendet, da in toProtobuf() nicht gesetzt wird
+        dto.setGuestId(300L);
 
         HotelRating proto = dto.toProtobuf();
         assertEquals(4, proto.getStarRating());
         assertEquals("Good", proto.getComment());
-        // Da guestId nicht im Protobuf-Builder gesetzt wird, können wir hier nichts prüfen.
     }
 }

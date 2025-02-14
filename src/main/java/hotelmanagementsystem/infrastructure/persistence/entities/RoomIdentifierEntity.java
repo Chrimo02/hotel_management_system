@@ -27,13 +27,6 @@ public class RoomIdentifierEntity {
         this.roomNumber = roomNumber;
     }
 
-    public RoomEntity getRoom() {
-        return room;
-    }
-
-    public void setRoom(RoomEntity room) {
-        this.room = room;
-    }
 
     public String getBuilding() {
         return building;

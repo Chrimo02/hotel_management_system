@@ -16,14 +16,11 @@ import org.junit.jupiter.api.Test;
 
 public class HotelRatingMapperTest {
 
-    // Für diesen Test verwenden wir eine echte Instanz von GuestMapper,
-    // da sie einfache Feldkopien durchführt.
-    private GuestMapper guestMapper = new GuestMapper(null);
+    private GuestMapper guestMapper = new GuestMapper();
     private HotelRatingMapper mapper = new HotelRatingMapper(guestMapper);
 
     @Test
     public void testMapToDomain() {
-        // Erstelle einen Dummy GuestEntity
         GuestEntity guestEntity = new GuestEntity("John", "Doe", 1990, 1, 1, "john@example.com", "123456789");
         guestEntity.setId(20L);
         HotelRatingEntity entity = new HotelRatingEntity.Builder()
@@ -38,13 +35,11 @@ public class HotelRatingMapperTest {
         assertEquals(entity.getId(), rating.getId());
         assertEquals(entity.getStarRating(), rating.getStarRating());
         assertEquals(entity.getCommentRating(), rating.getGuestComment());
-        // Da in mapToDomain() das Hotel-Objekt nicht gemappt wird, erwarten wir null
         assertNull(rating.getHotel());
     }
 
     @Test
     public void testMapToEntity() {
-        // Erstelle einen Dummy Guest
         Guest dummyGuest = new Guest.GuestBuilder()
                 .withId(20L)
                 .withFirstName("John")
@@ -65,13 +60,11 @@ public class HotelRatingMapperTest {
         assertEquals(rating.getId(), entity.getId());
         assertEquals(rating.getStarRating(), entity.getStarRating());
         assertEquals(rating.getGuestComment(), entity.getCommentRating());
-        // Da Hotel wird nicht gemappt, bleibt null
         assertNull(entity.getHotelId());
     }
 
     @Test
     public void testMapToDomainListAndEntityList() {
-        // Erstelle eine Liste von HotelRating-Objekten
         Guest dummyGuest = new Guest.GuestBuilder()
                 .withId(20L)
                 .withFirstName("John")

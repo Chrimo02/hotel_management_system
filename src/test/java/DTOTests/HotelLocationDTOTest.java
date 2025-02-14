@@ -23,13 +23,11 @@ public class HotelLocationDTOTest {
     @Test
     public void testToProtobuf_AllFieldsSet() {
         HotelLocationDTO dto = new HotelLocationDTO();
-        dto.setId(10L);
         dto.setAddress("123 Main St");
         dto.setCity("TestCity");
         dto.setCountry("TestCountry");
 
         HotelLocation proto = dto.toProtobuf();
-        assertEquals(10L, proto.getId());
         assertEquals("123 Main St", proto.getAddress());
         assertEquals("TestCity", proto.getCity());
         assertEquals("TestCountry", proto.getCountry());
@@ -38,11 +36,7 @@ public class HotelLocationDTOTest {
     @Test
     public void testToProtobuf_NullFields() {
         HotelLocationDTO dto = new HotelLocationDTO();
-        dto.setId(20L);
-        // Keine Werte für Address, City, Country setzen
         HotelLocation proto = dto.toProtobuf();
-        assertEquals(20L, proto.getId());
-        // Es sollten leere Strings zurückgegeben werden, wenn die Felder null sind
         assertEquals("", proto.getAddress());
         assertEquals("", proto.getCity());
         assertEquals("", proto.getCountry());

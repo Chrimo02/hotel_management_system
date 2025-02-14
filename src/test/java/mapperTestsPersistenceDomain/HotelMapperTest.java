@@ -51,10 +51,7 @@ public class HotelMapperTest {
                 .withRatingMap(Collections.emptyList())
                 .build();
 
-        // Stub Dependencies
-        // HotelLocationMapper
         when(hotelLocationMapper.mapToEntity(null)).thenReturn(null);
-        // BookingMapper und RoomMapper und HotelRatingMapper stubben wir hier als leere Listen
         when(bookingMapper.toEntityList(anyList())).thenReturn(Collections.emptyList());
         when(roomMapper.toEntityList(anyList())).thenReturn(Collections.emptyList());
         when(hotelRatingMapper.mapToEntityList(anyList())).thenReturn(Collections.emptyList());
@@ -65,7 +62,6 @@ public class HotelMapperTest {
         assertEquals(hotel.getName(), entity.getName());
         assertEquals(hotel.getDescription(), entity.getDescription());
         assertEquals(hotel.getAverageRating(), entity.getAverageRating(), 0.001);
-        // Da Location null, Bookings, Rooms, Ratings leer
         assertNull(entity.getLocation());
         assertTrue(entity.getBookings().isEmpty());
         assertTrue(entity.getRooms().isEmpty());
@@ -85,9 +81,7 @@ public class HotelMapperTest {
                 .withRatings(Collections.emptyList())
                 .build();
 
-        // Stub Dependencies
         when(hotelLocationMapper.mapToDomain(any())).thenReturn(null);
-        // BookingMapper, RoomMapper, HotelRatingMapper stubben als leere Listen
         when(bookingMapper.toDomainList(anyList())).thenReturn(Collections.emptyList());
         when(roomMapper.toDomainList(anyList())).thenReturn(Collections.emptyList());
         when(hotelRatingMapper.mapToDomainList(anyList())).thenReturn(Collections.emptyList());
@@ -98,7 +92,6 @@ public class HotelMapperTest {
         assertEquals(entity.getName(), hotel.getName());
         assertEquals(entity.getDescription(), hotel.getDescription());
         assertEquals(entity.getAverageRating(), hotel.getAverageRating(), 0.001);
-        // Da Location null und leere Listen
         assertNull(hotel.getLocation());
         assertTrue(hotel.getBookings().isEmpty());
         assertTrue(hotel.getRooms().isEmpty());

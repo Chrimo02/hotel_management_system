@@ -23,9 +23,7 @@ import org.mockito.Mockito;
 
 public class RoomMapperTest {
 
-    // Wir verwenden hier echte Instanzen der Hilfsmodule (RoomIdentifierMapper und BookingMapper)
     private RoomIdentifierMapper roomIdentifierMapper = new RoomIdentifierMapper();
-    // Für BookingMapper verwenden wir einen einfachen Stub, da er in diesem Test nicht im Detail benötigt wird.
     private BookingMapper bookingMapper = Mockito.mock(BookingMapper.class);
     private RoomMapper roomMapper = new RoomMapper(roomIdentifierMapper, bookingMapper);
 
@@ -50,10 +48,8 @@ public class RoomMapperTest {
         RoomEntity entity = roomMapper.domainToEntity(domainRoom);
         assertNotNull(entity);
         assertEquals(150.0, entity.getPricePerNight(), 0.001);
-        // Überprüfe, ob RoomIdentifier korrekt gemappt wurde
         assertNotNull(entity.getRoomIdentifier());
         assertEquals(dummyRoomIdentifier.getBuilding(), entity.getRoomIdentifier().getBuilding());
-        // MinimalHotelEntity wird erzeugt (nur ID)
         assertNotNull(entity.getHotel());
         assertEquals(dummyHotel.getId(), entity.getHotel().getId());
     }
@@ -75,7 +71,6 @@ public class RoomMapperTest {
         List<Room> mappedBack = roomMapper.toDomainList(entities);
         assertNotNull(mappedBack);
         assertEquals(2, mappedBack.size());
-        // Prüfe anhand der IDs
         Set<Long> ids = new HashSet<>();
         for (Room r : mappedBack) {
             ids.add(r.getId());
@@ -86,24 +81,19 @@ public class RoomMapperTest {
 
     @Test
     public void testToMinimalDomain() {
-        // Erzeuge ein Dummy RoomEntity (z. B. für einen SingleRoom)
         RoomIdentifierEntity riEntity = new RoomIdentifierEntity("BuildingX", 3, "303X");
         HotelEntity minimalHotelEntity = new HotelEntity.HotelBuilder()
                 .withId(dummyHotel.getId())
                 .withName(dummyHotel.getName())
                 .build();
-        // Erzeuge ein Dummy RoomEntity (hier als SingleRoomEntity)
         RoomEntity roomEntity = new SingleRoomEntity(10L, 150.0, riEntity, minimalHotelEntity);
-        // Simuliere, dass Bookings in der Entity vorhanden sind – hier setzen wir sie leer
         roomEntity.setBookings(new HashSet<>());
 
         Room minimalDomain = roomMapper.toMinimalDomain(roomEntity);
         assertNotNull(minimalDomain);
         assertEquals(10L, minimalDomain.getId());
         assertEquals(150.0, minimalDomain.getPricePerNight(), 0.001);
-        // Hotel im Minimal-Domain-Modell haben wir hier als null gesetzt (siehe Implementation)
         assertNull(minimalDomain.getHotel());
-        // Prüfe den RoomIdentifier
         assertNotNull(minimalDomain.getRoomIdentifier());
         assertEquals(riEntity.getBuilding(), minimalDomain.getRoomIdentifier().getBuilding());
     }

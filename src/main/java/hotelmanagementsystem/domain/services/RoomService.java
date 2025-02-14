@@ -18,7 +18,6 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @ApplicationScoped
 public class RoomService {
@@ -94,8 +93,7 @@ public class RoomService {
 
     public void removeRoom(long roomId) throws RoomNotFoundException {
         Room room = getRoomById(roomId);
-        // Prüfe, ob aktive Buchungen (Status true) existieren
-        boolean hasActiveBookings = room.getBookings().stream().anyMatch(b -> b.getStatus());
+        boolean hasActiveBookings = room.getBookings().stream().anyMatch(Booking::getStatus);
         if (hasActiveBookings) {
             throw new RuntimeException("Cannot remove room with active bookings.");
         }

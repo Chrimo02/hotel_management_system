@@ -29,6 +29,9 @@ public class GuestMapper {
         return result;
     }
     public Guest guestEntityToGuest(GuestEntity guestEntity){
+        if (guestEntity == null) {
+            return null;
+        }
         Guest guest = new Guest.GuestBuilder()
                 .withId(guestEntity.getId())
                 .withFirstName(guestEntity.getFirstName())

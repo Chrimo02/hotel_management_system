@@ -7,9 +7,7 @@ import hotelmanagementsystem.domain.models.Room;
 import hotelmanagementsystem.infrastructure.persistence.entities.HotelEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class HotelMapper {

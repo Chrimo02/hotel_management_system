@@ -2,8 +2,6 @@ package hotelmanagementsystem.domain.services;
 import hotelmanagementsystem.domain.exceptions.GuestNotFoundException;
 import hotelmanagementsystem.domain.exceptions.HotelNotFoundException;
 import hotelmanagementsystem.domain.models.*;
-import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.HotelLocationRepository;
-import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.HotelRatingRepository;
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.HotelRepository;
 import hotelmanagementsystem.domain.models.Hotel;
 import hotelmanagementsystem.domain.models.HotelLocation;
@@ -20,15 +18,11 @@ import java.util.stream.Collectors;
 public class HotelService {
 
     private final HotelRepository hotelRepository;
-    private final HotelLocationRepository hotelLocationRepository;
-    private final HotelRatingRepository hotelRatingRepository;
     private final RoomService roomService;
     private final GuestService guestService;
     @Inject
-    public HotelService(RoomService roomService, HotelRepository hotelRepository, HotelLocationRepository hotelLocationRepository, HotelRatingRepository hotelRatingRepository, GuestService guestService) {
+    public HotelService(RoomService roomService, HotelRepository hotelRepository, GuestService guestService) {
         this.hotelRepository = hotelRepository;
-        this.hotelLocationRepository = hotelLocationRepository;
-        this.hotelRatingRepository = hotelRatingRepository;
         this.roomService = roomService;
         this.guestService = guestService;
     }
@@ -85,29 +79,26 @@ public class HotelService {
         return hotel;
     }
 
-
     public PagedHotels listHotelsFilteredAndPaged(String city, double minRating, int pageNumber, int pageSize) {
         if (pageNumber < 1) pageNumber = 1;
         if (pageSize < 1) pageSize = 10;
         return hotelRepository.findPagedByFilter(city, minRating, pageNumber, pageSize);
     }
 
-
     public Hotel getHotelByHotelId(long hotelId) throws HotelNotFoundException{
         return getNotNullHotel(hotelId);
     }
 
-    public List<HotelRating> getHotelRatingsByHotelId(long hotelID, int starRating, boolean onlyWithComment) throws HotelNotFoundException {
-        List<HotelRating> hotelRatingMap = validateHotelRatings(hotelID);
-        return hotelRatingMap.stream().toList();
-    }
     public void rateHotel(long guestID, long hotelID, int starRating, String comment)
             throws HotelNotFoundException, GuestNotFoundException {
-        // Hotel und Gast laden
+        if(starRating < 1 || starRating > 5) throw new IllegalArgumentException("Enter a valid Star Rating (1-5)");
         Hotel hotel = getNotNullHotel(hotelID);
         Guest guest = guestService.getGuestById(guestID);
 
-        // Neues Rating erstellen
+        if (hotel.getRatings().stream().anyMatch(r -> r.getGuest().getId() == guestID)) {
+            throw new IllegalArgumentException("Guest with ID " + guestID + " has already rated this hotel.");
+        }
+
         HotelRating rating = new HotelRating.Builder()
                 .withRating(starRating)
                 .withComment(comment != null ? comment : "")
@@ -121,13 +112,11 @@ public class HotelService {
         hotelRepository.update(hotel);
     }
 
-
-
-    public List<Room> findAvailableRooms(long hotelID, Class<? extends Room> roomType) throws HotelNotFoundException {
+    public List<Room> findAvailableRooms(long hotelID, Class<? extends Room> roomType, LocalDate checkIn, LocalDate checkOut) throws HotelNotFoundException {
         Hotel hotel = getNotNullHotel(hotelID);
         List<Room> availableRooms = new ArrayList<>();
         for (Room room : hotel.getRooms()) {
-            boolean available = roomService.isAvailable(room, LocalDate.now(), LocalDate.now().plusDays(1));
+            boolean available = roomService.isAvailable(room, checkIn, checkOut);
             boolean matchesType = (roomType == null || roomType.isInstance(room));
             if (available && matchesType) {
                 availableRooms.add(room);
@@ -157,6 +146,9 @@ public class HotelService {
         if (description == null) {
             throw new IllegalArgumentException("Hotel description must not be empty");
         }
+        if (hotelLocation == null) {
+            throw new IllegalArgumentException("Hotel location must not be null");
+        }
     }
 
     private Hotel getNotNullHotel(long hotelId) throws HotelNotFoundException {
@@ -181,7 +173,6 @@ public class HotelService {
         }
         return ratings;
     }
-
 }
 
 
