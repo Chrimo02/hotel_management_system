@@ -9,8 +9,9 @@ public abstract class Room {
     private RoomIdentifier roomIdentifier;
     private Hotel hotel;
     private Set<Booking> bookings = new TreeSet<>(); // TreeSet für sortierte Buchungen
-    protected Room() {}
-    protected Room(double pricePerNight, RoomIdentifier roomIdentifier, Hotel hotel) {
+
+    protected Room(long id, double pricePerNight, RoomIdentifier roomIdentifier, Hotel hotel) {
+        this.id = id;
         this.pricePerNight = pricePerNight;
         this.roomIdentifier = roomIdentifier;
         this.hotel = hotel;

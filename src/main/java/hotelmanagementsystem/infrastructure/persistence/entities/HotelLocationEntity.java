@@ -1,5 +1,6 @@
 package hotelmanagementsystem.infrastructure.persistence.entities;
 
+import hotelmanagementsystem.domain.models.HotelLocation;
 import jakarta.persistence.*;
 
 @Entity
@@ -23,6 +24,7 @@ public class HotelLocationEntity {
     }
 
     private HotelLocationEntity(HotelLocationBuilder builder) {
+        this.id = builder.id;
         this.address = builder.address;
         this.city = builder.city;
         this.country = builder.country;
@@ -57,12 +59,17 @@ public class HotelLocationEntity {
     }
 
     public static class HotelLocationBuilder {
-
+        private Long id;
         private String address;
         private String city;
         private String country;
 
         public HotelLocationBuilder(){
+        }
+
+        public HotelLocationBuilder withId(Long id) {
+            this.id = id;
+            return this;
         }
 
         public HotelLocationBuilder withAddress(String address) {

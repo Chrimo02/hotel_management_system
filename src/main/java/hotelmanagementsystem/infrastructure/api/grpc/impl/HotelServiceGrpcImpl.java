@@ -40,7 +40,8 @@ public class HotelServiceGrpcImpl extends HotelServiceGrpc.HotelServiceImplBase 
     public void createHotel(CreateHotelRequest request, StreamObserver<HotelResponse> responseObserver) {
         try {
             hotelmanagementsystem.domain.models.HotelLocation hotelLocation =
-                    new hotelmanagementsystem.domain.models.HotelLocation.HotelLocationBuilder(request.getLocation().getId())
+                    new hotelmanagementsystem.domain.models.HotelLocation.HotelLocationBuilder()
+                            .withId(request.getLocation().getId())
                             .withAddress(request.getLocation().getAddress())
                             .withCity(request.getLocation().getCity())
                             .withCountry(request.getLocation().getCountry())

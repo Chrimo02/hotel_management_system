@@ -3,15 +3,16 @@ package hotelmanagementsystem.cli;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.quarkus.runtime.annotations.QuarkusMain;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class TestClient {
+//@QuarkusMain
+public class HotelManagementCLI {
 
     private static final Scanner scanner = new Scanner(System.in);
-    // ANSI-Farbcodes für eine verbesserte CLI
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_GREEN = "\u001B[32m";
     private static final String ANSI_RED = "\u001B[31m";

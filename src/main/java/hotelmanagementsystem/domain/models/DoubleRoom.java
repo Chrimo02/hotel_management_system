@@ -8,7 +8,7 @@ public class DoubleRoom extends Room{
         super(pricePerNight, roomIdentifier, hotel);
     }*/
     public DoubleRoom(Builder builder) {
-        super(builder.pricePerNight, builder.roomIdentifier, builder.hotel);
+        super(builder.id, builder.pricePerNight, builder.roomIdentifier, builder.hotel);
     }
     public static class Builder {
         private long id;

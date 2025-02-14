@@ -67,6 +67,7 @@ public class HotelMapper {
                 .withId(dto.getId())
                 .withName(dto.getName())
                 .withDescription(dto.getDescription())
+                .withLocation(HotelLocationMapper.fromDTO(dto.getHotelLocation()))
                 .withRoomsList(rooms)
                 .withBookingList(bookings)
                 .withAverageRating(dto.getAverageRating())

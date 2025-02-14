@@ -72,7 +72,8 @@ public class TestDataLoader {
             );
 
             // --- Hotel 2 ---
-            HotelLocation loc2 = new HotelLocation.HotelLocationBuilder(0L)
+            HotelLocation loc2 = new HotelLocation.HotelLocationBuilder()
+                    .withId(0L)
                     .withAddress("Mondstraße 2")
                     .withCity("MoonCity")
                     .withCountry("Germany")

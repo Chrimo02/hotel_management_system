@@ -1,5 +1,7 @@
 package hotelmanagementsystem.domain.models;
 
+import hotelmanagementsystem.infrastructure.api.mapper.HotelLocationMapper;
+
 public class HotelLocation {
     private Long id;
     private String address;
@@ -7,6 +9,7 @@ public class HotelLocation {
     private String country;
 
     private HotelLocation(HotelLocationBuilder hotelLocationBuilder) {
+        this.id = hotelLocationBuilder.id;
         this.address = hotelLocationBuilder.address;
         this.city = hotelLocationBuilder.city;
         this.country = hotelLocationBuilder.country;
@@ -40,8 +43,12 @@ public class HotelLocation {
         private String city;
         private String country;
 
-        public HotelLocationBuilder(Long id){
+
+        public HotelLocationBuilder() {}
+
+        public HotelLocationBuilder withId(Long id) {
             this.id = id;
+            return this;
         }
 
         public HotelLocationBuilder withAddress(String address){

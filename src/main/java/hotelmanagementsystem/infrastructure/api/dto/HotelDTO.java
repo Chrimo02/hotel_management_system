@@ -78,6 +78,7 @@ public class HotelDTO {
                 .setName(this.name)
                 .setDescription(this.description)
                 .setAverageRating(this.averageRating)
+                .setLocation(this.hotelLocation.toProtobuf())
                 .addAllRoomIds(this.roomIds != null ? this.roomIds : List.of())
                 .addAllBookingIds(this.bookingIds != null ? this.bookingIds : List.of())
                 .addAllHotelRatings(hotelRatings.stream().map(HotelRatingDTO::toProtobuf).toList())
