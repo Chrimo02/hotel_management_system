@@ -12,7 +12,7 @@ This repository contains the backend project of a Hotelmanagementsystem implemen
 
 ## Docker - How to start the Application:
 
-##### Step 1: Make sure you have Docker running on your device
+##### Step 1: Make sure you have Docker running on your device. Additionally, please ensure that you are not using a Java version newer than Java 22.
 ##### Step 2: Create a Docker image and run the tests (all UnitTests and the integration test):
 
 ```shell script
