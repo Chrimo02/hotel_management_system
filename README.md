@@ -8,7 +8,7 @@ This repository contains the backend project of a Hotelmanagementsystem implemen
 * All UnitTests get automatically executed during the Build-Process
 ## Integration Testing
 
-* The integration test of our project is: `HotelmanagementIT.java` or interactive with the CLI.
+* The integration test of our project is: `HotelmanagementTest.java` or interactive with the CLI.
 
 ## Docker - How to start the Application:
 

@@ -13,7 +13,7 @@ import java.util.List;
 
 @QuarkusTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class HotelmanagementIT {
+public class HotelmanagementTest {
 
     @GrpcClient
     GuestServiceGrpc.GuestServiceBlockingStub guestStub;
