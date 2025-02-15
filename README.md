@@ -2,6 +2,9 @@
 
 This repository contains the backend project of a Hotelmanagementsystem implementing the hexagonal architecture in Java using the Quarkus framework. It includes an API with gRPC, a core domain component, and a persistence component using JPA and Hibernate. It uses the H2 database.
 
+Please download and watch hotelmanagement-demo.mp4 to get a quick introduction into this project.
+
+
 ## Unit Testing
 
 * We implemented UnitTests for all components
