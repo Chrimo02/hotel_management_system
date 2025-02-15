@@ -199,7 +199,7 @@ public class HotelServiceGrpcImpl extends HotelServiceGrpc.HotelServiceImplBase 
             LocalDate checkIn = LocalDate.parse(request.getCheckInDate());
             LocalDate checkOut = LocalDate.parse(request.getCheckOutDate());
             Class<? extends Room> roomClass = parseRoomType(request.getRoomType());
-            List<Room> availableRooms = hotelService.findAvailableRooms(request.getHotelId(), roomClass, checkIn, checkOut);
+            List<Room> availableRooms = hotelServicePort.findAvailableRooms(request.getHotelId(), roomClass, checkIn, checkOut);
 
             List<hotelmanagementsystem.infrastructure.api.grpc.generated.Room> roomProtos = availableRooms.stream()
                     .map(RoomMapper::toDTO)

@@ -1,6 +1,7 @@
 package hotelmanagementsystem.infrastructure.api.grpc.impl;
 
 import hotelmanagementsystem.domain.exceptions.GuestNotFoundException;
+import hotelmanagementsystem.domain.interfaces.GuestServicePort;
 import hotelmanagementsystem.domain.models.Booking;
 import hotelmanagementsystem.domain.models.Guest;
 import hotelmanagementsystem.domain.services.GuestService;
@@ -24,16 +25,16 @@ import java.util.List;
 @Blocking
 public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
 {
-    private final GuestService guestService;
+    private final GuestServicePort guestServicePort;
 
     @Inject
-    public GuestServiceGrpcImpl(GuestService guestService){
-        this.guestService = guestService;
+    public GuestServiceGrpcImpl(GuestServicePort guestServicePort){
+        this.guestServicePort = guestServicePort;
     }
     @Override
     public void createGuest(CreateGuestRequest request, StreamObserver<GuestResponse> responseObserver) {
         try{
-            Guest guest = guestService.createGuest(
+            Guest guest = guestServicePort.createGuest(
                     request.getFirstName(),
                     request.getLastName(),
                     LocalDate.parse(request.getBirthday()).getYear(),
@@ -56,7 +57,7 @@ public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
     @Override
     public void getGuestById(GetGuestByIdRequest request, StreamObserver<GuestResponse> responseObserver) {
         try {
-            Guest guest = guestService.getGuestById(request.getId());
+            Guest guest = guestServicePort.getGuestById(request.getId());
             GuestDTO dto = GuestMapper.toDTO(guest);
             GuestResponse response = GuestResponse.newBuilder()
                     .setGuest(dto.toProtobuf())
@@ -76,7 +77,7 @@ public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
     @Override
     public void updateGuestEmail(UpdateGuestEmailRequest request, StreamObserver<GuestResponse> responseObserver) {
         try {
-            Guest updatedGuest = guestService.updateEMail(request.getGuestId(), request.getNewEmail());
+            Guest updatedGuest = guestServicePort.updateEMail(request.getGuestId(), request.getNewEmail());
             GuestDTO dto = GuestMapper.toDTO(updatedGuest);
             GuestResponse response = GuestResponse.newBuilder()
                     .setGuest(dto.toProtobuf())
@@ -98,7 +99,7 @@ public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
     @Override
     public void updateGuestPhone(UpdateGuestPhoneRequest request, StreamObserver<GuestResponse> responseObserver) {
         try {
-            Guest updatedGuest = guestService.updatePhone(request.getGuestId(), request.getNewPhone());
+            Guest updatedGuest = guestServicePort.updatePhone(request.getGuestId(), request.getNewPhone());
             GuestDTO dto = GuestMapper.toDTO(updatedGuest);
             GuestResponse response = GuestResponse.newBuilder()
                     .setGuest(dto.toProtobuf())
@@ -120,7 +121,7 @@ public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
     @Override
     public void updateGuestLastName(UpdateGuestLastNameRequest request, StreamObserver<GuestResponse> responseObserver) {
         try {
-            Guest updatedGuest = guestService.updateLastName(request.getGuestId(), request.getNewLastName());
+            Guest updatedGuest = guestServicePort.updateLastName(request.getGuestId(), request.getNewLastName());
             GuestDTO dto = GuestMapper.toDTO(updatedGuest);
             GuestResponse response = GuestResponse.newBuilder()
                     .setGuest(dto.toProtobuf())
@@ -142,7 +143,7 @@ public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
     @Override
     public void deleteGuest(DeleteGuestRequest request, StreamObserver<Empty> responseObserver) {
         try {
-            guestService.deleteGuest(request.getId());
+            guestServicePort.deleteGuest(request.getId());
             responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (GuestNotFoundException e) {
@@ -159,7 +160,7 @@ public class GuestServiceGrpcImpl  extends GuestServiceGrpc.GuestServiceImplBase
     @Override
     public void getBookingsByGuestId(GetBookingsByGuestIdRequest request, StreamObserver<ListBookingsResponse> responseObserver) {
         try {
-            List<Booking> bookings = guestService.getAllBookingsFromGuest(request.getGuestId());
+            List<Booking> bookings = guestServicePort.getAllBookingsFromGuest(request.getGuestId());
 
             List<BookingDTO> bookingDTOS = bookings.stream()
                     .map(BookingMapper::toDTO)

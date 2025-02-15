@@ -3,6 +3,7 @@ package hotelmanagementsystem.domain.services;
 import hotelmanagementsystem.domain.exceptions.BookingNotFoundException;
 import hotelmanagementsystem.domain.exceptions.HotelNotFoundException;
 import hotelmanagementsystem.domain.exceptions.RoomNotFoundException;
+import hotelmanagementsystem.domain.interfaces.RoomServicePort;
 import hotelmanagementsystem.domain.models.Booking;
 import hotelmanagementsystem.domain.models.Hotel;
 import hotelmanagementsystem.domain.models.Room;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
-public class RoomService {
+public class RoomService implements RoomServicePort {
     private final RoomRepository roomRepository;
     private final HotelService hotelService;
     private final RoomIdentifierRepository roomIdentifierRepository;
