@@ -3,6 +3,7 @@ package hotelmanagementsystem.domain.services;
 import hotelmanagementsystem.domain.exceptions.BookingNotFoundException;
 import hotelmanagementsystem.domain.exceptions.HotelNotFoundException;
 import hotelmanagementsystem.domain.exceptions.RoomNotFoundException;
+import hotelmanagementsystem.domain.interfaces.BookingServicePort;
 import hotelmanagementsystem.domain.models.*;
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.BookingRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
-public class BookingService {
+public class BookingService implements BookingServicePort {
     private final BookingRepository bookingRepository;
     private final RoomService roomService;
     private final HotelService hotelService;
@@ -36,6 +37,7 @@ public class BookingService {
     }
 
     @Transactional
+    @Override
     public Booking makeBooking(long hotelId, LocalDate checkInDate, LocalDate checkOutDate, List<Class<? extends Room>> roomTypes, List<Long> guestIds) throws HotelNotFoundException {
         if (!checkInDate.isAfter(LocalDate.now())){
             throw new IllegalArgumentException("CheckInDate must be after LocalDate.now");
@@ -55,6 +57,7 @@ public class BookingService {
         return booking;
     }
 
+    @Override
     public void cancelBooking(long bookingID) throws BookingNotFoundException, RoomNotFoundException {
         Booking booking = getNotNullBooking(bookingID);
         if(java.time.temporal.ChronoUnit.DAYS.between(LocalDate.now(), booking.getCheckInDate()) < 2)
@@ -67,7 +70,7 @@ public class BookingService {
         bookingRepository.updateBooking(booking);
     }
 
-
+    @Override
     public void guestCheckIn(long bookingId) throws BookingNotFoundException {
         Booking booking = getNotNullBooking(bookingId);
         LocalDate today = LocalDate.now();
@@ -83,6 +86,7 @@ public class BookingService {
         bookingRepository.updateBooking(booking);
     }
 
+    @Override
     public void guestCheckOut(long bookingId) throws BookingNotFoundException {
         Booking booking = getNotNullBooking(bookingId);
         LocalDate today = LocalDate.now();
@@ -101,11 +105,12 @@ public class BookingService {
         bookingRepository.updateBooking(booking);
     }
 
-
+    @Override
     public Booking getBookingById(long bookingID) throws BookingNotFoundException {
         return getNotNullBooking(bookingID);
     }
 
+    @Override
     public List<Booking> findAllByCheckInDate(LocalDate checkInDate) {
         return bookingRepository.findBookingsByCheckInDate(checkInDate);
     }

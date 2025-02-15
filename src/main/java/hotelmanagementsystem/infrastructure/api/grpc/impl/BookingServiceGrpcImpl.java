@@ -1,8 +1,8 @@
 package hotelmanagementsystem.infrastructure.api.grpc.impl;
 
 import hotelmanagementsystem.domain.exceptions.BookingNotFoundException;
+import hotelmanagementsystem.domain.interfaces.BookingServicePort;
 import hotelmanagementsystem.domain.models.Booking;
-import hotelmanagementsystem.domain.services.BookingService;
 import hotelmanagementsystem.infrastructure.api.dto.BookingDTO;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.*;
 import hotelmanagementsystem.infrastructure.api.mapper.BookingMapper;
@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
 @Blocking
 public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImplBase {
 
-    private final BookingService bookingService;
+    private final BookingServicePort bookingServicePort;
 
     @Inject
-    public BookingServiceGrpcImpl(BookingService bookingService) {
-        this.bookingService = bookingService;
+    public BookingServiceGrpcImpl(BookingServicePort bookingServicePort) {
+        this.bookingServicePort = bookingServicePort;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImp
             LocalDate checkIn = LocalDate.parse(request.getCheckInDate());
             LocalDate checkOut = LocalDate.parse(request.getCheckOutDate());
 
-            Booking booking = bookingService.makeBooking(
+            Booking booking = bookingServicePort.makeBooking(
                     request.getHotelId(),
                     checkIn,
                     checkOut,
@@ -66,7 +66,7 @@ public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImp
     @Override
     public void getBookingById(GetBookingByIdRequest request, StreamObserver<BookingResponse> responseObserver) {
         try {
-            Booking booking = bookingService.getBookingById(request.getId());
+            Booking booking = bookingServicePort.getBookingById(request.getId());
             BookingDTO dto = BookingMapper.toDTO(booking);
             hotelmanagementsystem.infrastructure.api.grpc.generated.Booking protobufBooking = dto.toProtobuf(); // Nutze die korrekte Booking-Klasse
 
@@ -86,7 +86,7 @@ public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImp
     @Override
     public void cancelBooking(CancelBookingRequest request, StreamObserver<Empty> responseObserver) {
         try {
-            bookingService.cancelBooking(request.getId());
+            bookingServicePort.cancelBooking(request.getId());
             responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (BookingNotFoundException e) {
@@ -99,7 +99,7 @@ public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImp
     @Override
     public void checkInGuest(CheckInGuestRequest request, StreamObserver<Empty> responseObserver) {
         try {
-            bookingService.guestCheckIn(request.getBookingId());
+            bookingServicePort.guestCheckIn(request.getBookingId());
             responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (BookingNotFoundException e) {
@@ -112,7 +112,7 @@ public class BookingServiceGrpcImpl extends BookingServiceGrpc.BookingServiceImp
     @Override
     public void checkOutGuest(CheckOutGuestRequest request, StreamObserver<Empty> responseObserver) {
         try {
-            bookingService.guestCheckOut(request.getBookingId());
+            bookingServicePort.guestCheckOut(request.getBookingId());
             responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (BookingNotFoundException e) {

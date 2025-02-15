@@ -2,10 +2,10 @@ package hotelmanagementsystem.infrastructure.api.grpc.impl;
 
 import hotelmanagementsystem.domain.exceptions.GuestNotFoundException;
 import hotelmanagementsystem.domain.exceptions.HotelNotFoundException;
+import hotelmanagementsystem.domain.interfaces.HotelServicePort;
 import hotelmanagementsystem.domain.models.Hotel;
 import hotelmanagementsystem.domain.models.PagedHotels;
 import hotelmanagementsystem.domain.models.Room;
-import hotelmanagementsystem.domain.services.HotelService;
 import hotelmanagementsystem.infrastructure.api.dto.HotelDTO;
 import hotelmanagementsystem.infrastructure.api.dto.RoomDTO;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.*;
@@ -29,11 +29,11 @@ import java.util.stream.Collectors;
 @Blocking
 public class HotelServiceGrpcImpl extends HotelServiceGrpc.HotelServiceImplBase {
 
-    private final HotelService hotelService;
+    private final HotelServicePort hotelServicePort;
 
     @Inject
-    public HotelServiceGrpcImpl(HotelService hotelService) {
-        this.hotelService = hotelService;
+    public HotelServiceGrpcImpl(HotelServicePort hotelServicePort) {
+        this.hotelServicePort = hotelServicePort;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class HotelServiceGrpcImpl extends HotelServiceGrpc.HotelServiceImplBase 
                             .withCountry(request.getLocation().getCountry())
                             .build();
 
-            Hotel createdHotel = hotelService.createHotel(
+            Hotel createdHotel = hotelServicePort.createHotel(
                     request.getName(),
                     request.getDescription(),
                     hotelLocation
@@ -69,7 +69,7 @@ public class HotelServiceGrpcImpl extends HotelServiceGrpc.HotelServiceImplBase 
     @Override
     public void getHotelById(GetHotelByIdRequest request, StreamObserver<HotelResponse> responseObserver) {
         try {
-            Hotel hotel = hotelService.getHotelByHotelId(request.getId());
+            Hotel hotel = hotelServicePort.getHotelByHotelId(request.getId());
             HotelDTO hotelDTO = HotelMapper.toDTO(hotel);
 
             HotelResponse response = HotelResponse.newBuilder()
@@ -97,7 +97,7 @@ public class HotelServiceGrpcImpl extends HotelServiceGrpc.HotelServiceImplBase 
             int pageNumber = (request.getPageNumber() <= 0) ? 1 : request.getPageNumber();
             int pageSize = (request.getPageSize() <= 0) ? 10 : request.getPageSize();
 
-            PagedHotels result = hotelService.listHotelsFilteredAndPaged(city, minRating, pageNumber, pageSize);
+            PagedHotels result = hotelServicePort.listHotelsFilteredAndPaged(city, minRating, pageNumber, pageSize);
 
             List<hotelmanagementsystem.infrastructure.api.grpc.generated.Hotel> protoHotels = result.hotels().stream()
                     .map(h -> HotelMapper.toDTO(h).toProtobuf())
@@ -134,7 +134,7 @@ public class HotelServiceGrpcImpl extends HotelServiceGrpc.HotelServiceImplBase 
                 updateMap.put("description", newDescription);
             }
 
-            Hotel updatedHotel = hotelService.updateHotel(request.getId(), updateMap);
+            Hotel updatedHotel = hotelServicePort.updateHotel(request.getId(), updateMap);
 
             HotelDTO hotelDTO = HotelMapper.toDTO(updatedHotel);
             HotelResponse response = HotelResponse.newBuilder()
@@ -157,7 +157,7 @@ public class HotelServiceGrpcImpl extends HotelServiceGrpc.HotelServiceImplBase 
     @Override
     public void deleteHotel(DeleteHotelRequest request, StreamObserver<Empty> responseObserver) {
         try {
-            hotelService.deleteHotel(request.getId());
+            hotelServicePort.deleteHotel(request.getId());
             responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (HotelNotFoundException e) {
@@ -174,7 +174,7 @@ public class HotelServiceGrpcImpl extends HotelServiceGrpc.HotelServiceImplBase 
     @Override
     public void rateHotel(RateHotelRequest request, StreamObserver<Empty> responseObserver) {
         try {
-            hotelService.rateHotel(
+            hotelServicePort.rateHotel(
                     request.getGuestId(),
                     request.getHotelId(),
                     request.getRating(),

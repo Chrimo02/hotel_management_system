@@ -33,6 +33,7 @@ public class RoomService implements RoomServicePort {
         this.roomIdentifierRepository = roomIdentifierRepository;
     }
 
+    @Override
     public Room getRoomById(long roomId) throws RoomNotFoundException {
         Room room = roomRepository.findRoomById(roomId);
         if (room == null) throw new RoomNotFoundException("There is no Room with the specified ID!");
@@ -40,6 +41,7 @@ public class RoomService implements RoomServicePort {
     }
 
     @Transactional
+    @Override
     public void bookRooms(Booking booking) {
         for (Room room : booking.getRooms()) {
             // Check if the room is available for the booking dates
@@ -52,6 +54,7 @@ public class RoomService implements RoomServicePort {
         }
     }
 
+    @Override
     public void cancelRoom(long roomId, Booking bookingToCancel) throws RoomNotFoundException, BookingNotFoundException {
         Room room = getRoomById(roomId);
         if (bookingToCancel != null) {
@@ -62,6 +65,7 @@ public class RoomService implements RoomServicePort {
         }
     }
 
+    @Override
     public boolean isAvailable(Room room, LocalDate checkIn, LocalDate checkOut) {
         for (Booking existingBooking : room.getBookings()) {
             if (isOverlapping(existingBooking, checkIn, checkOut)) {
@@ -77,6 +81,7 @@ public class RoomService implements RoomServicePort {
 
     }
 
+    @Override
     public Room createRoom(double pricePerNight, RoomIdentifier roomIdentifier, long hotelId, Class<? extends Room> roomType) throws HotelNotFoundException {
         Hotel hotel = hotelService.getHotelByHotelId(hotelId);
         Room room;
@@ -92,6 +97,7 @@ public class RoomService implements RoomServicePort {
         return newRoom;
     }
 
+    @Override
     public void removeRoom(long roomId) throws RoomNotFoundException {
         Room room = getRoomById(roomId);
         boolean hasActiveBookings = room.getBookings().stream().anyMatch(Booking::getStatus);
@@ -101,6 +107,7 @@ public class RoomService implements RoomServicePort {
         roomRepository.removeRoom(roomId);
     }
 
+    @Override
     public Room updatePricePerNight(long roomId, Double newPricePerNight) throws RoomNotFoundException {
         Room room = roomRepository.findRoomById(roomId);
         if (room == null) {
@@ -113,6 +120,7 @@ public class RoomService implements RoomServicePort {
         return room;
     }
 
+    @Override
     public Room updateRoomIdentifier(long roomId, RoomIdentifier newRoomIdentifier) throws RoomNotFoundException {
         Room room = roomRepository.findRoomById(roomId);
         if (room == null) {
@@ -126,6 +134,7 @@ public class RoomService implements RoomServicePort {
         return room;
     }
 
+    @Override
     public List<Room> findAvailableRooms(long hotelId, List<Class<? extends Room>> roomTypes, LocalDate checkInDate, LocalDate checkOutDate) throws HotelNotFoundException {
         List<Room> availableRooms = new ArrayList<>();
         for (Class<? extends Room> roomType : roomTypes) {

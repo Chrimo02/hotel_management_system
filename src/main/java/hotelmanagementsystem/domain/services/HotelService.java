@@ -1,6 +1,7 @@
 package hotelmanagementsystem.domain.services;
 import hotelmanagementsystem.domain.exceptions.GuestNotFoundException;
 import hotelmanagementsystem.domain.exceptions.HotelNotFoundException;
+import hotelmanagementsystem.domain.interfaces.HotelServicePort;
 import hotelmanagementsystem.domain.models.*;
 import hotelmanagementsystem.infrastructure.persistence.repositories.interfaces.HotelRepository;
 import hotelmanagementsystem.domain.models.Hotel;
@@ -15,7 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class HotelService {
+public class HotelService implements HotelServicePort {
 
     private final HotelRepository hotelRepository;
     private final RoomService roomService;
@@ -27,6 +28,7 @@ public class HotelService {
         this.guestService = guestService;
     }
 
+    @Override
     public Hotel createHotel(String name, String description, HotelLocation hotelLocation) throws RuntimeException {
         validateInputs(name, description, hotelLocation);
         Hotel hotel = new Hotel.HotelBuilder()
@@ -37,6 +39,7 @@ public class HotelService {
         return hotelRepository.createHotel(hotel);
     }
 
+    @Override
     public boolean deleteHotel(long hotelId) throws HotelNotFoundException{
         Hotel hotel = hotelRepository.findById(hotelId);
         if (hotel == null) throw new HotelNotFoundException("There is no Hotel with the specified ID!");
@@ -44,6 +47,7 @@ public class HotelService {
         return true;
     }
 
+    @Override
     public Hotel updateHotel(long hotelId, Map<String, String> updates) throws HotelNotFoundException {
         Hotel hotel = getNotNullHotel(hotelId);
         boolean isUpdated = false;
@@ -79,16 +83,19 @@ public class HotelService {
         return hotel;
     }
 
+    @Override
     public PagedHotels listHotelsFilteredAndPaged(String city, double minRating, int pageNumber, int pageSize) {
         if (pageNumber < 1) pageNumber = 1;
         if (pageSize < 1) pageSize = 10;
         return hotelRepository.findPagedByFilter(city, minRating, pageNumber, pageSize);
     }
 
+    @Override
     public Hotel getHotelByHotelId(long hotelId) throws HotelNotFoundException{
         return getNotNullHotel(hotelId);
     }
 
+    @Override
     public void rateHotel(long guestID, long hotelID, int starRating, String comment)
             throws HotelNotFoundException, GuestNotFoundException {
         if(starRating < 1 || starRating > 5) throw new IllegalArgumentException("Enter a valid Star Rating (1-5)");
@@ -112,6 +119,7 @@ public class HotelService {
         hotelRepository.update(hotel);
     }
 
+    @Override
     public List<Room> findAvailableRooms(long hotelID, Class<? extends Room> roomType, LocalDate checkIn, LocalDate checkOut) throws HotelNotFoundException {
         Hotel hotel = getNotNullHotel(hotelID);
         List<Room> availableRooms = new ArrayList<>();
@@ -125,6 +133,7 @@ public class HotelService {
         return availableRooms;
     }
 
+    @Override
     public List<HotelRating> filterHotelRatings(long hotelID, int starRating, boolean onlyWithComment) throws HotelNotFoundException{
         List<HotelRating> hotelRatingMap = validateHotelRatings(hotelID);
         return hotelRatingMap.stream()

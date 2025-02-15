@@ -1,12 +1,12 @@
 package hotelmanagementsystem.infrastructure.api.grpc.impl;
 
+import hotelmanagementsystem.domain.interfaces.RoomServicePort;
 import hotelmanagementsystem.domain.models.DoubleRoom;
 import hotelmanagementsystem.domain.models.Room;
 import hotelmanagementsystem.domain.models.RoomIdentifier;
 import hotelmanagementsystem.domain.models.SingleRoom;
 import hotelmanagementsystem.infrastructure.api.dto.RoomDTO;
 import hotelmanagementsystem.infrastructure.api.mapper.RoomMapper;
-import hotelmanagementsystem.domain.services.RoomService;
 import hotelmanagementsystem.infrastructure.api.grpc.generated.*;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
@@ -20,11 +20,11 @@ import jakarta.inject.Singleton;
 @Blocking
 public class RoomServiceGrpcImpl extends RoomServiceGrpc.RoomServiceImplBase {
 
-    private final RoomService roomService;
+    private final RoomServicePort roomServicePort;
 
     @Inject
-    public RoomServiceGrpcImpl(RoomService roomService) {
-        this.roomService = roomService;
+    public RoomServiceGrpcImpl(RoomServicePort roomServicePort) {
+        this.roomServicePort = roomServicePort;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class RoomServiceGrpcImpl extends RoomServiceGrpc.RoomServiceImplBase {
             } else {
                 throw new IllegalArgumentException("in gprcservice" + "Unsupported room type: " + typeString);
             }
-            Room room = roomService.createRoom(
+            Room room = roomServicePort.createRoom(
                     request.getPricePerNight(),
                     new RoomIdentifier(request.getRoomIdentifier().getBuilding(),request.getRoomIdentifier().getFloor(),request.getRoomIdentifier().getRoomNumber()),
                     request.getHotelId(),
@@ -65,7 +65,7 @@ public class RoomServiceGrpcImpl extends RoomServiceGrpc.RoomServiceImplBase {
     @Override
     public void getRoomById(GetRoomByIdRequest request, StreamObserver<RoomResponse> responseObserver) {
         try {
-            Room room = roomService.getRoomById(request.getId());
+            Room room = roomServicePort.getRoomById(request.getId());
             RoomDTO roomDTO = RoomMapper.toDTO(room);
 
             RoomResponse response = RoomResponse.newBuilder()
@@ -84,9 +84,9 @@ public class RoomServiceGrpcImpl extends RoomServiceGrpc.RoomServiceImplBase {
     @Override
     public void updateRoomPrice(UpdateRoomPriceRequest request, StreamObserver<RoomResponse> responseObserver) {
         try {
-            Room room = roomService.getRoomById(request.getRoomId());
+            Room room = roomServicePort.getRoomById(request.getRoomId());
             room.setPricePerNight(request.getNewPricePerNight());
-            roomService.updatePricePerNight(request.getRoomId(), request.getNewPricePerNight());
+            roomServicePort.updatePricePerNight(request.getRoomId(), request.getNewPricePerNight());
 
             RoomDTO roomDTO = RoomMapper.toDTO(room);
             RoomResponse response = RoomResponse.newBuilder()
@@ -105,7 +105,7 @@ public class RoomServiceGrpcImpl extends RoomServiceGrpc.RoomServiceImplBase {
     @Override
     public void removeRoom(RemoveRoomRequest request, StreamObserver<Empty> responseObserver) {
         try {
-            roomService.removeRoom(request.getRoomId());
+            roomServicePort.removeRoom(request.getRoomId());
             responseObserver.onNext(Empty.newBuilder().build());
             responseObserver.onCompleted();
         } catch (Exception e) {
